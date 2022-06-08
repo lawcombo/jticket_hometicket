@@ -1,0 +1,274 @@
+h4.h_st01{font-size:18px;color:#266bc8; font-weight:bold;margin:0px 0px 15px 0px;padding:0px 0px  0px 10px;background:url("/_program/img/star02.png") left center no-repeat;}
+/* 예약현황 */
+.blind{	left: 0px; top: 0px; width: 1px; height: 1px; line-height: 0; overflow: hidden; font-size: 0px; visibility: hidden; position: absolute;}
+.tbl_blind {margin: 0px; padding: 0px; border: 0px currentColor; width: 0px; height: 0px; line-height: 0; overflow: hidden; font-size: 0px; visibility: hidden;}
+
+
+.reserve_Lbtn{position:relative; width:100%; margin-bottom:10px;text-align:right; }
+
+.reserve_btn{position:relative; width:100%; height:35px; padding-top:10px; border:1px solid #c6c6c6; margin-bottom:10px;; background: url("/_program/img/reserve_btnbg.gif") repeat-x left center; }
+.reserve_btn ul {text-align:center;}
+.reserve_btn li{float:left}
+
+.reserve_btn .year{ width:80%; color:#000000; font-weight: bold; margin:0 auto;font-size:14px;}
+
+.reserve_btn .pre{width:10%}
+.reserve_btn .pre a{width: 12px; height: 18px;  margin-right: 25px; vertical-align: top; display: inline-block; background: url("/_program/img/path_icon.gif") no-repeat 4px -385px;}
+
+.reserve_btn .next{width:10%;float:right}
+.reserve_btn .next a{width: 12px; height: 18px;  margin-left: 25px; vertical-align: top; display: inline-block; background: url("/_program/img/path_icon.gif") no-repeat -20px -385px;}
+
+.reserve_btn .daybtn{ position:absolute; top:6px; right:10px; }
+.reserve_btn .daybtn dd{ text-align:center; float:left; margin-right:2px; background:#e8e8e8; height:22px; width:80px; line-height:20px; border:1px solid #c6c6c6;}
+.reserve_btn .daybtn dd a{width:80px;height:22px; line-height:20px; display:block; font-weight:bold;color:#ff0000;}
+.reserve_btn .daybtn dd a:hover{width:80px;height:22px; line-height:20px; display:block; background:#c8c7c7;}
+.reserve_btn .daybtn .setup a{padding-left:9px; width:41px; height: 18px; background: url("/_program/img/path_icon.gif") no-repeat -16px -410px;} 
+.reserve_btn .daybtn .setup a:hover{width:41px; height:22px; padding-left:9px; background:#c8c7c7 url("/_program/img/path_icon.gif") no-repeat -16px -410px;} 
+
+.reserve_popup{position:relative; width:600px; margin:0 auto;}
+.reserve_popup .btn{ width:100%;padding:10px 0 10px 0; text-align:center;}
+.reserve_popup .close{float:right;margin-right:20px; }
+.reserve_popup .textarea {background: rgb(247, 247, 247); border-width: 1px; border-style: solid; border-color: rgb(203, 203, 203) rgb(228, 228, 228) rgb(228, 228, 228) rgb(203, 203, 203); line-height: 18px; font-size: 11px; resize: none;}
+
+.week_time{color:#000000; padding:0px 0px 0px 0px;margin:-27px 0px 0px 0px;text-align:right}
+.day_holiday{background:#a50540;color:#FFFFFF}
+.day_check{background:#ddedff}
+.noClick{background:#eee}
+
+
+
+/*장비예약현황*/
+.equip_reserve{position:relative; width:100%; margin-bottom:10px;  }
+.tbl_type3 {width:100%;  overflow:overflow; display:inline-block;font-size: 12px; }
+.tbl_type3 table{ width:100%; line-height:15px; border-top:2px solid #444547; }
+.tbl_type3 th, td{ text-align:center; border-width:0px; color:#777777; }
+.tbl_type3 thead th{color:#000;line-height:17px; padding:8px 0 7px 0; background-color:#ebebeb; border-bottom:1px solid #c6c6c6;border-right:1px solid #c6c6c6 ; ;font-weight:700 }
+.tbl_type3 thead .Rlinetd{border-right:1px solid #c6c6c6}
+.tbl_type3 tbody th{line-height:17px; border-bottom:1px solid #c6c6c6; border-right:1px solid #c6c6c6 !important; background-color:#f9f9f9;font-weight:700}
+.tbl_type3 tbody td{line-height:17px; border-right:1px solid #c6c6c6 }
+
+.tbl_type3 thead .week0{ color:#ff0000;} /*일요일*/
+.tbl_type3 thead .week1{ } /*월요일*/
+.tbl_type3 thead .week2{ } /*화요일*/
+.tbl_type3 thead .week3{ } /*수요일*/
+.tbl_type3 thead .week4{ } /*목요일*/
+.tbl_type3 thead .week5{ } /*금요일*/
+.tbl_type3 thead .week6{ color:#1e77fb;} /*토요일*/
+ 
+.tbl_type3 .on{color:#de3a01; font-weight: bold; background-color:#0072bc;}
+
+
+
+
+.room_list{}
+.room_list li{ padding:20px;border:1px solid #cccccc; float:left;margin-right:20px;line-height:25px}
+.room_list .room_name{margin-bottom:5px;font-weight:bold}
+.room_list img{max-width:330px !important}
+
+.iconBlue{background:#0000FF;color:#ffffff;font-size:9px;padding:0px 3px ;border-radius:2px;box-shadow:1px 1px #999999  }
+.iconRed{background:#FF0000;color:#ffffff;font-size:9px;padding:0px 3px ;border-radius:2px;box-shadow:1px 1px #999999  }
+.iconGray{background:#999999;color:#ffffff;font-size:9px;padding:0px 3px ;border-radius:2px;box-shadow:1px 1px #999999  }
+.bookingTd{cursor:pointer}
+
+.booking_empty{width:100%;height:18px; }
+.weekBooking00{border-bottom:1px dotted #cccccc}
+.weekBooking30{border-bottom:1px solid #000000}
+
+
+.bookingBtn{background:#266bc8;color:#FFFFFF;border:1px solid #999999;padding:5px 10px ;cursor:pointer;border-radius: 3px;}
+
+/* 예매하기 스텝2 */
+.exmpl_cal_dt ul{width:100%;margin:0 auto;}
+.exmpl_cal_dt li{position:relative;display:inline-block;box-sizing:border-box;padding-left:20px;margin-right:5px;}
+.exmpl_cal_dt li::after{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);display:block;width:15px;height:15px;border-radius:10px;}
+.exmpl_cal_dt li:nth-child(1)::after{background:#ededed; border:1px solid #ddd;}
+.exmpl_cal_dt li:nth-child(2)::after{background:#dbdbdb; border:1px solid #ddd;}
+.exmpl_cal_dt li:nth-child(3)::after{background:#34b28d; border:1px solid #ddd;}
+.exmpl_cal_dt li:nth-child(4)::after{background:#ff6600; border:1px solid #ddd;}
+
+
+.list_wrap .RtopTable .cal_wrap_ar{width:100%;margin:30px auto 0px auto;border:1px solid #ccc; border-radius:10px;}
+/* .list_wrap .RtopTable #calendar{} */
+.list_wrap .RtopTable #calendar .top_select_td{text-align:center;padding:16px 0; padding-bottom:0px; font-size: 20px; background:linear-gradient(90deg, #2bac85, #6ebe61); border-radius:7px 7px 0px 0px; color:#fff; font-weight:300;}
+/* .list_wrap .RtopTable #calendar .top_select_td>a{position:static !important;} */
+.list_wrap .RtopTable #calendar .top_tr_date{background:linear-gradient(90deg, #2bac85, #6ebe61);  color:#fff;}
+.list_wrap .RtopTable #calendar .top_select_td #preMonth img{vertical-align:middle;margin-right:10px;}
+.list_wrap .RtopTable #calendar .top_select_td #preMonth .txt_span{font-size:0;width:0;height:0;text-indent:-9999px;}
+.list_wrap .RtopTable #calendar .top_select_td #nextMonth img{vertical-align:middle;margin-left:10px;}
+.list_wrap .RtopTable #calendar .top_select_td #nextMonth .txt_span{font-size:0;width:0;height:0;text-indent:-9999px;}
+.list_wrap .RtopTable #calendar .top_tr_date th{line-height:25px;}
+.list_wrap .RtopTable #calendar .day_tr td{
+	position:relative;
+	border-top:1px solid #e9e9e9;
+	border-right:1px solid #e9e9e9;
+	height:0;
+	text-align:left;
+	padding-bottom:9%;
+	padding-top:1.5%;
+	padding-left:1.5%;
+	padding-right:1.5%;
+	box-sizing:border-box;
+	background:#f9f9f9;
+}
+
+.list_wrap .RtopTable #calendar .day_tr td:nth-child(7n){border-right:0px;}
+.list_wrap .RtopTable #calendar .day_tr td a{
+	display:block;
+	position:absolute;
+	/* position:static; */
+	width:100%;
+	height:100%;
+	top:0;
+	left:0;
+	text-indent:-9999px;
+	z-index:10;
+	/* padding:10%; */
+}
+.list_wrap .RtopTable #calendar .day_tr td.choiceTD{background:#fff;}
+.list_wrap .RtopTable #calendar .day_tr td.choiceTD a{color:#333;}
+.list_wrap .RtopTable #calendar .day_tr td.choiceTD.dayactive{background:#34b28d !important; box-sizing:border-box;color:#fff;}
+/* .list_wrap .RtopTable #calendar .day_tr td.choiceTD.dayactive a{color:#fff !important;z-index:20;} */
+/* .list_wrap .RtopTable #calendar .day_tr td.choiceTD.dayactive a:before{content:""; display:block; width:100%; height:100%; position:absolute; top:0; left:0; box-shadow:1px 5px 10px rgba(0,0,0,0.5)} */
+ 
+
+/* .list_wrap #KindArea{width:96%;margin:0px auto;} */
+#KindArea #TicketNumTlb{width:100%}
+
+#KindArea #TicketNumTlb th{padding:14px 10px; font-size: 14px;}
+#KindArea #TicketNumTlb td{padding:14px 10px; font-size: 14px;}
+#KindArea #TicketNumTlb td.total_mny_td{color:#3b7fee;text-align:left !important;font-size:16px;     line-height: 1.5em;  font-weight: 700;}
+#KindArea #TicketNumTlb td.tiga_num{font-size:15px; line-height: 1.5em;letter-spacing: -1px;}
+#KindArea #TicketNumTlb tr.prd_tr:first-child{border-top:1px solid #d8d8d8;}
+
+/*
+#KindArea #TicketNumTlb tr.prd_tr:first-child td{padding-top:30px ;}
+#KindArea #TicketNumTlb tr.prd_tr:last-child td{padding-bottom:30px}
+*/
+
+
+.Line1st{border-top:1px solid #d8d8d8}
+.td3_t select{width:calc(100% - 20px);}
+.total_mny_td{color:#3b7fee;text-align:left !important;font-size:18px;     line-height: 1.5em;  font-weight: 700;}
+.total_eng_pt{display:block;color:#777;font-size:14px;}
+.chk_btn_area_1{text-align:center;margin-top:30px;}
+.chk_btn_area_1 input{width:38%;display:inline-block;line-height:44px;}
+
+
+
+
+
+/* 예매하기 스텝3 */
+.pc_wrp_reserv{width:100%;margin:0 auto;}
+.tick_chk_area{border:5px solid #2d74e8;box-sizing:border-box;padding: 20px 15px;}
+.tick_chk_area .lst1_img img{width:100%;}
+.tick_chk_area .lst1_img{margin-bottom:20px}
+.tick_info_chk_area{font-size:18px;     line-height: 1.4em;}
+.tick_title_prt{color:#222;margin-bottom:0px;     font-weight: 700;}
+.tick_title_eng_prt{font-size:15px;color:#777;margin-bottom:10px;}
+.tick_date_numb{font-size:14px;letter-spacing:-1px;}
+.tick_chk_table_wr{margin-top:20px;}
+.tick_chk_table_bd tr:first-child{border-top:1px solid #d4d4d4;}
+.total_top_bt{border-top:1px solid #d4d4d4;}
+.reser_sub_title_1{font-size:22px;margin-top:30px;margin-bottom:10px;text-align:left; }
+.exmpl_cal_dt{}
+
+.booking_agent li{border-top:1px solid #ccc;box-sizing:border-box;padding:15px 0;}
+.booking_agent li::after{content:"";display:block;clear:both;}
+.booking_agent li .bk_title, .booking_agent li .bk_conts{float:left;}
+.booking_agent li .bk_title{width:30%;line-height:33px;}
+.booking_agent li .bk_conts{width:70%;}
+.booking_agent li .bk_conts input{vertical-align:middle}
+.booking_agent li:nth-child(4) .bk_conts input{width:100px;}
+
+/*.booking_agent li:nth-child(4) .bk_conts input{height:33px;vertical-align:middle;}
+.booking_agent li:nth-child(4) .bk_conts label{margin-right:10px;}
+*/
+.bk_conts.hp_num input{width:calc(33% - 8px);}
+
+/* 예매하기 스텝4 */
+
+.booking_agent2 li{border-top:1px solid #ccc;box-sizing:border-box;padding:15px 0;}
+/* .booking_agent2 li .bk_title{font-size:13px;color:#008de2;margin-bottom:5px;}
+.booking_agent2 li .bk_conts{font-size:16px;} */
+
+.booking_agent2 li::after{content:"";display:block;clear:both;}
+.booking_agent2 li .bk_title, .booking_agent2 li .bk_conts{float:left;}
+.booking_agent2 li .bk_title{width:30%;font-size:16px;color:#008de2;margin-bottom:5px;}
+.booking_agent2 li .bk_conts{width:70%;font-size:16px;text-align:left;}
+
+.tick_chk_area2{border:7px solid #2d74e8;font-size:18px;box-sizing:border-box;padding:20px;}
+.tick_info_chk_area2 .tick_title_prt{color:#222;margin-bottom:3px;}
+/* .tick_info_chk_area2 .tick_title_eng_prt{font-size:15px;color:#d6d6d6;margin-bottom:8px;} */
+.tick_info_chk_area2 .tick_date_numb{font-size:14px;letter-spacing:-1px;color:#222;}
+.tick_chk_table_wr2{margin-top:10px;color:222;font-size:16px;letter-spacing:-1px;}
+/* .tick_chk_table_wr2 table td{padding:20px 10px !important;} */
+.tick_chk_table_bd2 tr:first-child{border-top:1px solid #2763c5;}
+.tick_chk_table_bd2 tr:first-child td{padding-top:30px !important;}
+.tick_chk_table_bd2 tr:last-child td{padding-bottom:40px !important;}
+
+.pc_wrp_reserv::after{content:"";display:block;clear:both;}
+.pc_wrp_lft_sd,.pc_wrp_rht_sd{width:100%;float:left;box-sizing:border-box;/* padding:20px 15px 40px 15px; */}
+
+.list_wrap #timeSetArea{margin:30px auto;}
+.list_wrap #timeSetArea li{border-radius:5px;box-sizing:border-box;padding-left:10px;margin-right:10px;font-size:13px;}
+.list_wrap #timeSetArea li a{font-size:13px;line-height:36px;}
+.list_wrap #timeSetArea li .nselspan{display:block;border:2px solid #999;line-height:36px;cursor:default;}
+.list_wrap #timeSetArea li .nselspan strong{font-weight:normal;}
+
+#timeSetArea,#KindArea{max-width:500px;margin: 30px auto;}
+#timeSetArea li{border-radius:5px;box-sizing:border-box;padding-left:10px;margin-right:10px}
+.bookingTimeChk{display:none}
+
+.agree_wrap .agree_contents {font-size:13px; }
+.agree_wrap .agree_contents {font-size: 12px;line-height: 1.5em;border: 1px solid #e7e7e7;padding: 15px 20px 20px;max-height: 130px;overflow-y: auto;margin-bottom: 10px;}
+.checkradio_wrap { vertical-align:middle;margin-top:-5px;display:inline-block;*display:inline;}
+.checkradio_wrap p {position:relative;margin:0 0 8px 20px;display:inline-block;*display:inline;}
+.checkradio_wrap p:first-child {margin-left:0;}
+.checkradio_wrap label span {vertical-align:middle;display:inline-block;cursor:pointer;}
+.checkradio_wrap p.block {position:relative;margin:0 0 8px 0;display:block;}
+.checkradio_wrap p>input[type="checkbox"], .checkradio_wrap p>input[type="radio"] {position:relative;top:-1px;vertical-align:middle;}
+
+.memberinner{    padding: 10px 0px 40px 0px; min-height:700px;}
+.icon_go_home img{margin-top:19px}
+.agreeh1{font-size:26px; margin-bottom:22px; color:#4a87ec}
+.txt_gene{    color: #666;font-size: 20px; line-height:1.5em}
+.txt_stst{color:#333; font-size:20px; line-height:1.5em}
+.agree_select_kan{font-size:20px;}
+.agree_select_kan input{width:16px; height:16px; margin-top:3px!important;}
+.floatLR{line-height:54px; font-size:18px}
+.agree_wrap .agree_contents {font-size:13px; }
+
+
+.RtopTable{display:block}
+.RtopTable:after { display: block; content: ''; clear: both; }
+#calendar{display:block}
+#calendar:after { display: block; content: ''; clear: both; }
+.groupBtn{float:left;display:block;border:1px solid #cccccc;padding:10px;text-align:center;border-radius:10px;cursor:pointer}
+.ticket_order_cnt{width:70px}
+#KindArea table{width:100%}
+#KindArea th{padding:10px}
+#KindArea td{padding:10px}
+
+
+.main_tbls tbody tr:last-child td:nth-child(1){border-radius:0px 0px 0px 10px;}
+.main_tbls tbody tr:last-child td:nth-child(7){border-radius:0px 0px 10px 0px;}
+
+
+@media screen and (min-width: 560px) {
+
+	.list_wrap #timeSetArea li a{line-height:normal;}
+	.bkperson{display:block;line-height:normal;box-sizing:border-box;padding:0 0 5px;}
+	.list_wrap #timeSetArea li .nselspan{line-height:normal;}
+	.list_wrap #timeSetArea li .nselspan strong{display:block;line-height:normal;box-sizing:border-box;padding:0 0 5px;}
+	.bktime{display:block;box-sizing:border-box;padding-top:5px;}
+
+}
+
+@media screen and (min-width: 1024px) {
+
+h4.h_st01{margin-bottom:0px; font-size:22px;}
+
+.list_wrap #timeSetArea li{font-size:15px;}
+.list_wrap #timeSetArea li a{font-size:15px;}
+
+}

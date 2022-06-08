@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="bgfAlimTalkMapper">
+	
+	<select id="selectAlimTalkTemplate" parameterType="alimTalkTemplate" resultType="alimTalkTemplate">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				bc_alimtalk_template
+			WHERE
+				1=1
+				AND type = #{type}
+				]]>
+				<if test="product_group_kind != null and product_group_kind != ''">
+					AND product_group_kind = #{product_group_kind}
+				</if>
+				<![CDATA[	
+				AND shop_code = IFNULL(#{shop_code}, 'DEFAULT')
+			ORDER BY 
+				IDX DESC
+			LIMIT 1
+		]]>
+
+	</select>
+	
+	<insert id="insertAlimTalk" parameterType="alimTalk">
+		<![CDATA[
+			
+			INSERT INTO `MSG_QUEUE`(
+				`MSEQ`,
+				`MSG_TYPE`,
+				`DSTADDR`,
+				`CALLBACK`,
+				`SUBJECT`,
+				`TEXT_TYPE`,
+				`TEXT`,
+				`REQUEST_TIME`,
+				`INSERT_TIME`,
+				`EXT_COL1`,
+				`SENDER_KEY`,
+				`TEMPLATE_CODE`,
+				`CHANGEFLAG`)
+			VALUES (
+				fn_get_total_last_num('bc_alimtalk_template'),
+			    #{msg_type},
+			    #{dstaddr},
+			    #{callback},
+			    #{subject},
+			    #{text_type},
+			    #{text},
+			    now(),
+			    now(),
+			    #{ext_col1},
+			    #{sender_key},
+			    #{template_code},
+			    #{changeflag}
+			)
+		]]>
+	
+	</insert>
+	
+</mapper>

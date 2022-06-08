@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC 
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN" 
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+    
+<form-validation>
+	<formset>
+		<form name="userVO">
+			<!-- ID -->
+			<field property="userId" depends="required,minlength">
+				<arg0 key="user.userId" />
+				<arg1 key="${var:minlength}" />
+				<var>
+					<var-name>minlength</var-name>
+					<var-value>4</var-value>
+				</var>
+			</field>
+			<field property="userId" depends="maxlength">
+				<arg0 key="user.userId" />
+				<arg1 key="${var:maxlength}" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>16</var-value>
+				</var>
+			</field>
+			<field property="userId" depends="mask">
+				<arg0 key="한글" />
+				<var>
+					<var-name>mask</var-name>
+					<var-value>^[a-zA-Z0-9]*$</var-value>
+				</var>
+			</field>
+			<!-- Password -->
+			<field property="userPassword" depends="required,minlength">
+				<arg0 key="user.userPassword" />
+				<arg1 key="${var:minlength}" />
+				<var>
+					<var-name>minlength</var-name>
+					<var-value>4</var-value>
+				</var>
+			</field>
+			<field property="userPassword" depends="maxlength">
+				<arg0 key="user.userPassword" />
+				<arg1 key="${var:maxlength}" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>20</var-value>
+				</var>
+			</field>			
+			<field property="userPasswordCheck" depends="required">
+				<arg0 key="user.userPasswordCheck" />
+			</field>
+			<field property="userName" depends="required,maxlength">
+				<arg0 key="user.userName" />
+				<arg1 key="${var:maxlength}" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>50</var-value>
+				</var>
+			</field>		
+			<field property="mobileNo" depends="required,maxlength">
+				<arg0 key="user.mobileNo" />
+				<arg1 key="${var:maxlength}" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>100</var-value>
+				</var>
+			</field>
+			<field property="email" depends="required,maxlength">
+				<arg0 key="user.email" />
+				<arg1 key="${var:maxlength}" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>100</var-value>
+				</var>
+			</field>
+			<field property="email" depends="email">
+				<arg0 key="user.email" />
+			</field>
+		</form>
+		<form name="userVOModify">
+			<!-- ID -->
+			<field property="userId" depends="required,minlength">
+				<arg0 key="user.userId" />
+				<arg1 key="${var:minlength}" />
+				<var>
+					<var-name>minlength</var-name>
+					<var-value>4</var-value>
+				</var>
+			</field>
+			<field property="userId" depends="maxlength">
+				<arg0 key="user.userId" />
+				<arg1 key="${var:maxlength}" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>16</var-value>
+				</var>
+			</field>
+			<field property="userId" depends="mask">
+				<arg0 key="한글" />
+				<var>
+					<var-name>mask</var-name>
+					<var-value>^[a-zA-Z0-9]*$</var-value>
+				</var>
+			</field>
+			<!-- Password -->
+			<field property="userPassword" depends="minlength">
+				<arg0 key="user.userPassword" />
+				<arg1 key="${var:minlength}" />
+				<var>
+					<var-name>minlength</var-name>
+					<var-value>4</var-value>
+				</var>
+			</field>
+			<field property="userPassword" depends="maxlength">
+				<arg0 key="user.userPassword" />
+				<arg1 key="${var:maxlength}" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>20</var-value>
+				</var>
+			</field>
+			<field property="userName" depends="required,maxlength">
+				<arg0 key="user.userName" />
+				<arg1 key="${var:maxlength}" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>50</var-value>
+				</var>
+			</field>		
+			<field property="mobileNo" depends="required,maxlength">
+				<arg0 key="user.mobileNo" />
+				<arg1 key="${var:maxlength}" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>100</var-value>
+				</var>
+			</field>
+			<field property="email" depends="required,maxlength">
+				<arg0 key="user.email" />
+				<arg1 key="${var:maxlength}" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>100</var-value>
+				</var>
+			</field>
+			<field property="email" depends="email">
+				<arg0 key="user.email" />
+			</field>
+		</form>
+	</formset>
+
+</form-validation>

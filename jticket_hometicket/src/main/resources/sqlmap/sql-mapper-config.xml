@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<typeAliases>
+		<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap" />
+		
+		<typeAlias alias="searchCriteria" type="com.bluecom.common.domain.SearchCriteria"/>
+		<typeAlias alias="memberSalesCriteria" type="com.bluecom.common.domain.MemberSalesCriteria"/>
+		
+		<!-- TicketingMapper -->
+		<typeAlias alias="productGroup" type="com.bluecom.ticketing.domain.ProductGroupDTO" />
+		<typeAlias alias="product" type="com.bluecom.ticketing.domain.ProductDTO" />
+		<typeAlias alias="bookopen" type="com.bluecom.ticketing.domain.BookOpenVO" />
+		<typeAlias alias="schedule" type="com.bluecom.ticketing.domain.ScheduleDTO" />
+		<typeAlias alias="sale" type="com.bluecom.ticketing.domain.SaleDTO" />
+		<typeAlias alias="saleProduct" type="com.bluecom.ticketing.domain.SaleProductDTO" />
+		<typeAlias alias="reserverInfo" type="com.bluecom.ticketing.domain.ReserverInfoDTO" />
+		<typeAlias alias="webPayment" type="com.bluecom.ticketing.domain.WebPaymentDTO" />
+		<typeAlias alias="webPaymentProduct" type="com.bluecom.ticketing.domain.WebPaymentProductDTO" />
+		<typeAlias alias="webPaymentStatus" type="com.bluecom.ticketing.domain.WebPaymentStatusDTO" />
+		<typeAlias alias="webPaymentVisitor" type="com.bluecom.ticketing.domain.WebPaymentVisitorDTO" />
+		<typeAlias alias="webPaymentPgResult" type="com.bluecom.ticketing.domain.WebPaymentPgResultDTO" />
+		<typeAlias alias="finishTrade" type="com.bluecom.ticketing.domain.FinishTradeVO" />		
+		<typeAlias alias="refund" type="com.bluecom.ticketing.domain.RefundVO" />
+		<typeAlias alias="company" type="com.bluecom.ticketing.domain.CompanyVO" />
+		<typeAlias alias="shopDetail" type="com.bluecom.ticketing.domain.ShopDetailVO" />
+		<typeAlias alias="saleVO" type="com.bluecom.ticketing.domain.SaleVO" />
+		<typeAlias alias="memberSaleVO" type="com.bluecom.ticketing.domain.MemberSalesVO" />
+		<typeAlias alias="verificationKeyVO" type="com.bluecom.ticketing.domain.VerificationKeyVO" />
+		<typeAlias alias="essential" type="com.bluecom.ticketing.domain.EssentialDTO" />
+		<typeAlias alias="coupon" type="com.bluecom.ticketing.domain.CouponVO" />
+
+		<typeAlias alias="alimTalkTemplate" type="com.bluecom.common.domain.AlimTalkTemplateDTO" />
+		<typeAlias alias="alimTalk" type="com.bluecom.common.domain.AlimTalkDTO" />
+		
+		<typeAlias alias="companyWebReservationKeyVO" type="com.bluecom.common.domain.CompanyWebReservationKeyVO"/>
+		
+		
+		<typeAlias alias="refundHistoryVO" type="com.bluecom.ticketing.domain.RefundHistoryVO"/>		
+		<typeAlias alias="paymentSaleVO" type="com.bluecom.ticketing.domain.ShopPaymentsaleVO"/>
+		
+		<typeAlias alias="BookOpen" type="com.bluecom.ticketing.domain.BookOpenVO"/>
+	</typeAliases>
+</configuration>

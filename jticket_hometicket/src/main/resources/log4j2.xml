@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %5p [%c] %m%n" />
+        </Console>
+        
+        <RollingFile name="rollingFile" fileName="${sys:catalina.home}/logs/jticket.log" filePattern="${sys:catalina.home}/logs/jticket.log-%d{yyyy-MM-dd}-%i">
+			<PatternLayout pattern="%d %5p [%c] %m%n" />
+			<Policies>
+				<!-- interval(default 1)이므로 1일 간격으로 rolling 수행 --> 
+				<OnStartupTriggeringPolicy /> 
+				<TimeBasedTriggeringPolicy interval="1"/>
+			</Policies>
+		</RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="java.sql" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="rollingFile" />
+        </Logger>
+        <Logger name="com.bluecom" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="rollingFile" />
+        </Logger>
+          <!-- log SQL with timing information, post execution -->
+        <Logger name="jdbc.sqltiming" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="rollingFile" />
+        </Logger>
+        <Logger name="org.springframework" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="rollingFile" />
+        </Logger>
+        <Root level="DEBUG">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="rollingFile" />
+        </Root>
+    </Loggers>
+</Configuration>

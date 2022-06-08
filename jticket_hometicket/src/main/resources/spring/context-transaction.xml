@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+    	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+<!-- 			<property name="dataSource" ref="dataSourceMySQL" /> -->
+	</bean>
+
+<!-- 	<bean id="dataSourceMySQL" class="net.sf.log4jdbc.Log4jdbcProxyDataSource"> -->
+<!-- 		<constructor-arg ref="dataSource" /> -->
+<!-- 		<property name="logFormatter"> -->
+<!-- 			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter"> -->
+<!-- 				<property name="loggingType" value="MULTI_LINE" /> -->
+<!-- 				<property name="sqlPrefix" value="" /> -->
+<!-- 			</bean> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			
+			<tx:method name="*" rollback-for="Exception"/>
+			<!-- TODO: 트랜젝션 제한, 필요시 변경 -->
+<!-- 			<tx:method name="select*" propagation="REQUIRED" rollback-for="Exception" /> -->
+<!-- 			<tx:method name="isnert*" propagation="REQUIRED" rollback-for="Exception" /> -->
+<!-- 			<tx:method name="update*" propagation="REQUIRED" rollback-for="Exception" /> -->
+<!-- 			<tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception" /> -->
+<!-- 			<tx:method name="add" propagation="REQUIRED" rollback-for="Exception" /> -->
+<!-- 			<tx:method name="del" propagation="REQUIRED" rollback-for="Exception" /> -->
+			
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:pointcut id="requiredTx" expression="execution(* com.bluecom..impl.*Impl.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="requiredTx" />
+	</aop:config>
+
+</beans>

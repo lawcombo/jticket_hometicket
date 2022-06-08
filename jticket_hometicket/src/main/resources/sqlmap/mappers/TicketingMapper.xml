@@ -1,0 +1,1018 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ticketingMapper">
+	<!-- 쿠폰 존재유무 확인 / 2021-10-13 / 조미근 -->
+	<select id="selectCouponCheck" resultType="int">
+		SELECT COUNT(*)
+		FROM bc_paymentsale
+		WHERE shop_code=#{shop_code}
+		AND sale_code=#{sale_code}
+		AND payment_code='0010'
+	</select>
+	
+	<!-- 취소시 web_payment_coupon update / 2021-10-13 / 조미근 -->
+	<update id="updateCouponUseYn" parameterType="String">
+		UPDATE bc_web_payment_coupon
+		SET use_yn=0
+		WHERE web_payment_idx=fn_get_web_content_idx(#{order_no})
+	</update>
+	
+	<!-- 취소시 쿠폰 정보 update / 2021-10-13 / 조미근 -->
+	<update id="updateCouponCancelDate" parameterType="java.util.List">
+		<foreach collection="list" item="item" separator=";">
+			UPDATE mb_coupon_num
+			SET cpm_use_date=#{item.cpm_use_date}, cpm_cancel_date=NOW(), cpm_use_info=#{item.cpm_use_info} 
+			WHERE cpm_num=#{item.cpm_num} AND company_code=#{item.company_code} AND cpm_cpn_code=#{item.cpm_cpn_code}
+		</foreach>
+	</update>
+	
+	<!-- 사용한 쿠폰 가져오기 / 2021-10-13 / 조미근 -->
+	<select id="selectCouponByWebPaymetIdx" resultType="coupon">
+		SELECT web_payment_idx, company_code, cpm_num, use_yn, cpn_name, cpn_sale_cost, cpm_cpn_code
+		FROM bc_web_payment_coupon
+		WHERE web_payment_idx=fn_get_web_content_idx(#{order_no})
+	</select>
+
+	<!-- 쿠폰 사용 정보 update / 2021-10-13 / 조미근 -->
+	<update id="updateCouponUseDate" parameterType="java.util.List">
+		<foreach collection="list" item="item" separator=";">
+			UPDATE mb_coupon_num
+			SET cpm_use_date=NOW(), cpm_cancel_date=#{item.cpm_cancel_date}, cpm_use_info=#{item.cpm_use_info}
+			WHERE cpm_num=#{item.cpm_num} AND company_code=#{item.company_code} AND cpm_cpn_code=#{item.cpm_cpn_code}
+		</foreach>
+	</update>
+
+	<!-- 쿠폰 사용 insert / 2021-10-13 / 조미근 -->
+	<insert id="insertWebPaymentCoupon" parameterType="java.util.List">
+			INSERT INTO bc_web_payment_coupon
+					(idx, web_payment_idx, company_code, cpm_num, cpm_cpn_code, use_yn, cpn_name, cpn_sale_cost)
+			VALUES	
+			<foreach collection="list" item="item" separator=",">
+				(#{item.idx}, #{item.web_payment_idx}, #{item.company_code}, #{item.cpm_num}, #{item.cpm_cpn_code}, 
+						#{item.use_yn}, #{item.cpn_name}, #{item.cpn_sale_cost})
+			</foreach>
+	</insert>
+	
+	<!-- 쿠폰 그룹 조회 / 2021-10-12 / 조미근 -->
+	<select id="selectCouponGroup" parameterType="coupon" resultType="coupon">
+		SELECT product_group_code
+		FROM mb_coupon_product_group
+		WHERE cpn_code=#{cpm_cpn_code}
+	</select>
+	
+	<!-- 쿠폰 번호 조회 / 2021-10-12 / 조미근 -->
+	<select id="selectCouponByCouponNum" parameterType="coupon" resultType="coupon">
+		SELECT 
+			mc.company_code,
+			mcn.cpm_cpn_code, mcn.cpm_num, mc.cpn_name, mc.cpn_sale_cost, mc.cpn_use_product,
+			mcn.cpm_from_date, mcn.cpm_to_date, mcn.cpm_use_date, mc.cpn_sale_type
+		FROM mb_coupon mc
+		JOIN mb_coupon_num mcn
+		ON mc.cpn_code = cpm_cpn_code
+		WHERE mcn.cpm_num = #{cpm_num} 
+				AND (mc.company_code = (SELECT company_code FROM bc_shop WHERE content_mst_cd=#{content_mst_cd})
+						OR mc.company_code = #{company_code}
+					)
+	</select>
+	
+	<!-- 구매한 상품정보 가져오기 -->
+	<select id="selectPurchaseProduct" parameterType="sale" resultType="saleProduct">
+		SELECT bsp.product_code, bsp.product_name, SUM(bsp.quantity) AS actual_quantity
+		     , bp.remark
+		FROM bc_sale_product bsp
+		JOIN bc_product bp
+		ON bsp.product_shop_code = bp.shop_code
+		AND bsp.product_code = bp.product_code
+		WHERE bsp.sale_shop_code = (SELECT shop_code FROM bc_shop WHERE content_mst_cd =#{content_mst_cd})
+		AND bsp.refund_yn=0 AND bsp.sale_type='SS' and bsp.sale_code=#{sale_code}
+		GROUP BY bsp.product_code
+	</select>
+	
+	<!-- book_no 가져오기 / 2021-09-27 / 조미근 -->
+	<select id="selectBookNoBySaleCode" parameterType="sale" resultType="saleProduct">
+		SELECT book_no, product_fee
+		FROM bc_sale_product
+		WHERE sale_code=#{sale_code}
+		AND refund_yn=0
+	</select>
+
+	<!-- 수정 / 2021-09-03 / 조미근 -->
+	<select id="selectProductGroups" parameterType="String" resultType="productGroup">
+		<![CDATA[
+			select 
+				bpg.*, bp.product_min, bs.content_mst_cd, bs.piece_ticket_yn, btv.valid_period, bp.schedule_yn, bp.common_yn
+			from 
+			bc_productgroup bpg
+			join bc_shop bs on bpg.shop_code = bs.shop_code
+			join (
+				select 
+					bp_s.product_group_code, count(bp_s.product_code) as product_count, min(product_fee) as product_min, 
+					bp_s.schedule_yn AS schedule_yn, bp_s.common_yn AS common_yn
+				from 
+					bc_product bp_s
+				where 
+					bp_s.shop_code = (SELECT shop_code FROM bc_shop where CONTENT_MST_CD = #{content_mst_cd})
+					and delete_yn = 0
+				group by 
+					bp_s.product_group_code
+			) bp on bpg.product_group_code = bp.product_group_code and bp.product_count > 0
+			left join bc_ticketvalid btv on bs.shop_code = btv.shop_code
+			where 
+				bpg.shop_code = (SELECT shop_code FROM bc_shop where CONTENT_MST_CD = #{content_mst_cd}) 
+				and bpg.delete_yn = 0 
+				and bpg.web_book_yn = 1 
+				and bpg.product_group_code=#{product_group_code}
+			order by bpg.order_no
+		]]>
+
+	</select>
+	
+	<select id="selectProductGroup" parameterType="productGroup" resultType="productGroup">
+		<![CDATA[
+			select 
+				bpg.*, bp.product_min, bs.content_mst_cd, bs.piece_ticket_yn, btv.valid_period, bp.schedule_yn, bp.common_yn
+			from 
+				bc_productgroup bpg
+			join bc_shop bs on bpg.shop_code = bs.shop_code
+			join (
+				select 
+					bp_s.product_group_code, count(bp_s.product_code) as product_count, min(product_fee) as product_min,
+					bp_s.schedule_yn AS schedule_yn, bp_s.common_yn AS common_yn
+				from 
+					bc_product bp_s
+				where 
+					bp_s.shop_code = #{shop_code}
+					and delete_yn = 0
+				group by 
+					bp_s.product_group_code
+			) bp on bpg.product_group_code = bp.product_group_code and bp.product_count > 0
+			left join bc_ticketvalid btv on bs.shop_code = btv.shop_code
+			where 
+				bpg.shop_code = #{shop_code}
+				and bpg.product_group_code = #{product_group_code}
+				and bpg.delete_yn = 0 
+				and bpg.web_book_yn = 1 
+		]]>
+
+	</select>
+
+	<select id="selectProducts" parameterType="productGroup" resultType="product">
+		<![CDATA[
+			SELECT 
+				bp.*, btv.valid_period, IFNULL(bc.common_name, '-') AS product_kind_name, bp.common_yn
+			FROM 
+				bc_product bp 
+				LEFT JOIN bc_ticketvalid btv on bp.shop_code = btv.shop_code
+				LEFT JOIN (
+					SELECT * FROM bc_common WHERE common_group_code = 'T020'
+				) bc ON bp.product_kind = bc.common_code
+			WHERE
+				bp.shop_code = (SELECT shop_code FROM bc_shop WHERE CONTENT_MST_CD = #{content_mst_cd})
+				AND bp.product_group_code = #{product_group_code}
+				AND bp.web_yn = 1
+				AND bp.delete_yn = 0
+				AND bp.schedule_yn=1
+			ORDER BY 
+				bp.order_no, bp.product_code
+		]]>
+
+	</select>
+	
+	<select id="selectVisitorType" parameterType="String" resultType="String">
+		<![CDATA[
+			select 
+				person_type as visitorType
+			from 
+				bc_shop
+			where
+				shop_code = #{shop_code}
+		]]>
+
+	</select>
+	
+	<!-- 예약가능 날짜 가져오기 / 2022-01-18 / 조미근(수정) -->
+	<select id="selectBookOpenList" parameterType="BookOpen" resultType="BookOpen">
+		<![CDATA[
+			SELECT
+				bbo.shop_code,
+				bbo.play_date,
+				bs.product_group_code
+			FROM 
+				bc_book_open bbo
+				left join (
+					select 
+						shop_code, SCHEDULE_CODE, PRODUCT_GROUP_CODE, play_date_from, PLAY_DATE_TO, count(SCHEDULE_CODE)
+					from bc_schedule bs 
+					where
+						bs.SHOP_CODE = (SELECT shop_code FROM bc_shop where content_mst_cd = #{content_mst_cd})
+						and bs.PRODUCT_GROUP_CODE = #{product_group_code}
+					group BY 
+						bs.PLAY_DATE_FROM 
+				) bs on bbo.shop_code = bs.shop_code
+					and SUBSTRING(REPLACE(bbo.play_date, '-',''),5,4) >= bs.play_date_from
+					and SUBSTRING(REPLACE(bbo.play_date, '-',''),5,4) <= bs.play_date_to
+			WHERE
+				1=1
+				AND bbo.shop_code = (SELECT shop_code FROM bc_shop where content_mst_cd = #{content_mst_cd})
+				AND bbo.book_yn = '1'
+				and TIMESTAMPDIFF(SECOND, bbo.start_date, now()) > 0
+				and bs.product_group_code = #{product_group_code}
+				AND bbo.play_date >= #{date}
+		]]>
+	</select>
+	
+	<select id="selectSchedule" parameterType="java.util.List" resultType="schedule">
+		<![CDATA[
+			SELECT
+				SHOP_CODE AS shop_code, 
+				SCHEDULE_CODE AS schedule_code, 
+				PRODUCT_GROUP_CODE AS product_group_code,
+				PLAY_SEQUENCE AS play_sequence, 
+				START_TIME AS start_time, 
+				END_TIME as end_time,
+				total_count,
+				START_TIME AS subject_text,
+				(TOTAL_COUNT - (select IFNULL(sum(p.QUANTITY ),0) 
+					from bc_sale_product p
+					where
+						p.SALE_SHOP_CODE = AA.SHOP_CODE 
+						and p.REFUND_YN ='0' 
+						and p.PACKAGE_YN ='0' 
+						and p.PLAY_DATE =#{play_date} 
+						and ((p.SALE_TYPE ='SS' AND p.ONLINE_YN = '1') OR (p.SALE_TYPE ='TS' AND p.ONLINE_YN = '0'))
+						and p.SCHEDULE_CODE = AA.SCHEDULE_CODE
+					)
+				) AS sumCout,
+				play_date_from,
+				play_date_to
+			FROM 
+				bc_schedule AS AA
+			WHERE
+				1=1
+				AND shop_code = (SELECT shop_code FROM bc_shop where CONTENT_MST_CD = #{contentMstCd}) 
+				AND PRODUCT_GROUP_CODE = #{product_group_code}
+				AND PRODUCT_GROUP_TYPE = 'TCIT'
+				AND SALE_YN ='1' 
+				AND DELETE_YN = '0'
+				AND SUBSTRING(REPLACE(#{play_date}, '-',''),5,4) between PLAY_DATE_FROM and PLAY_DATE_TO
+				AND (START_TIME > (DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 MINUTE), '%H:%i')) && DATE(NOW()) = STR_TO_DATE(#{play_date}, '%Y-%m-%d') || STR_TO_DATE(#{play_date}, '%Y-%m-%d') > CURDATE())
+				AND if(sale_weekday is null or sale_weekday = '', 1=1, sale_weekday LIKE CONCAT('%', WEEKDAY(#{play_date}), '%'))
+		]]>
+		<!-- CONCAT(PLAY_SEQUENCE, '회차 (', START_TIME, '~', END_TIME, ')') AS subject_text, -->
+	</select>
+	
+	<!-- 권종선택 출력 / 수정: 2021-09-02 / 조미근 -->
+	<select id="selectProcess2Product" parameterType="productGroup" resultType="product">
+		<![CDATA[
+			SELECT 
+				bp.*, IFNULL(bc.common_name, '-') AS product_kind_name
+			FROM 
+				bc_product bp 
+				LEFT JOIN (
+					SELECT * FROM bc_common WHERE common_group_code = 'T020'
+				) bc ON bp.product_kind = bc.common_code
+			WHERE
+				bp.shop_code = (SELECT shop_code FROM bc_shop WHERE CONTENT_MST_CD = #{content_mst_cd}) 
+				AND bp.product_group_code = #{product_group_code}
+				AND bp.web_yn = 1
+				AND bp.delete_yn = 0
+				AND bp.schedule_yn=1
+				ORDER BY bp.order_no
+		]]>
+	</select>
+	
+	<!-- 수정 / 2021-09-08 / 조미근 -->
+	<select id="selectCheckTicket" parameterType="sale" resultType="sale">
+		<![CDATA[
+		SELECT
+			salepro.shop_code,
+			salepro.sale_code,
+			salepro.order_num,
+			salepro.member_name,
+			salepro.member_tel,
+			salepro.payment_case,
+			salepro.payment_yn,
+			salepro.sale_date,
+			salepro.sale_type,
+			salepro.refund_yn,
+			salepro.product_name,
+			salepro.quantity,
+			salepro.play_date
+			, IF(IFNULL(sch.PLAY_SEQUENCE, '') = '', '', CONCAT(sch.START_TIME, '~', sch.END_TIME)) AS schedule_text
+			, concat(salepro.play_date, ' ', sch.start_time, ':00') as work_datetime
+		FROM
+		(SELECT
+				sale.shop_code,
+				sale.sale_code,
+				sale.order_num,
+				sale.member_name,
+				sale.member_tel,
+				sale.payment_case,
+				sale.payment_yn,
+				sale.sale_date,
+				sale.sale_type,
+				sale.online_channel,
+				pro.refund_yn,
+				pro.product_name,
+				pro.quantity,
+				pro.play_date,
+				pro.schedule_code
+			FROM
+				bc_sale sale
+				INNER JOIN bc_sale_product pro ON sale.sale_code=pro.SALE_CODE) salepro
+				INNER JOIN bc_schedule sch
+					ON salepro.schedule_code=sch.schedule_code 
+						AND salepro.shop_code=sch.shop_code 
+						and SUBSTRING(REPLACE(salepro.PLAY_DATE, '-',''),5,4) between sch.PLAY_DATE_FROM and sch.PLAY_DATE_TO
+		WHERE 
+			salepro.member_name = #{member_name}
+			AND salepro.member_tel = #{member_tel}
+			AND salepro.shop_code = (SELECT shop_code FROM bc_shop WHERE content_mst_cd = #{content_mst_cd}) 
+			AND salepro.sale_type = 'SS'
+			AND CONCAT(salepro.play_date, ' ', sch.start_time, ':00') >= now()
+			AND salepro.refund_yn=0
+			AND salepro.online_channel='1001'
+			GROUP BY salepro.sale_code
+			ORDER BY salepro.sale_date DESC
+		]]>
+	</select>
+	
+	<!-- 예매내역이 N건인 경우 리스트 (추가) / 2021-09-10 / 조미근 -->
+	<select id="selectSaleProductList" parameterType="sale" resultType="saleProduct">
+		SELECT 
+			T.sale_shop_code
+			, T.sale_code
+			, F.order_num 
+			, F.member_name AS person_name
+			, F.member_tel AS person_mobile_no
+			, F.sale_date
+			, F.sale_type
+			, F.refund_yn
+			, T.play_date
+			, C.start_time AS schedule_text
+			, concat(T.play_date, ' ', C.start_time, ':00') AS work_datetime
+			, G.idx AS web_payment_idx
+			, G.total_count AS quantity
+			, G.total_fee AS product_fee
+			, B.product_name AS product_name
+			, B.product_code AS product_code
+			, PG.product_group_name AS product_group_name
+			, PG.product_group_code AS product_group_code
+			, C.schedule_code
+			, T.total_count as actual_quantity
+		FROM (
+			SELECT
+				*, count(*) as total_count
+			FROM
+				bc_sale_product
+			WHERE
+				sale_shop_code = (SELECT shop_code FROM bc_shop WHERE content_mst_cd = #{content_mst_cd}) 
+				<if test='type eq 0'>
+					AND sale_code = #{sale_code}
+				</if>
+				AND refund_yn=0
+				AND sale_type='SS'
+				GROUP BY sale_code
+		) AS T
+		LEFT OUTER JOIN bc_product AS B ON T.product_code = B.product_code  AND T.product_shop_code = B.shop_code
+		LEFT OUTER JOIN bc_schedule AS C ON T.SCHEDULE_CODE = C.SCHEDULE_CODE AND T.product_shop_code = C.shop_code AND SUBSTRING(REPLACE(T.play_date, '-',''),5,4) between C.PLAY_DATE_FROM and C.PLAY_DATE_TO
+		LEFT OUTER JOIN bc_sale AS F ON T.sale_code=F.sale_code
+		LEFT OUTER JOIN bc_web_payment AS G ON F.order_num=G.order_no
+		LEFT OUTER JOIN bc_productgroup AS PG ON B.shop_code=PG.shop_code AND B.product_group_code=PG.product_group_code 
+		WHERE F.member_name=#{member_name} 
+			AND F.member_tel=#{member_tel}
+			AND CONCAT(T.play_date, ' ', C.start_time, ':00') >= now()
+			AND F.online_channel='1001'
+		ORDER BY T.sale_code DESC
+	</select>
+	
+	<!-- 수정 / 2021-09-08 / 조미근 -->
+	<select id="selectSaleProduct" parameterType="sale" resultType="saleProduct">
+	SELECT 
+		T.sale_shop_code
+		, T.sale_code
+		, T.sale_sequence
+		, T.ticket_control_no
+		, T.quantity
+		, IFNULL(T.product_shop_code , '') AS product_shop_code
+		, IFNULL(T.product_code , '') AS product_code
+		, IFNULL(F.member_name, '') AS person_name
+		, IFNULL(F.member_tel, '') AS person_mobile_no
+		, IFNULL(B.product_name , '') AS product_name
+		, IFNULL(B.product_fee , '') AS product_fee
+		, T.REFUND_YN AS refund_yn
+		, IF(IFNULL(B.product_name , '') = '', '', LEFT(T.CHECK_IN_DATETIME, 10)) AS check_in_datetime
+		, IFNULL(T.play_date, '') AS play_date
+		, IFNULL(E.play_date, '') AS playedDate
+		, IF(IFNULL(C.PLAY_SEQUENCE, '') = '', '', CONCAT(C.START_TIME, '~', C.END_TIME)) AS schedule_text
+		, IF(IFNULL(D.VALID_PERIOD , '') = '', 0, date_add(str_to_date(T.PLAY_DATE, '%Y-%m-%d'), Interval D.VALID_PERIOD day)) AS expireDate
+		, CONCAT((select replace(IFNULL(COMPANY_MST_CD, ''), '_', '/') from bc_shop where content_mst_cd = #{content_mst_cd}), '/',T.TICKET_CONTROL_NO) AS qrCode
+		, F.order_num 
+	FROM (
+		SELECT
+			*
+		FROM
+			bc_sale_product
+		WHERE
+			sale_shop_code = (SELECT shop_code FROM bc_shop WHERE content_mst_cd = #{content_mst_cd}) 
+			AND sale_code = #{sale_code}
+			<!-- AND person_name=#{member_name}
+		    AND person_mobile_no=#{member_tel}
+		    AND play_date >= curdate() -->
+			AND PACKAGE_YN = '0'
+			AND sale_type='SS'
+	) AS T
+	LEFT OUTER JOIN bc_product AS B ON T.product_code = B.product_code  AND T.product_shop_code = B.shop_code
+	LEFT OUTER JOIN bc_schedule AS C 
+		ON T.SCHEDULE_CODE = C.SCHEDULE_CODE 
+			AND T.product_shop_code = C.shop_code
+			and SUBSTRING(REPLACE(T.play_date, '-',''),5,4) between C.PLAY_DATE_FROM and C.PLAY_DATE_TO
+	LEFT OUTER JOIN bc_ticketvalid AS D ON T.product_shop_code = D.shop_code
+	LEFT OUTER JOIN bc_checkticket AS E ON T.TICKET_CONTROL_NO = E.TICKET_CONTROL_NO AND T.product_shop_code = E.shop_code
+	LEFT OUTER JOIN bc_sale AS F ON T.sale_code=F.sale_code
+	WHERE F.member_name=#{member_name} AND F.member_tel=#{member_tel}
+	ORDER BY T.sale_code DESC
+	</select>
+
+	<select id="selectSelectedProducts" parameterType="java.util.List" resultType="product">
+		
+		select 
+			bp.*, btv.valid_period, IFNULL(bc.common_name, '-') as product_kind_name
+		from 
+			bc_product bp 
+			left join bc_ticketvalid btv on bp.shop_code = btv.shop_code
+			left join (
+				select * from bc_common where common_group_code = 'T020'
+			) bc on bp.product_kind = bc.common_code
+		where
+			bp.shop_code = #{list[0].shop_code}
+			and bp.product_group_code = #{list[0].product_group_code}
+			and bp.web_yn = 1
+			and bp.delete_yn = 0
+			and bp.product_code IN (
+				<foreach collection="list" item="item" separator=",">
+					#{item.product_code}
+				</foreach>	
+			)
+			order by bp.order_no
+	</select>
+	
+	<insert id="insertWebPayment" parameterType="webPayment" useGeneratedKeys="true" keyProperty="idx">
+		<![CDATA[
+			INSERT INTO `bc_web_payment` (
+				`shop_code`,
+				`order_no`,
+				`RESERVER_AUTHENTICATION_IDX`,
+				`PRODUCT_GROUP`,
+				`TOTAL_COUNT`,
+				`TOTAL_FEE`,
+				`PAY_METHOD`,		
+				`VISITOR_TYPE`,
+				`CONTENT_MST_CD`,
+				`PIECE_TICKET_YN`,
+				`PRODUCT_GROUP_KIND`,
+				`SCHEDULE_CODE`,
+				`PLAY_SEQUENCE`,
+				`PLAY_DATE`,
+				`SHOP_NAME`,		
+				`PRODUCT_GROUP_NAME`,
+				`START_TIME`,
+				`END_TIME`,
+				`VALID_PERIOD`,
+				`AGREE_1`,
+				`AGREE_2`,
+				`PRODUCT_GROUP_TYPE`
+			) VALUES (
+				#{shop_code},
+				CONCAT('0010', DATE_FORMAT(CURDATE(), '%y%m%d'), LPAD(fn_get_last_num('bc_web_payment'), 5, '0')),
+				#{reserver_authentication_idx},
+				#{product_group},
+				#{total_count},
+				#{total_fee},
+				#{pay_method},
+				#{visitor_type},
+				#{content_mst_cd},
+				#{piece_ticket_yn},
+				#{product_group_kind},
+				#{schedule_code},
+				#{play_sequence},
+				#{play_date},
+				(select shop_name from bc_shop where shop_code = #{shop_code}),
+				#{product_group_name},
+				#{start_time},
+				#{end_time},
+				(select IFnulL(valid_period, '') from bc_ticketvalid where shop_code = #{shop_code}),
+				#{agree_1},
+				#{agree_2},
+				#{product_group_type}
+			)
+		]]>
+
+	</insert>
+	
+	<insert id="insertWebPaymentProducts" parameterType="java.util.List">
+		INSERT INTO `bc_web_payment_product` (
+			`WEB_PAYMENT_IDX`,
+			`PRODUCT_CODE`,
+			`PRODUCT_NAME`,
+			`PRODUCT_FEE`,
+			`COUNT`			
+		) VALUES 
+		<foreach collection="list" item="item" separator=",">
+			(
+				#{item.web_payment_idx},
+				#{item.product_code},
+				#{item.product_name},
+				#{item.product_fee},
+				#{item.count}
+			)
+		</foreach>
+	</insert>
+	
+	<insert id="insertWebPaymentVisitors" parameterType="java.util.List">
+		INSERT INTO `bc_web_payment_visitor` (
+			`WEB_PAYMENT_IDX`,
+			`NAME`,				
+			`PHONE`,
+			`JUMIN`,
+			`PRODUCT_CODE`,
+			`ADDR`
+		) VALUES 
+		<foreach collection="list" item="item" separator=",">
+			(
+				#{item.web_payment_idx},
+				#{item.name},
+				#{item.phone},
+				#{item.jumin},
+				#{item.product_code},
+				#{item.addr}
+			)
+		</foreach>
+	</insert>
+	
+	<insert id="insertWebPaymentStatusWithWebPaymentIdx" parameterType="webPaymentStatus">
+		INSERT INTO `bc_web_payment_status` (
+			`WEB_PAYMENT_IDX`,
+			`STATUS`,
+			`MESSAGE`,
+			`TIME`
+		) VALUES (
+			#{web_payment_idx},
+			#{status},
+			#{message},
+			NOW()	
+		)
+		
+	</insert>
+	
+	<insert id="insertWebPaymentStatus" parameterType="webPaymentStatus">
+		INSERT INTO `bc_web_payment_status` (
+			`WEB_PAYMENT_IDX`,
+			`STATUS`,
+			`MESSAGE`,
+			`TIME`
+		) VALUES (
+			fn_get_web_content_idx(#{orderNo}),
+			#{status},
+			#{message},
+			NOW()	
+		)
+		
+	</insert>
+	
+	<select id="selectWebPaymentOrderNo" parameterType="int" resultType="String">
+		<![CDATA[
+			SELECT 
+				order_no
+			FROM
+				bc_web_payment
+			WHERE
+				1=1
+				AND idx = #{idx}
+		]]>
+	</select>
+	
+	
+	<update id="updateWebPaymentPayId" parameterType="webPaymentStatus">
+		UPDATE
+			bc_web_payment
+		SET
+			pay_id = #{message}
+		WHERE
+			ORDER_NO = #{orderNo}
+	</update>
+	
+	<insert id="insertWebPaymentPgResult" parameterType="webPaymentPgResult">
+		INSERT INTO `bc_web_payment_pg_result`(
+			`web_payment_idx`,
+			`auth_result_code`,
+			`auth_result_msg`,
+			`next_ap_url`,
+			`transaction_id`,
+			`auth_token`,
+			`pay_method`,
+			`mid`,
+			`moid`,
+			`amt`,
+			`net_cancel_url`,
+			`auth_code`,
+			`auth_date`,
+			`approval_result_code`,
+			`approval_result_msg`,
+			`tid`
+		) VALUES (
+			fn_get_web_content_idx(#{moid}),
+			#{auth_result_code},
+			#{auth_result_msg},
+			#{next_ap_url},
+			#{transaction_id},
+			#{auth_token},
+			#{pay_method},
+			#{mid},
+			#{moid},
+			#{amt},
+			#{net_cancel_url},
+			#{auth_code},
+			#{auth_date},
+			#{approval_result_code},
+			#{approval_result_msg},
+			#{tid})
+		
+	</insert>
+	
+	<select id="selectWebPaymentByOrderNo" parameterType="String" resultType="webPayment">
+		<![CDATA[
+			SELECT 
+				bwp.*, bra.name as reserverName, bra.phone as reserverPhone, bra.email as reserverEmail
+			FROM
+				bc_web_payment bwp
+			left join bc_reserver_authentication bra on bwp.RESERVER_AUTHENTICATION_IDX = bra.idx
+			WHERE
+				1=1
+				AND bwp.ORDER_NO = #{order_no}
+		]]>
+	</select>
+	
+	<update id="updateReserverEmail" parameterType="reserverInfo">
+		UPDATE
+			bc_reserver_authentication
+		SET
+			email = #{email}
+		WHERE
+			1=1
+			AND idx = #{idx}
+	</update>
+	
+	<select id="selectWebPaymentProductsByOrderNo" parameterType="String" resultType="webPaymentProduct">
+		<![CDATA[
+		
+			select
+		        bwpp.*, bwpv.name, bwpv.phone, bwpv.jumin, bwpv.addr
+		    from
+		        bc_web_payment_product bwpp
+		        left join bc_web_payment_visitor bwpv on bwpp.WEB_PAYMENT_IDX = bwpv.WEB_PAYMENT_IDX and bwpp.product_code = bwpv.product_code
+		    where
+		        1=1
+		        and bwpp.web_payment_idx = (select idx from bc_web_payment where order_no = #{order_no})
+		]]>
+	</select>
+	
+	<select id="selectWebSaleSequence" resultType="String">
+		<![CDATA[
+			select 
+				concat('0010', date_format(curdate(), '%y%m%d'), lpad(fn_get_last_num('bc_web_ticket_sale_product'), 8, '0'))
+		]]>
+	</select>
+	
+	<select id="selectWebSaleSequences" parameterType="int" resultType="String">
+		<![CDATA[
+			select 
+				concat('0010', date_format(curdate(), '%y%m%d'), lpad((fn_get_last_numbers('bc_web_ticket_sale_product', #{count}) - #{count} + 1), 8, '0'))
+		]]>
+	</select>
+	
+	<!-- 수정 / 2021-09-03 / 조미근 -->
+	<select id="selectFinishTrade" resultType="finishTrade" >
+		SELECT 
+			bs.work_datetime,
+			bwp.total_fee,
+			bwp.total_count,
+			IF(bwp.PAY_METHOD = 'CELLPHONE', '휴대폰', IF(bwp.PAY_METHOD = 'CARD ', '신용카드', IF(bwp.PAY_METHOD = 'BANK', '계좌이체', '기타'))) AS pay_method,
+			bs.order_num,
+			bs.sale_date,
+			bsh.shop_name,
+			bs.member_name,
+			bs.member_tel,
+			IFNULL(bs.member_email, '') AS member_email,
+			SUM(bsp.quantity) AS quantity,
+			bsp.play_date,
+			bsp.product_name,
+			bsd.start_time,
+			bsd.end_time,
+			bsd.play_sequence,
+			bwp.product_group_kind,
+			bwp.product_group_type,
+			bwp.product_group_name
+		FROM 
+			bc_sale bs
+		JOIN bc_sale_product bsp ON bs.SHOP_CODE = bsp.SALE_SHOP_CODE AND bs.sale_code = bsp.sale_code
+		JOIN bc_shop bsh ON bs.shop_code = bsh.shop_code
+		JOIN bc_web_payment bwp ON bs.SHOP_CODE = bwp.SHOP_CODE AND bs.order_num = bwp.order_no
+		LEFT JOIN bc_schedule bsd 
+			ON bsp.sale_shop_code = bsd.shop_code 
+				AND bsp.schedule_code = bsd.schedule_code
+				and SUBSTRING(REPLACE(bsp.PLAY_DATE, '-',''),5,4) between bsd.PLAY_DATE_FROM and bsd.PLAY_DATE_TO
+		WHERE
+			bs.shop_code = (SELECT shop_code FROM bc_shop WHERE CONTENT_MST_CD = #{contentMstCd}) 
+			AND bs.order_num = #{orderNo}
+			AND bs.sale_type = 'ss'
+		GROUP BY bsp.product_code
+	
+	</select>
+	
+	<select id="selectWebPaymentPgResult" parameterType="String" resultType="webPaymentPgResult" >
+		SELECT 
+			pr.*, wp.visitor_type, ra.name, ra.phone
+		FROM 
+			bc_web_payment_pg_result pr
+		join bc_web_payment wp on wp.idx = pr.web_payment_idx
+		join bc_reserver_authentication ra on wp.RESERVER_AUTHENTICATION_IDX = ra.idx
+		where
+			WEB_PAYMENT_IDX = fn_get_web_content_idx(#{orderNo})
+		order by idx desc
+		limit 1;
+	</select>
+	
+	<!-- pg_result 취소승인기록하기 / 2021-09-28 / 조미근 -->
+	<update id="updateWebPaymentPgResult" parameterType="webPaymentPgResult">
+		UPDATE 
+			bc_web_payment_pg_result
+		SET result_code=#{result_code}, result_msg=#{result_msg}, cancel_amt=#{cancel_amt}, cancel_time=#{cancel_time}
+		WHERE tid=#{tid}
+	</update>
+	
+	<select id="selectScheduleByScheduleCode" parameterType="schedule" resultType="schedule">
+		<![CDATA[
+			select 
+				*
+			from 
+				bc_schedule
+			where
+				shop_code = #{shop_code}
+				and schedule_code = #{schedule_code}
+				AND SUBSTRING(REPLACE(#{play_date_from}, '-',''),5,4) between PLAY_DATE_FROM and PLAY_DATE_TO
+		]]>
+
+	</select>
+	
+	<!-- 수정 / 2021-09-03 -->
+	<select id="selectRefund" parameterType="sale" resultType="refund">
+		<![CDATA[
+			SELECT 
+				s.shop_code, 
+				s.order_num, 
+				s.sale_date, 
+				s.member_name,
+				s.member_tel, 
+				sp.play_date, 
+				sp.refund_yn,
+				wp.VALID_PERIOD,
+				sp.ticket_control_no, 
+				count(ct.ticket_control_no) as used_count,
+				date_add(str_to_date(s.sale_date, '%Y-%m-%d'), Interval wp.valid_period day) as expire_date,
+				wp.start_time,
+				wp.product_group_kind,
+				wp.product_group_type,
+				concat(sp.play_date, ' ', wp.start_time, ':00') as play_datetime
+			FROM 
+				bc_sale s
+				JOIN bc_sale_product sp ON s.shop_code = sp.sale_shop_code and s.sale_code = sp.sale_code
+				JOIN bc_web_payment wp ON s.shop_code = wp.shop_code and s.order_num = wp.order_no
+				LEFT JOIN bc_checkticket ct ON sp.sale_shop_code = ct.shop_code and sp.ticket_control_no = ct.TICKET_CONTROL_NO and gate_no = '0'
+			WHERE 
+				s.SHOP_CODE = (SELECT shop_code FROM bc_shop WHERE CONTENT_MST_CD = #{content_mst_cd}) 
+				and s.order_num = #{order_num}
+				and s.sale_date <= curdate()
+				and s.sale_type = 'SS'
+			GROUP BY
+				ct.ticket_control_no
+		]]>		
+	</select>
+	
+	<select id="selectCompany" parameterType="String" resultType="company">
+		<![CDATA[
+			select 
+				* 
+			from bc_company
+			where
+				COMPANY_CODE = fn_get_company_code(#{shopCode})
+		]]>
+
+	</select>
+	
+	<select id="selectShopDetail" parameterType="String" resultType="shopDetail">
+		<![CDATA[
+			select 
+				s.*, c.alimtalk_comp_code, c.alimtalk_sender_key, c.comp_tel	
+			from 
+				bc_shop s
+			join bc_company c on c.company_code = s.company_code
+			where 
+				s.shop_code = #{shopCode}
+		]]>
+
+	</select>
+
+	<select id="selectShopDetailByContentMstCd" parameterType="String" resultType="shopDetail">
+		<![CDATA[
+			select 
+				*
+			from 
+				bc_shop
+			where 
+				shop_code = (SELECT shop_code FROM bc_shop where CONTENT_MST_CD = #{contentMstCd}) 
+		]]>
+
+	</select>
+	
+	<select id="selectSaleSsByOrderNum" parameterType="saleVO" resultType="saleVO">
+		<![CDATA[
+			select 
+				*
+			from 
+				bc_sale
+			where 
+				shop_code = #{shop_code}
+				AND order_num = #{order_num}
+				AND sale_type = 'SS'
+		]]>
+	</select>
+	
+	<select id="selectSaleProductsTsBySaleCode" parameterType="saleVO" resultType="saleVO">
+		<![CDATA[
+			select 
+				*
+			from 
+				bc_sale
+			where 
+				shop_code = #{shop_code}
+				AND ticket_control_no = #{ticket_control_no}
+		]]>
+	</select>
+	
+	<select id="selectMemberSales" parameterType="memberSalesCriteria" resultType="memberSaleVO">
+		<![CDATA[
+			select 
+				s.WORK_DATETIME, s.ORDER_NUM, sp.schedule_code, sc.START_TIME, sc.END_TIME, sp.play_date, 
+				s.VALID_FROM, s.VALID_TO, sum(sp.QUANTITY) as quantity, sum(sp.REFUND_YN) as refund, 
+				pg.PRODUCT_GROUP_NAME, sum(sp.PRODUCT_FEE) as fee, s.sale_code, sc.play_sequence
+			from 
+				bc_sale s
+			join bc_sale_product sp on s.SHOP_CODE = sp.SALE_SHOP_CODE and s.SALE_CODE = sp.SALE_CODE
+			join bc_product p on s.SHOP_CODE = p.SHOP_CODE and sp.PRODUCT_CODE = p.PRODUCT_CODE
+			join bc_productgroup pg on p.SHOP_CODE = pg.SHOP_CODE and p.PRODUCT_GROUP_CODE = pg.PRODUCT_GROUP_CODE
+			left join bc_schedule sc 
+				on sp.SALE_SHOP_CODE = sc.SHOP_CODE 
+				and sp.SCHEDULE_CODE = sc.SCHEDULE_CODE
+				and SUBSTRING(REPLACE(sp.PLAY_DATE, '-',''),5,4) between sc.PLAY_DATE_FROM and sc.PLAY_DATE_TO
+			where
+				s.shop_code = (SELECT shop_code FROM bc_shop where CONTENT_MST_CD = #{contentMstCd}) 
+				and s.MEMBER_YN = '1'
+				and s.member_no = #{memberCode}
+				and sp.PACKAGE_YN = 0
+				and s.SALE_TYPE = 'SS'    
+				and s.ORDER_NUM is not null
+				and s.SALE_KIND_CODE = '0030'
+				and s.ONLINE_CHANNEL = '0010'
+				and date(s.SALE_DATE) between #{startDate} and #{endDate}   
+			group by
+				s.SHOP_CODE, s.ORDER_NUM
+			order by
+				s.reg_date desc
+			limit #{pageStart}, #{perPageNum}
+		]]>
+	</select>
+	
+	<select id="selectReserveInfo" parameterType="String" resultType="com.bluecom.ticketing.domain.WebReservationKeyDTO">
+		SELECT company_code, info_a_title, info_a, info_b_title, info_b
+				, info_c_title, info_c, info_d_title, info_d
+		FROM bc_web_reservation_key
+		WHERE company_code = (SELECT company_code FROM bc_shop WHERE shop_code = #{shop_code})
+
+	</select>
+	
+	<select id="selectReserveInfoByCompanyCode" parameterType="String" resultType="com.bluecom.ticketing.domain.WebReservationKeyDTO">
+		SELECT company_code, info_a_title, info_a, info_b_title, info_b
+				, info_c_title, info_c, info_d_title, info_d
+		FROM bc_web_reservation_key
+		WHERE company_code = #{company_code}
+
+	</select>
+	
+	<select id="selectMemberSalesCount" parameterType="memberSalesCriteria" resultType="int">
+		<![CDATA[
+			select
+				count(*)
+			from (
+				select 
+					s.ORDER_NUM
+				from 
+					bc_sale s
+					join bc_sale_product sp on s.SHOP_CODE = sp.SALE_SHOP_CODE and s.SALE_CODE = sp.SALE_CODE
+				where
+					s.shop_code = (SELECT shop_code FROM bc_shop where CONTENT_MST_CD = #{contentMstCd}) 
+					and s.MEMBER_YN = '1'
+					and s.member_no = #{memberCode}
+					and sp.PACKAGE_YN = 0
+					and s.SALE_TYPE = 'SS'    
+					and s.ORDER_NUM is not null
+					and s.SALE_KIND_CODE = '0030'
+					and s.ONLINE_CHANNEL = '0010'
+					and date(s.SALE_DATE) between #{startDate} and #{endDate}
+				group by
+					s.SHOP_CODE, s.ORDER_NUM
+			) sg
+		]]>
+	</select>	
+	
+	<select id="selectSaleBySaleCode" parameterType="sale" resultType="sale">
+		<![CDATA[
+			SELECT
+				SHOP_CODE AS shop_code,
+				SALE_CODE AS sale_code,
+				ORDER_NUM AS order_num,
+				MEMBER_NAME AS member_name,
+				MEMBER_TEL AS member_tel,
+				PAYMENT_CASE AS paymentCase,
+				PAYMENT_YN AS paymentYn,
+				SALE_DATE AS saleDate
+			FROM
+				bc_sale 
+			WHERE 
+				SHOP_CODE = (SELECT shop_code FROM bc_shop where CONTENT_MST_CD = #{contentMstCd}) 
+				AND SALE_TYPE = 'TS'
+				AND ORDER_NUM = #{order_num}
+		]]>
+	</select>
+	
+	<select id="selectKeys" parameterType="String" resultType="verificationKeyVO">
+		<![CDATA[
+			select
+				*
+			from 
+				bc_web_reservation_key
+			where
+				COMPANY_CODE = fn_get_company_code(#{shopCode})
+		]]>
+	</select>
+
+	<select id="selectShopCode" parameterType="String" resultType="String">
+		<![CDATA[
+			select
+				shop_code
+			from 
+				bc_shop
+			where
+				content_mst_cd = #{contentMstCd} 
+		]]>
+	</select>
+
+	<!-- 실제 결제금액 - 웹 예매의 경우 @+포인트, @+쿠폰을 제외하면 복합결제가 존재하지 않는다. -->
+	<select id="selectRealFee" parameterType="HashMap" resultType="int">
+		SELECT IFNULL(sum(payment_fee), 0)
+		FROM bc_paymentsale
+		WHERE shop_code = #{shop_code}
+			AND sale_code = #{ss_sale_code}
+			and PAYMENT_CODE != '0010'
+	</select>
+	
+	
+	<!-- 환불 history 기록 / 2021-10-26 / 조미근 -->
+	<insert id="insertRefundHistory" parameterType="refundHistoryVO">
+		INSERT INTO bc_refund_history(shop_code, sale_code, count, fee, book_no, work_datetime, work_id)
+		VALUES(#{shop_code}, #{sale_code}, #{count}, #{fee}, #{book_no}, NOW(), #{work_id})
+	</insert>
+	
+	<!-- 부분환불시 paymentsale 가져오기 / 2021-10-26 / 조미근 -->
+	<select id="selectPaymentSale" resultType="paymentSaleVO">
+		SELECT shop_code, sale_code, payment_code, payment_no, payment_idx, payment_fee,
+				penalty_fee, group_payment_code, payment_kind, payment_user_id, payment_terminal_code,
+				payment_date, decide_date, decide_id, bill_yn, bill_datetime, work_datetime, turn_idx
+		FROM bc_paymentsale
+		WHERE shop_code=#{shop_code} 
+				AND sale_code=#{sale_code}
+				AND payment_no=#{payment_no}
+		 ORDER BY payment_idx ASC
+	</select>
+	
+	<!-- 부분환불시 paymentsale 기록 / 2021-10-26 / 조미근 -->
+	<insert id="insertPaymentSale" parameterType="paymentSaleVO">
+		INSERT INTO bc_paymentsale(shop_code, sale_code, payment_code, payment_no, payment_idx, payment_fee,
+									penalty_fee, group_payment_code, payment_kind, payment_user_id, payment_terminal_code,
+									payment_date, decide_date, decide_id, bill_yn, bill_datetime, work_datetime, turn_idx)
+		VALUES(#{shop_code}, #{sale_code}, #{payment_code}, #{payment_no}, #{payment_idx}, #{payment_fee},
+				#{penalty_fee}, #{group_payment_code}, #{payment_kind}, #{payment_user_id}, #{payment_terminal_code},
+				#{payment_date}, #{decide_date}, #{decide_id}, #{bill_yn}, #{bill_datetime}, NOW(), #{turn_idx})
+	</insert>
+	
+</mapper>
