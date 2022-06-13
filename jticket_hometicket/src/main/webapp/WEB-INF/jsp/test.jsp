@@ -6,8 +6,7 @@
 <%@ taglib prefix="fn"     uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt"	   uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@ include file="./include/header-single.jsp" %>
-
+<%@ include file="./include/diamondbay/header-single.jsp" %>
 
 
 <div id="select-section" style="width:100%;padding:30px;">
@@ -32,17 +31,39 @@
 		<div>
 			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=102">체험<span style="color:red">(가상결제!)</span></a>
 		</div>
+		<!-- 
 		<div>
 			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=103">금능해변<span style="color:red">(가상결제!)</span></a>
 		</div>
 		<div>
 			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=104">베럴테이스팅<span style="color:red">(가상결제!)</span></a>
 		</div>
+		 -->
+		<div>
+			<!-- <a onclick="window.open('/ticketing/diamondbay','window_name','width=1215,height=900,location=no,status=no,scrollbars=yes');" style="cursor: pointer;">다이아몬드베이<span style="color:red">(가상결제!)</span></a> -->
+			<a onclick="pop.openDiamondBay();" style="cursor:pointer;">다이아몬드베이<span style="color:red">(가상결제!)</span></a>
+		</div>
 	</div>
 	
 </div>
 
 <script>
+
+
+
+var pop = {
+		openDiamondBay : function(){
+
+			var popupWidth = 1215;
+			var popupHeight = 900;
+			
+			//팍업 가운데 정렬을 위한 화면 해상도 계산
+			var popupX = (window.screen.width / 2) - (popupWidth / 2);
+			var popupY= (window.screen.height / 2) - (popupHeight / 2);
+			
+			window.open('/ticketing/diamondbay', 'window_name', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+		}
+}
 
 </script>
 

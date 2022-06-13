@@ -894,8 +894,20 @@
 	</select>
 	
 	<select id="selectReserveInfo" parameterType="String" resultType="com.bluecom.ticketing.domain.WebReservationKeyDTO">
-		SELECT company_code, info_a_title, info_a, info_b_title, info_b
-				, info_c_title, info_c, info_d_title, info_d
+		SELECT 
+			company_code, 
+			identification_site_code,
+			identification_site_password,
+			pay_merchant_key,
+			pay_merchant_id,
+			info_a_title, 
+			info_a, 
+			info_b_title, 
+			info_b, 
+			info_c_title, 
+			info_c, 
+			info_d_title, 
+			info_d
 		FROM bc_web_reservation_key
 		WHERE company_code = (SELECT company_code FROM bc_shop WHERE shop_code = #{shop_code})
 

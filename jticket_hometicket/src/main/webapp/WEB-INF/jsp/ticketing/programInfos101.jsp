@@ -30,6 +30,11 @@
 
 <div class="app prog">
     <%@ include file="../include/top_menu.jsp" %>
+    
+    
+    <%@ include file="../common/channelTalk.jsp" %>
+    
+    
     <div class="body-contents ewp_body">
     	<div class="body-contents-wrap">
 		    

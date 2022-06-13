@@ -5,26 +5,27 @@
             <PatternLayout pattern="%d %5p [%c] %m%n" />
         </Console>
         
-        <RollingFile name="rollingFile" fileName="${sys:catalina.home}/logs/jticket.log" filePattern="${sys:catalina.home}/logs/jticket.log-%d{yyyy-MM-dd}-%i">
+        <RollingFile name="rollingFile" fileName="${sys:catalina.home}/logs/iticket.log" filePattern="${sys:catalina.home}/logs/iticket.log-%d{yyyy-MM-dd}-%i">
 			<PatternLayout pattern="%d %5p [%c] %m%n" />
 			<Policies>
-				<!-- interval(default 1)이므로 1일 간격으로 rolling 수행 --> 
+				<!-- interval(default 1)이므로 1일 간격으로 rolling 수행 -->
 				<OnStartupTriggeringPolicy /> 
 				<TimeBasedTriggeringPolicy interval="1"/>
 			</Policies>
 		</RollingFile>
     </Appenders>
+    <!-- TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF -->
+    <!-- 
     <Loggers>
         <Logger name="java.sql" level="INFO" additivity="false">
             <AppenderRef ref="console" />
             <AppenderRef ref="rollingFile" />
         </Logger>
-        <Logger name="com.bluecom" level="DEBUG" additivity="false">
+        <Logger name="com.bluecom" level="INFO" additivity="false">
             <AppenderRef ref="console" />
             <AppenderRef ref="rollingFile" />
         </Logger>
-          <!-- log SQL with timing information, post execution -->
-        <Logger name="jdbc.sqltiming" level="DEBUG" additivity="false">
+        <Logger name="jdbc.sqltiming" level="INFO" additivity="false">
             <AppenderRef ref="console" />
             <AppenderRef ref="rollingFile" />
         </Logger>
@@ -32,9 +33,71 @@
             <AppenderRef ref="console" />
             <AppenderRef ref="rollingFile" />
         </Logger>
-        <Root level="DEBUG">
+        <Root level="INFO">
             <AppenderRef ref="console" />
             <AppenderRef ref="rollingFile" />
         </Root>
     </Loggers>
+     -->
+     
+     <Loggers>
+     	<!-- Application Loggers -->
+     	<logger name="com.bluecom" level="info" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="rollingFile" />
+        </logger>
+        
+        <!-- 3rdparty Loggers -->
+        <!-- 
+		<logger name="org.springframework.core">
+			<level value="warn" />
+		</logger>
+		
+		<logger name="org.springframework.beans">
+			<level value="warn" />
+		</logger>
+		
+		<logger name="org.springframework.context">
+			<level value="warn" />
+		</logger>
+	
+		<logger name="org.springframework.web">
+			<level value="warn" />
+		</logger>
+      	-->
+      	
+     	<!-- SQL Logger -->
+		<logger name="jdbc.connection" additivity="false">
+			<level value="warn" />
+			<appender-ref ref="console"/> 
+		</logger>
+		<logger name="jdbc.audit" additivity="false"> 
+			<level value="warn"/>  
+			<appender-ref ref="console"/> 
+		</logger> 
+	    
+		<logger name="jdbc.resultset" additivity="false">
+			<level value="off" />
+			<appender-ref ref="console"/> 
+		</logger>
+		<logger name="jdbc.sqlonly" additivity="false"> 
+			<level value="info"/> 
+			<appender-ref ref="console"/> 
+		</logger>
+	     
+		<logger name="jdbc.resultsettable" additivity="false"> 
+			<level value="info"/>  
+			<appender-ref ref="console"/> 
+		</logger> 
+		
+		<logger name="jdbc.sqltiming" additivity="false">
+			<level value="warn" />
+			<appender-ref ref="console"/> 
+		</logger>
+        <Root level="info">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="rollingFile" />
+        </Root>
+     </Loggers>
+     
 </Configuration>

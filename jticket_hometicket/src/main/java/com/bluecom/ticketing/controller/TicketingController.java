@@ -155,6 +155,9 @@ public class TicketingController extends BaseController {
 	public String payRequest(@ModelAttribute("paymentInfo") @Valid PaymentInfoDTO info, HttpServletResponse response, Errors errors, Model model) throws Exception {
 		System.out.println("aaa");
 		System.out.println(info.getReserver().getPhone());
+		
+		log.info("::payRequest CALL");
+		
 		if(errors.hasErrors()) {
 			ScriptUtils.alert(response, errors.getAllErrors().get(0).getDefaultMessage());
 			return null;
@@ -251,7 +254,24 @@ public class TicketingController extends BaseController {
 		
 		model.addAttribute("webPayment", webPayment);
 
-		return "/ticketing/payRequest";
+		
+		//콜백 jsp 화면 분기
+		String callBackJsp = "";
+		if(info.getProductGroup().getContent_mst_cd().toString().contains("JEJUBEER"))
+		{
+			callBackJsp = "/ticketing/payRequest";
+		}
+		else if(info.getProductGroup().getContent_mst_cd().toString().contains("DIAMONDBAY"))
+		{
+			callBackJsp = "/ticketing/diamondbay/payRequest";
+		}
+		else
+		{
+			callBackJsp = "/ticketing/payRequest";
+		}
+		
+		
+		return callBackJsp;
 	}
 	
 	// 0원 결제 결과(미결제)
@@ -1112,6 +1132,7 @@ public class TicketingController extends BaseController {
 				!StringUtils.hasText(reserveInfo.getInfo_c()) ||
 				!StringUtils.hasText(reserveInfo.getInfo_d())) {			
 			redirect.addFlashAttribute("msg", "약관정보가 없습니다. 관리자에게 연락 바랍니다.");
+			log.error("[ERROR]약관정보가 없습니다. 관리자에게 연락 바랍니다.");
 			if(StringUtils.hasText(content_mst_cd) && StringUtils.hasText(product_group_code)) {
 				return "redirect:/ticketing/selectSchedule?content_mst_cd=" + content_mst_cd + "&product_group_code=" + product_group_code;
 			} else {
@@ -1142,6 +1163,9 @@ public class TicketingController extends BaseController {
 				|| !StringUtils.hasText(keys.getPay_merchant_id())
 				|| !StringUtils.hasText(keys.getPay_merchant_key())) {
 			redirect.addFlashAttribute("msg", "인증를 위한 정보가 없습니다. 관리자에게 연락 바랍니다.");
+			
+			log.info("[ERROR]인증를 위한 정보가 없습니다. 관리자에게 연락 바랍니다.");
+			
 			if(StringUtils.hasText(content_mst_cd) && StringUtils.hasText(product_group_code)) {
 				return "redirect:/ticketing/selectSchedule?content_mst_cd=" + content_mst_cd + "&product_group_code=" + product_group_code;
 			} else {
@@ -1851,6 +1875,8 @@ public class TicketingController extends BaseController {
 	@GetMapping("/selectSchedule")
 	public String process1SelectTicketGroup(@ModelAttribute("essential") @Valid EssentialDTO essential, Errors errors, HttpServletResponse response, Model model) throws Exception {
 	
+		log.info("::: Ticketing JEJUBEER SelectSchedule START");
+		
 		if(errors.hasErrors()) {
 			validationLog(errors);
 			
@@ -2250,4 +2276,218 @@ public class TicketingController extends BaseController {
 		
 		return "/ticketing/refundPolicy";
 	}	
+	
+	
+	
+	//=============================================================다이아몬드 베이 START======================================================================
+	
+	/**
+	 * 다이아몬드베이 홈티켓
+	 * @param essential
+	 * @param errors
+	 * @param response
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@GetMapping("/diamondbay")
+	public String diamondbay(@ModelAttribute("essential") @Valid EssentialDTO essential, Errors errors, HttpServletResponse response, Model model) throws Exception {
+		
+		return "/ticketing/diamondbay/selectTicketItem";
+	}
+	
+	
+	@GetMapping("/diamondbay/schedule")
+	public String diamondbaySchedule(@ModelAttribute("essential") @Valid EssentialDTO essential, Errors errors, HttpServletResponse response, Model model) throws Exception {
+		
+		log.info("::: Ticketing DIAMOND BAY SelectSchedule START");
+		
+		if(errors.hasErrors()) {
+			validationLog(errors);
+			
+			ScriptUtils.alertAndBackPage(response, "상품그룹정보가 올바르지 않습니다. 결제페이지에 진입 할 수 없습니다.");
+			return null;
+			
+		}		
+		// content_mst_cd, product_group_code 기준으로 기본 정보 가져오기
+		ProductGroupDTO productGroup = ticketingService.getProductGroups(essential);
+		//bc_product 에서 fee & web_yn & schedule_yn 값 가져와서 뿌리기
+		
+		model.addAttribute("productGroup", productGroup);
+		
+		List<ProductDTO> products = ticketingService.getProducts(productGroup);
+		model.addAttribute("products", products);
+		
+		ScheduleDTO scheduleDTO = new ScheduleDTO();
+		scheduleDTO.setContentMstCd(essential.getContent_mst_cd());
+		scheduleDTO.setProduct_group_code(essential.getProduct_group_code());
+		scheduleDTO.setShop_code(productGroup.getShop_code());
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		scheduleDTO.setPlay_date(dateFormat.format(cal.getTime()));
+		
+		List<ScheduleDTO> scheduleDTOList = ticketingService.getSchedule(scheduleDTO);
+		model.addAttribute("scheduleDTOList", scheduleDTOList);
+		
+		return "/ticketing/diamondbay/selectSchedule";
+	}
+	
+	
+
+	/**
+	 * 상품 선택후 예약 번튼 클릭시 - 예약정보입력 페이지로 이동하는 과정
+	 * @param essential
+	 * @param paymentInfo
+	 * @param errors
+	 * @param request
+	 * @param response
+	 * @param redirect
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/diamondbay/insertReserver")
+	public String process1InsertReserverOfDiamondBay(@ModelAttribute("essential")EssentialDTO essential, 
+			@ModelAttribute("paymentInfo") PaymentInfoDTO paymentInfo, Errors errors, 
+			HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirect, Model model) throws Exception {
+		
+		// 상품 그룹 확인
+		ProductGroupDTO dbProductGroup = ticketingService.getProductGroups(essential);
+		
+		if (dbProductGroup == null || !checkProductGroup(paymentInfo.getProductGroup(), dbProductGroup)) {
+			ScriptUtils.alertAndBackPage(response, "상품그룹정보가 올바르지 않습니다. 결제를 진행할 수 없습니다.");
+			return null;
+		}
+		paymentInfo.setProductGroup(dbProductGroup);
+
+		// 상품 가져오기
+		// 현재는 상품이 하나뿐이기 때문에 맨 위에꺼 하나만 사용
+		List<ProductDTO> dbProducts = ticketingService.getProducts(paymentInfo.getProductGroup());
+/*		List<ProductDTO> products = new ArrayList<>();
+		ProductDTO product = dbProducts.get(0);
+		product.setCount(paymentInfo.getProducts().get(0).getCount()); // 수량만 받은거 사용
+		products.add(product);
+		paymentInfo.setProducts(products); 
+		
+		paymentInfo.setTotalCount(products.stream().mapToInt(ProductDTO::getCount).sum());
+		paymentInfo.setTotalFee(products.stream()
+			.map(p -> p.getProduct_fee()
+			.multiply(BigDecimal.valueOf(p.getCount())))
+			.reduce(BigDecimal.ZERO, BigDecimal::add));*/
+		
+		// 0명인 상품리스트 삭제
+		paymentInfo.getProducts().removeIf(p -> p.getCount() <= 0);
+		
+		List<ProductDTO> selectedProducts = new ArrayList<>();		
+		// 상품코드로 상품 정보 다 불러오기, 인원수만 불러온 상품에 넣기
+		for (int i = 0; i < paymentInfo.getProducts().size(); i++) {
+			ProductDTO product = paymentInfo.getProducts().get(i);
+			for (int j = 0; j < dbProducts.size(); j++) {
+				ProductDTO dbProduct = dbProducts.get(j);
+				if (product.getShop_code().equals(dbProduct.getShop_code())
+						&& product.getProduct_group_code().equals(dbProduct.getProduct_group_code())
+						&& product.getProduct_code().equals(dbProduct.getProduct_code())) {
+					dbProduct.setCount(product.getCount());
+					selectedProducts.add(dbProduct);
+				}
+			}
+		}
+		paymentInfo.setProducts(selectedProducts);
+
+		
+		List<ProductDTO> productsOrderedByPrice = new ArrayList<>();
+		for(ProductDTO product : selectedProducts) {
+			productsOrderedByPrice.add(product);
+		}
+		Collections.sort(productsOrderedByPrice, Collections.reverseOrder()); // 내림차순
+		paymentInfo.setProductsOrderedByPrice(productsOrderedByPrice);
+			
+		// 총액, 총인원수
+		paymentInfo.setTotalCount(selectedProducts.stream().mapToInt(ProductDTO::getCount).sum());
+		paymentInfo
+				.setTotalFee(selectedProducts.stream().map(p -> p.getProduct_fee().multiply(BigDecimal.valueOf(p.getCount())))
+						.reduce(BigDecimal.ZERO, BigDecimal::add));
+		
+		// 회차
+		if(StringUtils.hasText(paymentInfo.getSchedule_code())) {
+			ScheduleDTO schedule =  new ScheduleDTO();
+			schedule.setShop_code(paymentInfo.getProductGroup().getShop_code());
+			schedule.setSchedule_code(paymentInfo.getSchedule_code());
+			schedule.setPlay_date_from(paymentInfo.getPlay_date());
+			schedule = ticketingService.getScheduleByScheduleCode(schedule);
+			
+			if(schedule == null) {
+				ScriptUtils.alertAndClose(response, "해당 상품의 회차정보가 존재하지 않습니다. 결제를 진행할 수 없습니다.");
+				return null;
+			}
+			paymentInfo.setSchedule(schedule);
+		}
+		
+		// 방문자 정보 가져오기
+		ShopDetailVO shopDetail = ticketingService.getShopDetail(paymentInfo.getProductGroup().getShop_code());
+		paymentInfo.setVisitorType(shopDetail.getPerson_type());
+		// model.addAttribute("shopDetail", shopDetail);
+		
+		String content_mst_cd = essential.getContent_mst_cd(); 
+		String product_group_code = essential.getProduct_group_code();
+		
+		// 이용약관 가져오기
+		WebReservationKeyDTO reserveInfo = ticketingService.selectReserveInfo(dbProductGroup.getShop_code());
+		
+		if(reserveInfo == null || 
+				!StringUtils.hasText(reserveInfo.getInfo_a()) ||
+				!StringUtils.hasText(reserveInfo.getInfo_b()) ||
+				!StringUtils.hasText(reserveInfo.getInfo_c()) ||
+				!StringUtils.hasText(reserveInfo.getInfo_d())) 
+		{
+			//redirect.addFlashAttribute("msg", "약관정보가 없습니다. 관리자에게 연락 바랍니다.");
+			log.error("[ERROR]약관정보가 없습니다.");
+			
+			if(StringUtils.hasText(content_mst_cd) && StringUtils.hasText(product_group_code)) {
+				return "redirect:/ticketing/diamondbay/schedule?content_mst_cd=" + content_mst_cd + "&product_group_code=" + product_group_code;
+			} else {
+				return "redirect:/error";
+			}
+		}
+		else if(reserveInfo == null 
+				|| !StringUtils.hasText(reserveInfo.getIdentification_site_code()) 
+				|| !StringUtils.hasText(reserveInfo.getIdentification_site_password())
+				|| !StringUtils.hasText(reserveInfo.getPay_merchant_id())
+				|| !StringUtils.hasText(reserveInfo.getPay_merchant_key()))
+		{
+			//redirect.addFlashAttribute("msg", "인증를 위한 정보가 없습니다. 관리자에게 연락 바랍니다.");
+			
+			log.error("[ERROR]인증를 위한 정보가 없습니다.");
+			
+			if(StringUtils.hasText(content_mst_cd) && StringUtils.hasText(product_group_code)) {
+				return "redirect:/ticketing/diamondbay/schedule?content_mst_cd=" + content_mst_cd + "&product_group_code=" + product_group_code;
+			} else {
+				return "redirect:/error";
+			}
+		}
+		else
+		{
+			String content = reserveInfo.getInfo_a();
+			reserveInfo.setInfo_a(StringEscapeUtils.unescapeXml(content));
+			
+			content = reserveInfo.getInfo_b();
+			reserveInfo.setInfo_b(StringEscapeUtils.unescapeXml(content));
+			
+			content = reserveInfo.getInfo_c();
+			reserveInfo.setInfo_c(StringEscapeUtils.unescapeXml(content));
+
+			content = reserveInfo.getInfo_d();
+			reserveInfo.setInfo_d(StringEscapeUtils.unescapeXml(content));
+
+			model.addAttribute("reserveInfo", reserveInfo);
+			
+			
+			//본인인증 정보
+			model.addAttribute("siteCode", reserveInfo.getIdentification_site_code());
+			model.addAttribute("sitePassword", reserveInfo.getIdentification_site_password());
+		}
+
+		return "/ticketing/diamondbay/insertReserverDiamondbay";
+	}
 }

@@ -16,6 +16,9 @@
 
 <div class="app">
 	<%@ include file="../include/top_menu.jsp" %>
+	
+	<%@ include file="../common/channelTalk.jsp" %>
+	
 	<div class="body-contents">
 		<div class="body-contents-wrap">
 			<div class="intro res_tit res_padi">
