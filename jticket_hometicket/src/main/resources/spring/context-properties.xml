@@ -6,9 +6,9 @@
 		<property name="properties">
 	        <map>
 	        	<!-- 개발 -->
-	        	<entry key="apiUrl" value="https://iticket-stg.nicetcm.co.kr/api"/>
+	        	<!-- <entry key="apiUrl" value="https://iticket-stg.nicetcm.co.kr/api"/> -->
 	        	<!-- 실제 -->
-	        	<!-- <entry key="apiUrl" value="https://iticket.nicetcm.co.kr/api"/> -->
+	        	<entry key="apiUrl" value="https://iticket.nicetcm.co.kr/api"/>
 
 	        	<entry key="apiKey" value="BC-Auth-Token"/>
 	        	<entry key="apiValue">
@@ -22,9 +22,9 @@
 	        	<entry key="alimTalkSenderKey" value="2"/>
 	        	
 	        	<!-- 탑승객유저 개발 -->
-	        	<entry key="userApi" value="https://ticketstgsvc.nicetcm.co.kr:443/Apis/Services/SetReservationInfo.ashx"/>
+	        	<!-- <entry key="userApi" value="https://ticketstgsvc.nicetcm.co.kr:443/Apis/Services/SetReservationInfo.ashx"/> -->
 	        	<!-- 실제 -->
-	        	<!-- <entry key="userApi" value="https://ticketsvc.nicetcm.co.kr:443/Apis/Services/SetReservationInfo.ashx"/> -->
+	        	<entry key="userApi" value="https://ticketsvc.nicetcm.co.kr:443/Apis/Services/SetReservationInfo.ashx"/>
 
 
 				<!-- 에러시 리다이렉트할 제주맥주 페이지 -->
