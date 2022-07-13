@@ -60,6 +60,15 @@
 						<p>*옵션 변경을 희망하실 경우 예약 취소 후 재예약 하셔야 합니다.</p>
 					</div>
 				</c:if>
+				<c:if test="${productGroup.product_group_code eq '106' }">
+					<div class="datepick_txt">
+						<p>7월12일 ~ 8월16일</p>
+						<p>제주라거 무제한 : 15,000원</p>
+						<p>* 일행 전원이 사전 예약하셔야 이용하실 수 있는 상품입니다.</p>
+						<p>* 현장 방문 시 일행 전원 <span>*신분증 지참</span>은 필수 입니다.</p>
+						<p>* 주문 시간 기준 2시간 현장 이용할 수 있으며, TAKE OUT 불가한 상품입니다.</p>
+					</div>
+				</c:if>
 			</section>
 			<section class="order-wrap time-wrap">
 				<h3>
@@ -159,6 +168,61 @@
 	{{/data}}
 	</ul>
 </script>
+
+<!-- 제주맥주 상품 추가로 인해 화면 구성 수정_2022_07_07 -->
+<script type="text/x-mustache" id="list-template-for-product106">
+	<ul>
+	<li class="list_tit_li"><div class="ch_time">시간 선택</div><div class="ch_num" style="padding-left:64px;">잔여석</div></li>
+	{{#data}}
+		<li class="th_list_tem_li">
+			<div data-id="item{{id}}"
+				data-time="{{time}}"
+				data-seat="{{seat}}"
+				data-limit="{{seatlimit}}"
+				data-user-seat="0"
+				class="cell {{^reserv}}disable{{/reserv}}">
+				<label class="time jejuRadioButton calch" style="width:153px;">
+					<input type="radio" id="c{{id}}" name="cal" value="{{id}}" {{^reserv}}disabled{{/reserv}} /><span class="radio"></span>
+					{{time}}
+					{{scheduleNm}}
+				</label>
+				<div class="seat">
+					<span>{{seat}}</span>
+				</div>
+				<div class="order" style="width:209px;">
+					{{#reserv}}
+					{{#product.product}}
+					<div class="order_spbx">
+						<span data-id="{{id}}">{{name}}</span>
+						<button type="button" data-id="{{id}}" id="{{id}}{{code}}" class="btn js-minus">
+							<span class="material-icons">remove</span>
+						</button>
+					
+						<div class="data-input-cnt" data-input-id="input{{id}}{{code}}">
+							0
+						</div>
+					
+						<button type="button" data-id="{{id}}"  id="{{id}}{{code}}" class="btn js-plus">
+							<span class="material-icons">add</span>
+						</button>
+					</div>
+					{{/product.product}}
+					{{/reserv}}
+				</div>
+				<div class="submit">
+					{{^reserv}}
+						<button type="button" data-id="{{id}}"  disabled class="btn js-order">불가</button>
+					{{/reserv}}
+					{{#reserv}}
+						<button type="button" data-id="{{id}}" class="btn js-order">예약</button>
+					{{/reserv}}
+				</div>
+			</div>
+		</li>
+	{{/data}}
+	</ul>
+</script>
+
 <script>
 	let selectDate = ''
 	var min = '';
@@ -216,27 +280,69 @@
 					
 					let dataAry = {data: []};
 					var reserv = false;
-					for(var i=0; i<schedule.length; i++){
-						if(schedule[i].sumCout <= 0){
-							reserv = false;
-							schedule[i].sumCout = 0;
-						}else{
-							reserv = true;
+					
+					
+					//오늘제주맥주 라는 상품분류 추가되어 분기작업 ( 회차시간에 이름(ex-17:00 델문도 김녕점)도 포함해서 해야하기때문에 ) 
+					if(schedule[0].product_group_code == '106')
+					{
+						for(var i=0; i<schedule.length; i++){
+							if(schedule[i].sumCout <= 0){
+								reserv = false;
+								schedule[i].sumCout = 0;
+							}else{
+								reserv = true;
+							}
+							dataAry.data.push({
+								id: schedule[i].schedule_code,
+								time: schedule[i].subject_text,
+								
+								//추가
+								scheduleNm: schedule[i].play_sequence,
+								
+								seat: Number(schedule[i].sumCout),
+								seatlimit: Number(schedule[i].total_count),
+								reserv: reserv,
+								product:productAry,
+							})
 						}
-						dataAry.data.push({
-							id: schedule[i].schedule_code,
-							time: schedule[i].subject_text,
-							seat: Number(schedule[i].sumCout),
-							seatlimit: Number(schedule[i].total_count),
-							reserv: reserv,
-							product:productAry,
-						})
+						
+						var temlate = $('#list-template-for-product106').html();
+						var html = Mustache.render(temlate, dataAry);
+						
+						$('.reserve-list').append(html);
+					}
+					else
+					{
+						for(var i=0; i<schedule.length; i++){
+							if(schedule[i].sumCout <= 0){
+								reserv = false;
+								schedule[i].sumCout = 0;
+							}else{
+								reserv = true;
+							}
+							dataAry.data.push({
+								id: schedule[i].schedule_code,
+								time: schedule[i].subject_text,
+								seat: Number(schedule[i].sumCout),
+								seatlimit: Number(schedule[i].total_count),
+								reserv: reserv,
+								product:productAry,
+							})
+						}
+						
+						var temlate = $('#list-template').html();
+						var html = Mustache.render(temlate, dataAry);
+						
+						$('.reserve-list').append(html);
 					}
 					
-					var temlate = $('#list-template').html();
-					var html = Mustache.render(temlate, dataAry);
 					
-					$('.reserve-list').append(html);
+					
+					
+					//var temlate = $('#list-template').html();
+					//var html = Mustache.render(temlate, dataAry);
+					
+					//$('.reserve-list').append(html);
 					
 				},
 				error : function(xhr,status,error) {
