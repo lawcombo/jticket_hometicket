@@ -776,6 +776,7 @@ public class TicketingController extends BaseController {
 							ShopDetailVO shopDetail = ticketingService.getShopDetail(apiResultVO.getWebPayment().getShop_code());
 						
 							try {
+								//알림톡 저장
 								messageService.send(request, response, apiResultVO, pgResult, shopDetail);
 							} catch(Exception ex) {
 								ex.printStackTrace();

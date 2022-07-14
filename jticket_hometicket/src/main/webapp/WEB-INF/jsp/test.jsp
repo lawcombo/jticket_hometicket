@@ -31,12 +31,18 @@
 		<div>
 			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=102">체험<span style="color:red">(가상결제!)</span></a>
 		</div>
+		
 		<!-- 
 		<div>
 			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=103">금능해변<span style="color:red">(가상결제!)</span></a>
 		</div>
 		<div>
 			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=104">베럴테이스팅<span style="color:red">(가상결제!)</span></a>
+		</div>
+		 -->
+		<!--  
+	 	<div>
+			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=106">오늘제주맥주<span style="color:red">(가상결제!)</span></a>
 		</div>
 		 -->
 		<div>
