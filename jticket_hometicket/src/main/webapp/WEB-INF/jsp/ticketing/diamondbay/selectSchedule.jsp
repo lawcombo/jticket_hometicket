@@ -66,6 +66,7 @@
 		<div class="calender_box">
 			<section class="calendar">
 				<div id="datepicker"></div>
+				<%-- 
 				<c:if test="${productGroup.product_group_code eq '101' }">
 					<div class="datepick_txt">
 						<p>5월 1일 부터</p>
@@ -74,6 +75,7 @@
 						<p>*옵션 변경을 희망하실 경우 예약 취소 후 재예약 하셔야 합니다.</p>
 					</div>
 				</c:if>
+				 --%>
 			</section>
 			<section class="order-wrap time-wrap">
 				<h3>

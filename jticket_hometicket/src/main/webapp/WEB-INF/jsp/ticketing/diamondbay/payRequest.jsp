@@ -54,14 +54,14 @@ a.disabled {
 }
 </style>
 <!-- 아래 js는 PC 결제창 전용 js입니다.(모바일 결제창 사용시 필요 없음) -->
-<script src="http://web.nicepay.co.kr/v3/webstd/js/nicepay-3.0.js" type="text/javascript"></script>
+<script src="https://web.nicepay.co.kr/v3/webstd/js/nicepay-3.0.js" type="text/javascript"></script>
 <script type="text/javascript">
 
 //결제창 최초 요청시 실행됩니다.
 function nicepayStart(pay){
 	if(pay > 0) {
 		if(checkPlatform(window.navigator.userAgent) == "mobile"){//모바일 결제창 진입
-			document.payForm.action = "http://web.nicepay.co.kr/v3/v3Payment.jsp";
+			document.payForm.action = "https://web.nicepay.co.kr/v3/v3Payment.jsp";
 			document.payForm.acceptCharset="euc-kr";
 			document.payForm.submit();
 		}else{//PC 결제창 진입
@@ -129,7 +129,7 @@ function checkPlatform(ua) {
 					<div class="main-sec_wrap">
 
 						<div id="pay-info-section" class="paytop">
-							<h1 id="container_title" class="pay_ch_tit">결제정보 확인</h1>
+							<h1 id="container_title" class="pay_ch_tit">결제정보 확인!</h1>
 							<form name="payForm" method="post" action="<c:url value="${webPayment.getFee() > 0 ? '/ticketing/payResult' : '/ticketing/pay0Result'}" />">
 								<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> 
 								<div class="tbl_frm01 tbl_wrap bookinfo">

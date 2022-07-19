@@ -147,13 +147,25 @@ public class TicketingController extends BaseController {
 		model.addAttribute("siteCode", keys.getIdentification_site_code());
 		model.addAttribute("sitePassword", keys.getIdentification_site_password());
 		
-		return "/ticketing/checkTicket";
+		String returnUrl = "";
+		
+		if(essential.getContent_mst_cd().toString().contains("JEJUBEER"))
+		{
+			returnUrl = "/ticketing/checkTicket";
+		}
+		else if(essential.getContent_mst_cd().toString().contains("DIAMONDBAY"))
+		{
+			returnUrl = "/ticketing/diamondbay/checkTicket";
+		}
+		
+		
+		//return "/ticketing/checkTicket";
+		return returnUrl;
 	}
 	
 	// 결제요청
 	@PostMapping("/payRequest")	
 	public String payRequest(@ModelAttribute("paymentInfo") @Valid PaymentInfoDTO info, HttpServletResponse response, Errors errors, Model model) throws Exception {
-		System.out.println("aaa");
 		System.out.println(info.getReserver().getPhone());
 		
 		log.info("::payRequest CALL");
@@ -246,6 +258,22 @@ public class TicketingController extends BaseController {
 		
 		info.setTotalCount(dbTotalCount);
 		info.setTotalFee(dbTotalFee);
+		
+		
+		if(info.getProductGroup().getContent_mst_cd().toString().contains("JEJUBEER"))
+		{
+			//..
+		}
+		else if(info.getProductGroup().getContent_mst_cd().toString().contains("DIAMONDBAY"))
+		{
+			info.getProductGroup().setProduct_group_kind("2");
+		}
+		else
+		{
+			//..
+		}
+		
+		
 		
 		// 판매 금액이 0원이면  결제수단을 0원결제로 변경
 		if("0".equals(info.getFee()) ) info.setPayMethod("0000");
@@ -967,6 +995,20 @@ public class TicketingController extends BaseController {
 		
 		return "/ticketing/finish";
 	}
+	@GetMapping("/diamondbay/finish")
+	public String finishForDiamondbay(@ModelAttribute("essential") @Valid EssentialDTO essential, @RequestParam("orderNo") String orderNo, Model model) throws Exception {
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("orderNo", orderNo);
+		params.put("contentMstCd", essential.getContent_mst_cd());
+		List<FinishTradeVO> trade = ticketingService.getFinishTrade(params);
+		model.addAttribute("trade", trade);
+		
+		ShopDetailVO shopDetail = ticketingService.getShopDetailByContentMstCd(essential.getContent_mst_cd());
+		model.addAttribute("shopDetail", shopDetail);
+		
+		return "/ticketing/diamondbay/finish";
+	}
 	
 	/**
 	 * 예매내역 존재 여부 확인 
@@ -1245,11 +1287,25 @@ public class TicketingController extends BaseController {
 		request.getSession().setAttribute("saleDTO", saleDTO);
 		
 		String redirectPage = null;
-		if(saleDTO.getType().equals("0")) {
-			redirectPage = "redirect:/ticketing/showTicketInfo?content_mst_cd=" + essential.getContent_mst_cd();
-		}else {
-			redirectPage = "redirect:/ticketing/showTicketInfoList?content_mst_cd=" + essential.getContent_mst_cd();
+		
+		if(essential.getContent_mst_cd().toString().contains("JEJUBEER"))
+		{
+			if(saleDTO.getType().equals("0")) {
+				redirectPage = "redirect:/ticketing/showTicketInfo?content_mst_cd=" + essential.getContent_mst_cd();
+			}else {
+				redirectPage = "redirect:/ticketing/showTicketInfoList?content_mst_cd=" + essential.getContent_mst_cd();
+			}
 		}
+		else if(essential.getContent_mst_cd().toString().contains("DIAMONDBAY"))
+		{
+			if(saleDTO.getType().equals("0")) {
+				redirectPage = "redirect:/ticketing/diamondbay/showTicketInfo?content_mst_cd=" + essential.getContent_mst_cd();
+			}else {
+				redirectPage = "redirect:/ticketing/diamondbay/showTicketInfoList?content_mst_cd=" + essential.getContent_mst_cd();
+			}
+		}
+		
+		
 		
 		//redirectPage = "redirect:/ticketing/showTicketInfoList?content_mst_cd=" + essential.getContent_mst_cd();
 		//rttr.addFlashAttribute("saleDTO", saleDTO);

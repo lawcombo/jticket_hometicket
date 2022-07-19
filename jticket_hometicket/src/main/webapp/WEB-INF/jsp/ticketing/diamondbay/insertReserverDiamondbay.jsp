@@ -406,26 +406,10 @@
 																	<p class="mt_top_text">필수 확인 사항들을 한번 더 안내 드릴게요.</p>
 																</div>
 																<div class="mt_bot">
-																	<h3>양조장투어 + 맥주 선택 시 <span class="txt_red_st">신분증 필참 !</span></h3>
-																	<!-- <p class="mt_txt">
-																		- 양조장투어 : 만 0세~6세 보호자 동반하여도 참여 불가<br> - 나만의전용잔만들기
-																		: 보호자 동반 시 만 12세 이하 참여 가능
-																	</p> -->
-																	<h3>양조장투어 <span class="txt_red_st">옵션 당일 변경 절대 불가 !</span></h3>
-																	<!-- <p class="mt_txt">
-																		1. 양조장투어 포함사항은 지각 시에도 제공<br> 2. 비행기 지연 및 결항, 건강상의
-																		이유, 천재지변으로 인한 환불은 전화/채팅 문의
-																	</p> -->
-																	<h3>프로그램 참여 가능 연령 확인!</h3>
-																	<p class="mt_txt">
-																		- 양조장투어 : 만 7세 이상 (0세~6세는 보호자 동반 시에도 참여 불가)<br>
-																		- 나만의잔만들기 : 만 12세 이상 (보호자 동반 시 12세 이하도 참여 가능)
-																	</p>
 																	<h3>
 																		10분 이상 지각 시 참여 및 환불 불가
 																	</h3>
 																	<p class="mt_txt">
-																		- 양조장투어의 맥주 또는 음료는 지각 시에도 제공<br>
 																		- 비행기 지연 및 결항, 건강상의 이유, 천재지변으로 인한 지각은 전화/채팅 문의
 																	</p>
 																	<h3>
@@ -1033,7 +1017,7 @@ var setReturnedReserverAuthenticationValuesFromChildWindow = function (result) {
 /***** 결제 결과*****/
 var setReturnedPayValuesFromChildWindow = function (result) {
 	if(result.success == 1) {
-		window.location.href= "/ticketing/finish?content_mst_cd=<c:out value='${essential.content_mst_cd }' />&product_group_code=<c:out value='${essential.product_group_code }' />&orderNo=" + result.orderNo;	
+		window.location.href= "/ticketing/diamondbay/finish?content_mst_cd=<c:out value='${essential.content_mst_cd }' />&product_group_code=<c:out value='${essential.product_group_code }' />&orderNo=" + result.orderNo;	
 	}
 	
 }
