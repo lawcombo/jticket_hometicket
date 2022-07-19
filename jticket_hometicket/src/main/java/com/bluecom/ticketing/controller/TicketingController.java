@@ -1281,6 +1281,69 @@ public class TicketingController extends BaseController {
 		return "/ticketing/ShowTicketInfo";
 	}
 	
+	
+	/**
+	 * 다이아몬드베이 예매조회 1건
+	 * @param essential
+	 * @param request
+	 * @param saleDTO
+	 * @param message
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/diamondbay/showTicketInfo")
+	public String ShowTicketInfoOfDiamondBay(@ModelAttribute("essential")EssentialDTO essential, 
+								HttpServletRequest request, SaleDTO saleDTO,
+								/*SaleDTO2 changedSaleDTO,*/
+								@ModelAttribute("message") String message, Model model) throws Exception {
+		
+		HttpSession session = request.getSession();
+		saleDTO = (SaleDTO) session.getAttribute("saleDTO");
+		
+		List<SaleProductDTO> saleProductDTOList = ticketingService.getSaleProductDTOList(saleDTO);
+		
+		/*if(saleProductDTOList.isEmpty())
+			return "redirect:/ticketing/checkTicket?content_mst_cd="+essential.getContent_mst_cd();*/
+
+		// content_mst_cd, product_group_code 기준으로 기본 정보 가져오기
+		essential.setProduct_group_code(saleProductDTOList.get(0).getProduct_group_code());
+		ProductGroupDTO productGroup = ticketingService.getProductGroups(essential);
+		//bc_product 에서 fee & web_yn & schedule_yn 값 가져와서 뿌리기
+		List<ProductDTO> products = ticketingService.getProducts(productGroup);
+		
+		// 방문자 정보 가져오기
+		PaymentInfoDTO paymentInfo = new PaymentInfoDTO();
+		ShopDetailVO shopDetail = ticketingService.getShopDetail(productGroup.getShop_code());
+		paymentInfo.setVisitorType(shopDetail.getPerson_type());
+		
+		// 0번상품이 금액 상품
+		WebPaymentDTO orgWebPayment =  ticketingService.getWebPayment(saleProductDTOList.get(0).getOrder_num());
+		paymentInfo.setPayMethod(orgWebPayment.getPay_method());
+		
+		saleDTO.setShop_code(productGroup.getShop_code());
+		
+		// web_payment_idx 로 bc_web_payment_coupon 조회 후 금액 가져오기
+		List<CouponVO> coupon = ticketingService.getCouponByWebPaymetIdx(saleProductDTOList.get(0).getOrder_num());
+		
+		//구매한 상품정보 가져오기
+		saleDTO.setSale_code(saleProductDTOList.get(0).getSale_code());
+		List<SaleProductDTO> purchase = ticketingService.selectPurchaseProduct(saleDTO);
+		
+		model.addAttribute("products", products);
+		model.addAttribute("productGroup", productGroup);
+		model.addAttribute("paymentInfo", paymentInfo);
+		model.addAttribute("dataList", saleProductDTOList);
+		model.addAttribute("buyerInfo", saleDTO);
+		model.addAttribute("coupon", coupon);
+		model.addAttribute("purchase", purchase);
+		
+		//model.addAttribute("companyTel", ticketingService.getCompany(saleDTO.getShopCode()).getComp_tel());
+		return "/ticketing/diamondbay/ShowTicketInfo";
+	}
+	
+	
+	
 	@RequestMapping("/prevShowTicket")
 	public String prevShowTicketList(@ModelAttribute("essential")EssentialDTO essential, SaleDTO saleDTO, 
 										HttpServletRequest request, HttpServletResponse response, Model model,
@@ -1330,6 +1393,30 @@ public class TicketingController extends BaseController {
 		model.addAttribute("buyerInfo", saleDTO);
 		//model.addAttribute("companyTel", ticketingService.getCompany(saleDTO.getShopCode()).getComp_tel());
 		return "/ticketing/ShowTicketInfoList";
+	}
+	
+	/**
+	 * 다이아몬드베이 예매내역 조회 여러건
+	 * @param essential
+	 * @param saleDTO
+	 * @param request
+	 * @param message
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/diamondbay/showTicketInfoList")
+	public String ShowTicketInfoListOfDiamondbay(@ModelAttribute("essential")EssentialDTO essential, 
+			SaleDTO saleDTO, HttpServletRequest request,
+			@ModelAttribute("message") String message, Model model) throws Exception {
+		HttpSession session = request.getSession();
+		saleDTO = (SaleDTO) session.getAttribute("saleDTO");
+		saleDTO.setType("1");
+		List<SaleProductDTO> saleProductDTOList = ticketingService.getSaleProductDTOList(saleDTO);
+		
+		model.addAttribute("dataList", saleProductDTOList);
+		model.addAttribute("buyerInfo", saleDTO);
+		return "/ticketing/diamondbay/ShowTicketInfoList";
 	}
 	
 	/*

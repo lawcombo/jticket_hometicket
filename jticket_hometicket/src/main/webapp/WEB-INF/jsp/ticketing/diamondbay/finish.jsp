@@ -20,12 +20,14 @@
 	
 
 	<!-- 뒤로가기 버튼 -->
+	<%-- 
 	<div style="text-align:left; padding-top:10px; padding-left:10px;">
 		<!-- <button onclick="history.back(); " style="cursor: pointer";>뒤로가기</button> -->
 		
 		<img src="${pageContext.request.contextPath }/resources/images/diamondbay/backImg.png" onclick="history.back()" style="cursor: pointer; width: 50px;" />
 	</div>
-
+ 	--%>
+ 	
 	<section class="head">
 		<div class="intro res_tit">
 			<h1>
