@@ -381,10 +381,13 @@
 		LEFT OUTER JOIN bc_productgroup AS PG ON B.shop_code=PG.shop_code AND B.product_group_code=PG.product_group_code 
 		WHERE F.member_name=#{member_name} 
 			AND F.member_tel=#{member_tel}
+			<!-- 일단원복 -->
+			AND CONCAT(T.play_date, ' ', C.start_time, ':00') >= now()
 			<!-- 7월13일 수정 요청 _ 신종호 차장님 -->
-			<!-- AND CONCAT(T.play_date, ' ', C.start_time, ':00') >= now() -->
+			<!-- 
 			and T.play_date 	>= DATE_FORMAT(NOW(), '%Y-%m-%d')
 			and C.start_time 	>= DATE_FORMAT(NOW(), '%H:%i')
+			 -->
 			AND F.online_channel='1001'
 		ORDER BY T.sale_code DESC
 	</select>
