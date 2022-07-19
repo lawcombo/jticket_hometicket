@@ -399,15 +399,12 @@ var setReturnedReserverAuthenticationValuesFromChildWindow = function (result) {
 						$("#shopCode").val(data[0].shop_code);
 					}
 					
-					//$("input[name='reserver.name']").val(result.name);
-					//$("input[name='reserver.phone']").val(result.phone);
 					$("#member_tel").val(result.phone);
 					$("#member_name").val(result.name);
 					
 					var form = document.inputForm;
 					form.action="/ticketing/prevShowTicket";
 					form.submit();
-					//sendAuthenticationNumber(userName, userPhone);
 				}
 			},
 			error : function(xhr,status,error) {
