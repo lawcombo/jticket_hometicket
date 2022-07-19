@@ -582,6 +582,7 @@ public class TicketingController extends BaseController {
 			
 			HashMap resultData = new HashMap();
 			boolean paySuccess = false;
+			
 			if("9999".equals(resultJsonStr)){
 				// 결제승인에러 기록
 				WebPaymentStatusDTO approvalErrorStatus = WebPaymentStatusDTO.builder()
