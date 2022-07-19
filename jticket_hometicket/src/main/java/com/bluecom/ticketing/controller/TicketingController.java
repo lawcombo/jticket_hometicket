@@ -166,7 +166,6 @@ public class TicketingController extends BaseController {
 	// 결제요청
 	@PostMapping("/payRequest")	
 	public String payRequest(@ModelAttribute("paymentInfo") @Valid PaymentInfoDTO info, HttpServletResponse response, Errors errors, Model model) throws Exception {
-		System.out.println("aaa");
 		System.out.println(info.getReserver().getPhone());
 		
 		log.info("::payRequest CALL");
@@ -259,6 +258,22 @@ public class TicketingController extends BaseController {
 		
 		info.setTotalCount(dbTotalCount);
 		info.setTotalFee(dbTotalFee);
+		
+		
+		if(info.getProductGroup().getContent_mst_cd().toString().contains("JEJUBEER"))
+		{
+			//..
+		}
+		else if(info.getProductGroup().getContent_mst_cd().toString().contains("DIAMONDBAY"))
+		{
+			info.getProductGroup().setProduct_group_kind("2");
+		}
+		else
+		{
+			//..
+		}
+		
+		
 		
 		// 판매 금액이 0원이면  결제수단을 0원결제로 변경
 		if("0".equals(info.getFee()) ) info.setPayMethod("0000");
