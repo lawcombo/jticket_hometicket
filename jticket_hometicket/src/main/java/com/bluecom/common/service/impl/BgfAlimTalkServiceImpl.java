@@ -58,7 +58,16 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 			WebPaymentPgResultDTO pgResult, ShopDetailVO shopDetail) throws Exception{
 
 		AlimTalkTemplateDTO searchTemplate = new AlimTalkTemplateDTO(); // default
-		searchTemplate.setShop_code("JEJUBEER");
+		
+		if(payment.getContent_mst_cd().toString().contains("JEJUBEER"))
+		{
+			searchTemplate.setShop_code("JEJUBEER");
+		}
+		else if(payment.getContent_mst_cd().toString().contains("DIAMONDBAY"))
+		{
+			searchTemplate.setShop_code("DIAMONDBAY");
+		}
+		
 		searchTemplate.setType("RESERVE");
 //		searchTemplate.setProduct_group_kind("S");		
 		
@@ -131,7 +140,17 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 			ShopDetailVO shopDetail) throws Exception{
 
 		AlimTalkTemplateDTO searchTemplate = new AlimTalkTemplateDTO(); // default
-		searchTemplate.setShop_code("JEJUBEER");
+		
+		
+		if(payment.getContent_mst_cd().toString().contains("JEJUBEER"))
+		{
+			searchTemplate.setShop_code("JEJUBEER");
+		}
+		else if(payment.getContent_mst_cd().toString().contains("DIAMONDBAY"))
+		{
+			searchTemplate.setShop_code("DIAMONDBAY");
+		}
+		
 		searchTemplate.setType("REFUND");
 		searchTemplate.setProduct_group_kind("S");
 		
