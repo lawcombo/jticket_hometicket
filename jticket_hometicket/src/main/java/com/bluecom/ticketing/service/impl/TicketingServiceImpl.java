@@ -381,7 +381,11 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 	@Override
 	public List<SaleProductDTO> getSaleProductDTOList(SaleDTO saleDTO) throws Exception {
 		
+		log.debug("[CONTENT_MST_CD] ===============> " + saleDTO.getContentMstCd());
+		
 		List<SaleProductDTO> saleProducts = ticketingMapper.selectSaleProductList(saleDTO);
+		
+		log.debug("[saleProducts] =================> " + saleProducts);
 		
 		for(SaleProductDTO saleProduct: saleProducts) {
 			
