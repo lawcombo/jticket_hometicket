@@ -86,6 +86,7 @@
 		
 			<div class="intro res_padi" style="padding-top:35px;">
 				<p style="font-size:40px; font-weight:bold;">코스 선택</p>
+				<button type="button" class="" style="cursor:pointer;" onclick="check.reserveCheck();">예약확인 및 취소</button>
 			</div>
 			
 			 <div class="container">
@@ -130,5 +131,12 @@
 
 
 <script>
+	
+	var check = {
+			reserveCheck : function(){
+				var newURL = window.location.protocol + "//" + window.location.host + "/ticketing/checkTicket?content_mst_cd=DIAMONDBAY_0_1";
+				 window.location.href=newURL;
+			}
+	}
 	
 </script>
