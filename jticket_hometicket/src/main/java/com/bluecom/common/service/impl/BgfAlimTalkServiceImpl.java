@@ -149,7 +149,27 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 		text = text.replace("#{1}", payment.getOrder_no());
 		text = text.replace("#{2}", payment.getProduct_group_name());
 		
-		String productName = sale.getSALE_PRODUCT_LIST().get(0).getPRODUCT_NAME();
+		
+		String productName = "";
+		if(sale.getSALE_PRODUCT_LIST().size() > 1)
+		{//상품여러개
+			for(int i=0; i<sale.getSALE_PRODUCT_LIST().size(); i++)
+			{
+				if(i==0)
+				{
+					productName += sale.getSALE_PRODUCT_LIST().get(i).getPRODUCT_NAME() + "(" + sale.getSALE_PRODUCT_LIST().get(i).getQUANTITY() + "매)";
+				}
+				else
+				{
+					productName += ", " + sale.getSALE_PRODUCT_LIST().get(i).getPRODUCT_NAME() + "(" + sale.getSALE_PRODUCT_LIST().get(i).getQUANTITY() + "매)";
+				}
+			}
+		}else
+		{
+			productName = sale.getSALE_PRODUCT_LIST().get(0).getPRODUCT_NAME();
+		}
+		
+		//String productName = sale.getSALE_PRODUCT_LIST().get(0).getPRODUCT_NAME();
 //		int productCount = sale.getSALE_PRODUCT_LIST().size();
 		int productCount = payment.getTotal_count();
 //		if(productCount > 1) {
