@@ -64,7 +64,7 @@ public class JejuMailServiceImpl extends EgovAbstractServiceImpl implements Mail
 			templateFile = request.getSession().getServletContext().getRealPath("/") + "resources" + File.separator + "jeju_email.html";
 			
 		}
-		else if(payment.getContent_mst_cd().toString().contains("JEJUBEER"))
+		else if(payment.getContent_mst_cd().toString().contains("DIAMONDBAY"))
 		{
 			mailVO.setFrom(propertyService.getString("senderEmailOfDiamondbay"));
 			subject = "다이아몬드베이 예매가 완료되었습니다.";
