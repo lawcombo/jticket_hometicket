@@ -80,20 +80,6 @@
 								<p class="sh_text">
 									${product.play_date} ${product.schedule_text}
 								</p>
-								<c:if test="${productGroup.product_group_code ne '105'}">
-									<div class="ewp_db_rig">
-										<c:if test="${(product.quantity eq product.actual_quantity) && (product.real_fee eq (product.product_fee - coupon[0].couponFee)) }">
-											<div class="ewb_db_btn">
-												<a href="#" class="db_rig_chan">
-													예약일시 변경
-												</a>
-												<a href="#" class="db_rig_cant">
-													취소
-												</a>
-											</div>
-										</c:if>
-									</div>
-								</c:if>
 							</div>
 							<div class="ewp_ecb">
 								<div class="cb_top">
@@ -140,14 +126,6 @@
 						</li>
 						<li class="reserveDt mb50">
 							<p class="sh_tit">
-								쿠폰 적용금액
-							</p>
-							<p class="sh_text">
-								- <fmt:formatNumber type="number" maxFractionDigits="3" value="${coupon[0].couponFee}"/> 원
-							</p>
-						</li>
-						<li class="reserveDt mb50">
-							<p class="sh_tit">
 								총 결제금액
 							</p>
 							<p class="sh_text">
@@ -168,20 +146,10 @@
 						<div class="ewp_show_bot" style="max-width:initial; width:fit-content;">
 							<c:choose>
 								<c:when test="${(product.quantity eq product.actual_quantity) && (product.real_fee eq (product.product_fee - coupon[0].couponFee)) }">
-									<c:if test="${productGroup.product_group_code ne '105'}">
-										<div>
-											<button id="confirmButton" class="buttonTypeCyan full textLarge ewp_bot_ok" 
-												style='<c:out value="${isUsed eq true || isRefunded eq true ? 'pointer-events: none;background-color:#ddd' : '' }" />;'>예약일시 변경 확정</button>
-										</div>
-										<div>
-											<button id="cancelButton" class="buttonTypeCyan full textLarge ewp_bot_cant" style='<c:out value="${isUsed eq true || isRefunded eq true ? 'pointer-events: none;background-color:#ddd' : '' }" />;'>예약 취소</button>
-										</div>
-									</c:if>
-									<c:if test="${productGroup.product_group_code eq '105'}">
-										<div>
-											<button id="cancelButton" class="buttonTypeCyan full textLarge ewp_bot_cant" style='<c:out value="${isUsed eq true || isRefunded eq true ? 'pointer-events: none;background-color:#ddd' : '' }" />; width:285px;'>예약 취소</button>
-										</div>
-									</c:if>
+									<div>
+										<%-- <button id="cancelButton" class="buttonTypeCyan full textLarge ewp_bot_cant" style='<c:out value="${isUsed eq true || isRefunded eq true ? 'pointer-events: none;background-color:#ddd' : '' }" />;'>예약 취소</button> --%>
+										<button id="cancelButton" class="buttonTypeCyan full textLarge ewp_bot_cant" style="width:285px;">예약 취소</button>
+									</div>
 								</c:when>
 								<c:otherwise>
 									<h4>부분 인원 취소 또는 부분 환불이 진행된 상품의 경우 관리자를 통해서만 취소 가능합니다.</h4>

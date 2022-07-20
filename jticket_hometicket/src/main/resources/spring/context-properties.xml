@@ -15,6 +15,7 @@
 	        		<value><![CDATA[{"key":"4104A22CCDBC4159BE0373EA9CEFC42B","token":"$2a$10$mC74L9bGjRgjtKh/Udx7zOJEn.TM9DSrVCAcUIvL04LZAEnoOC/Oa","created":"20210226122046","expired":"21210226122046"}]]></value>
 	        	</entry>
 	        	<entry key="senderEmail" value="jejubeer@jejubeer.co.kr"/>
+	        	<entry key="senderEmailOfDiamondbay" value="diamondbay@diamondbay.co.kr"/>
 
 				<!-- 알림톡 -->
 	        	<entry key="templateCodeA" value="1"/>
@@ -29,6 +30,7 @@
 
 				<!-- 에러시 리다이렉트할 제주맥주 페이지 -->
 				<entry key="jejubeer" value="https://jejubeer.co.kr/brewery-program"/>
+				<entry key="diamondbay" value="https://jejubeer.co.kr/brewery-program"/>
 	        </map>
 		</property>
 	</bean>

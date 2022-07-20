@@ -107,7 +107,19 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 		}
 		
 		template.setCallback(StringUtils.hasText(shopDetail.getComp_tel()) ? shopDetail.getComp_tel() : "");
-		template.setTemplate_code("jejubeer1001");		
+		//template.setTemplate_code("jejubeer1001");		
+		
+		
+		if(payment.getContent_mst_cd().toString().contains("JEJUBEER"))
+		{
+			template.setTemplate_code("jejubeer1001");
+		}
+		else if(payment.getContent_mst_cd().toString().contains("DIAMONDBAY"))
+		{
+			template.setTemplate_code("diamond0001");
+		}
+		
+		
 //		template.setTemplate_code(StringUtils.hasText(shopDetail.getAlimtalk_comp_code()) ? shopDetail.getAlimtalk_comp_code() : "");
 		template.setSender_key(StringUtils.hasText(shopDetail.getAlimtalk_sender_key()) ? shopDetail.getAlimtalk_sender_key() : "");
 		
