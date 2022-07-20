@@ -36,7 +36,18 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 		ApiSocialSaleDTO sale = apiResult.getSocialSales().get(0);
 		WebPaymentDTO payment = apiResult.getWebPayment();
 		
-		AlimTalkTemplateDTO template = getScheduleReservationMessage(request, sale, payment, pgResult, shopDetail);
+		AlimTalkTemplateDTO template = null;
+		
+		if (payment.getContent_mst_cd().toString().contains("JEJUBEER"))
+		{
+			template = getScheduleReservationMessage(request, sale, payment, pgResult, shopDetail);
+		}
+		else if(payment.getContent_mst_cd().toString().contains("DIAMONDBAY"))
+		{
+			template = getScheduleReservationMessageOfDiamondBay(request, sale, payment, pgResult, shopDetail);
+		}
+		
+		//AlimTalkTemplateDTO template = getScheduleReservationMessage(request, sale, payment, pgResult, shopDetail);
 		
 		AlimTalkDTO alimTalk = new AlimTalkDTO();
 		alimTalk.setMsg_type(template.getMsg_type());
@@ -59,14 +70,7 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 
 		AlimTalkTemplateDTO searchTemplate = new AlimTalkTemplateDTO(); // default
 		
-		if(payment.getContent_mst_cd().toString().contains("JEJUBEER"))
-		{
-			searchTemplate.setShop_code("JEJUBEER");
-		}
-		else if(payment.getContent_mst_cd().toString().contains("DIAMONDBAY"))
-		{
-			searchTemplate.setShop_code("DIAMONDBAY");
-		}
+		searchTemplate.setShop_code("JEJUBEER");
 		
 		searchTemplate.setType("RESERVE");
 //		searchTemplate.setProduct_group_kind("S");		
@@ -110,14 +114,75 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 		//template.setTemplate_code("jejubeer1001");		
 		
 		
-		if(payment.getContent_mst_cd().toString().contains("JEJUBEER"))
-		{
-			template.setTemplate_code("jejubeer1001");
+		template.setTemplate_code("jejubeer1001");
+		
+		
+//		template.setTemplate_code(StringUtils.hasText(shopDetail.getAlimtalk_comp_code()) ? shopDetail.getAlimtalk_comp_code() : "");
+		template.setSender_key(StringUtils.hasText(shopDetail.getAlimtalk_sender_key()) ? shopDetail.getAlimtalk_sender_key() : "");
+		
+		return template;
+	}
+	
+	/**
+	 * 다이아몬드베이 알림톡
+	 * @param request
+	 * @param sale
+	 * @param payment
+	 * @param pgResult
+	 * @param shopDetail
+	 * @return
+	 * @throws Exception
+	 */
+	private AlimTalkTemplateDTO getScheduleReservationMessageOfDiamondBay(HttpServletRequest request, ApiSocialSaleDTO sale, WebPaymentDTO payment,
+			WebPaymentPgResultDTO pgResult, ShopDetailVO shopDetail) throws Exception{
+
+		AlimTalkTemplateDTO searchTemplate = new AlimTalkTemplateDTO(); // default
+		
+		searchTemplate.setShop_code("DIAMONDBAY");
+		searchTemplate.setType("RESERVE");
+//		searchTemplate.setProduct_group_kind("S");		
+		
+		AlimTalkTemplateDTO template = alimTalkMapper.selectAlimTalkTemplate(searchTemplate);
+		
+		String text = template.getText();
+		text = text.replace("#{0}", payment.getShop_name());
+		text = text.replace("#{1}", payment.getOrder_no());
+		text = text.replace("#{2}", payment.getProduct_group_name());
+		
+		String productName = sale.getSALE_PRODUCT_LIST().get(0).getPRODUCT_NAME();
+//		int productCount = sale.getSALE_PRODUCT_LIST().size();
+		int productCount = payment.getTotal_count();
+//		if(productCount > 1) {
+//			productName += " 등 "; 
+//		}
+		text = text.replace("#{3}", productName);
+		text = text.replace("#{4}", Integer.toString(productCount));
+		text = text.replace("#{5}", payment.getPlay_date() +"("+payment.getStart_time()+"~"+payment.getEnd_time()+")");
+//		text = text.replace("#{6}", payment.getStart_time());
+		text = text.replace("#{6}", payment.getReserverName());
+		Date workDatetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sale.getWORK_DATETIME());
+		text = text.replace("#{7}", new SimpleDateFormat("yyyy-MM-dd HH:mm").format(workDatetime));	
+		text = text.replace("#{8}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/checkTicket?content_mst_cd=" + payment.getContent_mst_cd());
+//		text = text.replace("#{10}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/termsOfUse?content_mst_cd=" + payment.getContent_mst_cd());
+//		text = text.replace("#{11}", StringUtils.hasText(shopDetail.getWeekday_use_time()) ? shopDetail.getWeekday_use_time() : "");	
+//		text = text.replace("#{12}", StringUtils.hasText(shopDetail.getWeekend_use_time()) ? shopDetail.getWeekend_use_time() : "");	
+//		text = text.replace("#{13}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/refundPolicy?content_mst_cd=" + payment.getContent_mst_cd());
+//		text = text.replace("#{14}", StringUtils.hasText(shopDetail.getComp_tel()) ? shopDetail.getComp_tel() : "");	
+		template.setText(text);
+		
+		// 알림톡 키가 업을 때에		
+		if (StringUtils.hasText(shopDetail.getAlimtalk_comp_code()) && StringUtils.hasText(shopDetail.getAlimtalk_sender_key())) {
+			template.setMsg_type("7");
+			template.setChangeflag("1");
+		} else {
+			template.setMsg_type("3");
 		}
-		else if(payment.getContent_mst_cd().toString().contains("DIAMONDBAY"))
-		{
-			template.setTemplate_code("diamond0001");
-		}
+		
+		template.setCallback(StringUtils.hasText(shopDetail.getComp_tel()) ? shopDetail.getComp_tel() : "");
+		//template.setTemplate_code("jejubeer1001");		
+		
+		
+		template.setTemplate_code("diamond0001");
 		
 		
 //		template.setTemplate_code(StringUtils.hasText(shopDetail.getAlimtalk_comp_code()) ? shopDetail.getAlimtalk_comp_code() : "");

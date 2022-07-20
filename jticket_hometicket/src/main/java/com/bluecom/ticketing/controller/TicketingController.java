@@ -1939,9 +1939,12 @@ public class TicketingController extends BaseController {
 					
 					ShopDetailVO shopDetail = ticketingService.getShopDetail(webPayment.getShop_code());
 					
-					messageService.sendRefund(request, saleVO, webPayment, pgResult, shopDetail); //알림톡 메시지 전송
+					//알림톡 메시지 전송
+					messageService.sendRefund(request, saleVO, webPayment, pgResult, shopDetail); 
 
-					mailService.sendRefund(request, saleVO, webPayment, pgResult); //알림톡 메시지 전송
+					//알림톡 메시지 전송
+					mailService.sendRefund(request, saleVO, webPayment, pgResult); 
+					
 					sale.setType("1");
 					List<SaleProductDTO> saleProductDTOList = ticketingService.getSaleProductDTOList(sale);
 					if(saleProductDTOList.isEmpty() == false && saleProductDTOList.size() > 1)
