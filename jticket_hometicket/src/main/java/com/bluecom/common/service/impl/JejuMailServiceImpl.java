@@ -53,9 +53,27 @@ public class JejuMailServiceImpl extends EgovAbstractServiceImpl implements Mail
 		NumberFormat numberFormat = NumberFormat.getInstance();
 		MailVO mailVO = new MailVO();
 		mailVO.setTo(payment.getReserverEmail());
-		mailVO.setFrom(propertyService.getString("senderEmail"));
+		
+		
+		String templateFile = "";
+		if(payment.getContent_mst_cd().toString().contains("JEJUBEER"))
+		{
+			mailVO.setFrom(propertyService.getString("senderEmail"));
+			subject = "제주맥주 양조장 예약이 완료되었습니다.";
+			
+			templateFile = request.getSession().getServletContext().getRealPath("/") + "resources" + File.separator + "jeju_email.html";
+			
+		}
+		else if(payment.getContent_mst_cd().toString().contains("JEJUBEER"))
+		{
+			mailVO.setFrom(propertyService.getString("senderEmailOfDiamondbay"));
+			subject = "다이아몬드베이 예매가 완료되었습니다.";
+			
+			templateFile = request.getSession().getServletContext().getRealPath("/") + "resources" + File.separator + "html" + File.separator + "diamondbay_email.html";
+		}
+		
 		mailVO.setSubject(subject);
-		String templateFile = request.getSession().getServletContext().getRealPath("/") + "resources" + File.separator + "jeju_email.html";
+		//String templateFile = request.getSession().getServletContext().getRealPath("/") + "resources" + File.separator + "jeju_email.html";
 		
 //		0	reserverName
 //		1	14 휴대폰번호

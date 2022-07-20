@@ -39,7 +39,6 @@ public class ErrorController extends BaseController {
 		pageErrorLog(request);
 		String jejuUrl = properties.getString("jejubeer");
 		ScriptUtils.alertAndMovePage(response, "예외가 발생하였습니다.", jejuUrl);
-		
 	}
 
 	@RequestMapping("/403")
@@ -48,7 +47,6 @@ public class ErrorController extends BaseController {
 		pageErrorLog(request);
 		String jejuUrl = properties.getString("jejubeer");
 		ScriptUtils.alertAndMovePage(response, "접근권한이 없습니다.", jejuUrl);
-		
 	}
 
 	@RequestMapping("/404")
@@ -57,7 +55,6 @@ public class ErrorController extends BaseController {
 		pageErrorLog(request);
 		String jejuUrl = properties.getString("jejubeer");
 		ScriptUtils.alertAndMovePage(response, "페이지를 찾을 수 없습니다.", jejuUrl);
-		
 	}
 
 	@RequestMapping("/405")
@@ -66,7 +63,6 @@ public class ErrorController extends BaseController {
 		pageErrorLog(request);
 		String jejuUrl = properties.getString("jejubeer");
 		ScriptUtils.alertAndMovePage(response, "잘못된 요청입니다.", jejuUrl);
-		
 	}
 
 	@RequestMapping("/500")
@@ -75,7 +71,6 @@ public class ErrorController extends BaseController {
 		pageErrorLog(request);
 		String jejuUrl = properties.getString("jejubeer");
 		ScriptUtils.alertAndMovePage(response, "서버에 오류가 발생하였습니다.", jejuUrl);
-		
 	}
 
 	@RequestMapping("/503")
@@ -84,9 +79,70 @@ public class ErrorController extends BaseController {
 		pageErrorLog(request);
 		String jejuUrl = properties.getString("jejubeer");
 		ScriptUtils.alertAndMovePage(response, "서비스를 사용할 수 없습니다.", jejuUrl);
+	}
+	
+	
+	//=====================================================DiamondBay======================================
+	
+	@RequestMapping("/diamondbay/throwable")
+	public void throwableOfDiamondbay(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
 		
+		pageErrorLog(request);
+		String jejuUrl = properties.getString("diamondbay");
+		ScriptUtils.alertAndMovePage(response, "예외가 발생하였습니다.", jejuUrl);
 	}
 
+	@RequestMapping("/diamondbay/exception")
+	public void exceptionOfDiamondbay(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+		
+		pageErrorLog(request);
+		String jejuUrl = properties.getString("diamondbay");
+		ScriptUtils.alertAndMovePage(response, "예외가 발생하였습니다.", jejuUrl);
+	}
+
+	@RequestMapping("/diamondbay/403")
+	public void page403OfDiamondbay(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+		
+		pageErrorLog(request);
+		String jejuUrl = properties.getString("diamondbay");
+		ScriptUtils.alertAndMovePage(response, "접근권한이 없습니다.", jejuUrl);
+	}
+
+	@RequestMapping("/diamondbay/404")
+	public void page404OfDiamondbay(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+
+		pageErrorLog(request);
+		String jejuUrl = properties.getString("diamondbay");
+		ScriptUtils.alertAndMovePage(response, "페이지를 찾을 수 없습니다.", jejuUrl);
+	}
+
+	@RequestMapping("/diamondbay/405")
+	public void page405OfDiamondbay(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+
+		pageErrorLog(request);
+		String jejuUrl = properties.getString("diamondbay");
+		ScriptUtils.alertAndMovePage(response, "잘못된 요청입니다.", jejuUrl);
+	}
+
+	@RequestMapping("/diamondbay/500")
+	public void page500OfDiamondbay(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+
+		pageErrorLog(request);
+		String jejuUrl = properties.getString("diamondbay");
+		ScriptUtils.alertAndMovePage(response, "서버에 오류가 발생하였습니다.", jejuUrl);
+	}
+
+	@RequestMapping("/diamondbay/503")
+	public void page503OfDiamondbay(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+
+		pageErrorLog(request);
+		String jejuUrl = properties.getString("diamondbay");
+		ScriptUtils.alertAndMovePage(response, "서비스를 사용할 수 없습니다.", jejuUrl);
+	}
+
+	
+	
+	
 	
 	private int getHistoryBackCount(String path) {
 		int historyBackCount = 1;

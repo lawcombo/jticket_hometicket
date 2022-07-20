@@ -267,6 +267,7 @@ public class TicketingController extends BaseController {
 		else if(info.getProductGroup().getContent_mst_cd().toString().contains("DIAMONDBAY"))
 		{
 			info.getProductGroup().setProduct_group_kind("2");
+			info.getProductGroup().setValid_period(30);
 		}
 		else
 		{
@@ -2594,7 +2595,7 @@ public class TicketingController extends BaseController {
 			if(StringUtils.hasText(content_mst_cd) && StringUtils.hasText(product_group_code)) {
 				return "redirect:/ticketing/diamondbay/schedule?content_mst_cd=" + content_mst_cd + "&product_group_code=" + product_group_code;
 			} else {
-				return "redirect:/error";
+				return "redirect:/error/diamondbay";
 			}
 		}
 		else if(reserveInfo == null 
@@ -2610,7 +2611,7 @@ public class TicketingController extends BaseController {
 			if(StringUtils.hasText(content_mst_cd) && StringUtils.hasText(product_group_code)) {
 				return "redirect:/ticketing/diamondbay/schedule?content_mst_cd=" + content_mst_cd + "&product_group_code=" + product_group_code;
 			} else {
-				return "redirect:/error";
+				return "redirect:/error/diamondbay";
 			}
 		}
 		else
