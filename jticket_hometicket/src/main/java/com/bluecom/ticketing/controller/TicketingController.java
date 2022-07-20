@@ -267,7 +267,6 @@ public class TicketingController extends BaseController {
 		else if(info.getProductGroup().getContent_mst_cd().toString().contains("DIAMONDBAY"))
 		{
 			info.getProductGroup().setProduct_group_kind("2");
-			info.getProductGroup().setValid_period(30);
 		}
 		else
 		{
