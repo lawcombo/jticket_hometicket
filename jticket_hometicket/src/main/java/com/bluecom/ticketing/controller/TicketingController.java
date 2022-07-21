@@ -1745,11 +1745,17 @@ public class TicketingController extends BaseController {
 			sale.setType("1");
 			List<SaleProductDTO> saleProductDTOList = ticketingService.getSaleProductDTOList(sale);
 			if(saleProductDTOList.isEmpty() == false && saleProductDTOList.size() > 1)
+			{
 				ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "prevShowTicket?type=1&content_mst_cd=" + sale.getContent_mst_cd()+"&member_name="+sale.getMember_name()+"&member_tel="+sale.getMember_tel()+"&shop_code="+sale.getShop_code());
+			}
 			else if(saleProductDTOList.isEmpty() == false && saleProductDTOList.size() == 1)
+			{
 				ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "prevShowTicket?type=0&content_mst_cd=" + sale.getContent_mst_cd()+"&member_name="+sale.getMember_name()+"&member_tel="+sale.getMember_tel()+"&shop_code="+sale.getShop_code()+"&sale_code="+saleProductDTOList.get(0).getSale_code()+"&order_num="+saleProductDTOList.get(0).getOrder_num());
+			}
 			else
+			{
 				ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "checkTicket?content_mst_cd=" + sale.getContent_mst_cd());
+			}
 
 			return null;
 		}
@@ -2319,6 +2325,7 @@ public class TicketingController extends BaseController {
 			
 			return recvBuffer.toString().trim();
 		}catch (Exception e){
+			e.printStackTrace();
 			return "9999";
 		}finally{
 			recvBuffer.setLength(0);

@@ -3,6 +3,7 @@ package com.bluecom.common.util;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateHelper {
 
@@ -166,5 +167,32 @@ public class DateHelper {
         return cal.getTime();
 	}
 	
-	
+	public static String getTimeStamp(int iMode) {
+		String sFormat;
+		// if (iMode == 1) sFormat = "E MMM dd HH:mm:ss z yyyy";   // Wed Feb 03 15:26:32 GMT+09:00 1999
+		if (iMode == 1) sFormat = "MMMM dd, yyyy HH:mm:ss z";   // Jun 03, 2001 15:26:32 GMT+09:00
+		else if (iMode == 2) sFormat = "MM/dd/yyyy";// 02/15/1999
+		else if (iMode == 3) sFormat = "yyyyMMdd";// 19990215
+		else if (iMode == 4) sFormat = "HHmmss";// 121241
+		else if (iMode == 5) sFormat = "dd MMM yyyy";// 15 Jan 1999
+		else if (iMode == 6) sFormat = "yyyyMMddHHmm"; //200101011010
+		else if (iMode == 7) sFormat = "yyyyMMddHHmmss"; //20010101101052
+		else if (iMode == 8) sFormat = "HHmmss";
+		else if (iMode == 9) sFormat = "yyyy";
+		else if (iMode == 10) sFormat = "MM";
+		else if (iMode == 11) sFormat = "MMddHHmmssSSS";
+		else if (iMode == 12) sFormat = "yyyy-MM-dd";
+		else if (iMode == 13) sFormat = "HH";
+		else if (iMode == 14) sFormat = "mm";
+		
+		else sFormat = "E MMM dd HH:mm:ss z yyyy";// Wed Feb 03 15:26:32 GMT+09:00 1999
+
+		Locale locale = new Locale("en", "EN");
+		// SimpleTimeZone timeZone = new SimpleTimeZone(32400000, "KST");
+		SimpleDateFormat formatter = new SimpleDateFormat(sFormat, locale);
+		// formatter.setTimeZone(timeZone);
+		// SimpleDateFormat formatter = new SimpleDateFormat(sFormat);
+
+		return formatter.format(new Date());
+	}
 }
