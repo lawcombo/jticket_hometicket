@@ -19,9 +19,17 @@
 	
 	<!-- 취소시 쿠폰 정보 update / 2021-10-13 / 조미근 -->
 	<update id="updateCouponCancelDate" parameterType="java.util.List">
+		<!-- 블루컴 이 거지같은, 취소시 취소컬럼만 업데이트 쳐야지 왜 사용컬럼도 업데이트침 하  -->
+		<!-- 
 		<foreach collection="list" item="item" separator=";">
 			UPDATE mb_coupon_num
 			SET cpm_use_date=#{item.cpm_use_date}, cpm_cancel_date=NOW(), cpm_use_info=#{item.cpm_use_info} 
+			WHERE cpm_num=#{item.cpm_num} AND company_code=#{item.company_code} AND cpm_cpn_code=#{item.cpm_cpn_code}
+		</foreach>
+		 -->
+		<foreach collection="list" item="item" separator=";">
+			UPDATE mb_coupon_num
+			SET cpm_cancel_date=NOW(), cpm_use_info=#{item.cpm_use_info} 
 			WHERE cpm_num=#{item.cpm_num} AND company_code=#{item.company_code} AND cpm_cpn_code=#{item.cpm_cpn_code}
 		</foreach>
 	</update>
@@ -35,9 +43,17 @@
 
 	<!-- 쿠폰 사용 정보 update / 2021-10-13 / 조미근 -->
 	<update id="updateCouponUseDate" parameterType="java.util.List">
+		<!-- 블루컴 이 거지같은, 사용 컬럼만 업데이트 치면되는데, 취소컬럼은 업데이트 왜침 -->
+		<!-- 
 		<foreach collection="list" item="item" separator=";">
 			UPDATE mb_coupon_num
 			SET cpm_use_date=NOW(), cpm_cancel_date=#{item.cpm_cancel_date}, cpm_use_info=#{item.cpm_use_info}
+			WHERE cpm_num=#{item.cpm_num} AND company_code=#{item.company_code} AND cpm_cpn_code=#{item.cpm_cpn_code}
+		</foreach>
+		 -->
+		<foreach collection="list" item="item" separator=";">
+			UPDATE mb_coupon_num
+			SET cpm_use_date=NOW(), cpm_use_info=#{item.cpm_use_info}
 			WHERE cpm_num=#{item.cpm_num} AND company_code=#{item.company_code} AND cpm_cpn_code=#{item.cpm_cpn_code}
 		</foreach>
 	</update>
