@@ -364,6 +364,8 @@ var setReturnedReserverAuthenticationValuesFromChildWindow = function (result) {
 				length = data.length;
 				if (data[0].result_code == "0"){
 					alert('입력하신 신청자명 및 핸드폰번호에 해당하는 예약 정보가 없습니다.');
+					showShadow(false);
+					hideShadow();
 				}
 				else{
 					

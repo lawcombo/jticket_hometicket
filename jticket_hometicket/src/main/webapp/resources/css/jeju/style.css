@@ -20,7 +20,7 @@ ul {
 a, a:focus, a:hover, a:active
 {text-decoration:none;}
 
-/* �ָ��Ѱ��߰� ���� */
+/* 占쌍몌옙占싼곤옙占쌩곤옙 占쏙옙占쏙옙 */
 
 
 .app {
@@ -119,9 +119,9 @@ header img {
     text-align: left;
 }
 
-/* �ָ��Ѱ��߰� �� */
+/* 占쌍몌옙占싼곤옙占쌩곤옙 占쏙옙 */
 
-/* �ָ��Ѱ��߰� ���� */
+/* 占쌍몌옙占싼곤옙占쌩곤옙 占쏙옙占쏙옙 */
 
 .head .info li {
     position: relative;
@@ -156,7 +156,7 @@ header img {
     padding: 0 15px;
 }
 
-/* �ָ��Ѱ��߰� �� */
+/* 占쌍몌옙占싼곤옙占쌩곤옙 占쏙옙 */
 
 .tabs ul {
     display: flex;
@@ -204,7 +204,7 @@ header img {
 .tabs .material-icons {
     font-size: 12px;
 }
-/* �ָ��Ѱ��߰� ���� */
+/* 占쌍몌옙占싼곤옙占쌩곤옙 占쏙옙占쏙옙 */
 
 .pageLine {
     padding-top: 10px;
@@ -223,7 +223,7 @@ header img {
 }
 
 
-/* �ָ��Ѱ��߰� �� */
+/* 占쌍몌옙占싼곤옙占쌩곤옙 占쏙옙 */
 
 
 
@@ -973,6 +973,7 @@ header img {
 }
 
 .reserve .agreementLi .agreementToggle,
+.reserve .agreementLi .promotionAgreementToggle,
 .reserve .agreementLi .termsOfUseToggle {
     cursor: pointer;
     color:#55585b;
@@ -986,6 +987,17 @@ header img {
 }
 
 .reserve .agreementLi .agreementToggle.open .material-icons {
+    transform: rotate(180deg);
+}
+
+.reserve .agreementLi .promotionAgreementToggle .material-icons {
+    vertical-align: middle;
+    margin-top: -.3ex;
+    transform: rotate(0);
+    transition: all .3s ease;
+}
+
+.reserve .agreementLi .promotionAgreementToggle.open .material-icons {
     transform: rotate(180deg);
 }
 
@@ -1142,7 +1154,7 @@ header img {
 
 .chmd:after{display:block; content:""; clear:both;}
 
-/* ================================================jjh 작업==================================================== */
+/* ================================================jjh �옉�뾽==================================================== */
 
 /* showTicketinfo */
 .body-contents-wrap{max-width:1200px; margin:0 auto;}
@@ -1182,7 +1194,7 @@ header img {
 
 
 
-/* 예매자 정보 입력1 */
+/* �삁留ㅼ옄 �젙蹂� �엯�젰1 */
 
 .main-sec_wrap:after{display:block; content:""; clear:both;}
 #container_title{position:relative; padding-left:25px; display:inline-block;}
@@ -1294,7 +1306,7 @@ header img {
 
 
 
-/* 메인페이지 로그인영역 */
+/* 硫붿씤�럹�씠吏� 濡쒓렇�씤�쁺�뿭 */
 .gnb_area {background:transparent; padding:10px 15px;}
 .t_gnb_box {width:100%; margin-left:auto;}
 .t_gnb_box ul:after {clear:both; content:""; display:block;}
@@ -1342,14 +1354,14 @@ header img {
 .ewp_show_bot2 {width:100%; max-width:320px; margin:0 auto 90px;}
 
 
-/* insertReserver flex 작업 */
+/* insertReserver flex �옉�뾽 */
 .ewp_fe {display:inherit !important;}
 .ewp_fe .reserve.reserve-form {width:100%; box-sizing:border-box;}
 .ewp_fe .pageLine.dashed {margin:0 !important; padding: 0 !important;}
 
 
 
-/* 양조장 서브비쥬얼 작업 */
+/* �뼇議곗옣 �꽌釉뚮퉬伊ъ뼹 �옉�뾽 */
 .ewp_subm {position:relative; background: url("https://dsfyc8ahox9m2.cloudfront.net/static/images/reservationRenew/m/beerwalk/img_keyvisual.jpg"); background-size:contain; background-position:center; background-repeat:no-repeat; width:100%; height:33vw;}
 .ewp_subm p {font-size:18px; width:100%; color:#fff; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-weight:bold;}
 
@@ -1359,7 +1371,7 @@ header img {
 
 
 
-/* 체험장 작업 */
+/* 泥댄뿕�옣 �옉�뾽 */
 .ewp_pcb {max-width:1200px !important; margin:0 auto;}
 .ewp_imb:after {clear:both; content:""; display:block;}
 .ewp_imb > div {float:left; width:100%;}
@@ -1387,7 +1399,7 @@ header img {
 .beer_table_bx table tbody tr td:first-child{border-left:0px;}
 .beer_table_bx table tbody tr:last-child{border-bottom:0px;}
 
-/* 금능해변 페이지 */
+/* 湲덈뒫�빐蹂� �럹�씠吏� */
 .kn_main {width:100%; height:320px; background:url("/resources/images/kn_main_bg_mb01.png"); background-position:center top; background-repeat:no-repeat; background-size:cover; position:relative;}
 .kmt_stit {display:table; margin:0 auto;}
 .kmt_stit:after {clear:both; content:""; display:block;}
@@ -1480,7 +1492,7 @@ header img {
 
 
 
-/* 베럴테이스팅 페이지 */
+/* 踰좊윺�뀒�씠�뒪�똿 �럹�씠吏� */
 
 .bt_txt_area h1 {margin-bottom:20px;}
 .bt_intro {padding-bottom:0;}
@@ -1508,7 +1520,7 @@ header img {
 .sd_tb_bot p {line-height:30px !important;} 
 .sd_tb_bot h3 {margin-bottom:12px;}
 
-/* ================================================lsj 작업==================================================== */
+/* ================================================lsj �옉�뾽==================================================== */
 #bg_layer{height:100% !important; position:fixed !important;}
 /* calender */
 
@@ -1578,6 +1590,8 @@ header img {
 .reserve .reserveDl.full .reserveDd{margin-bottom:0px;}
 .reserve .agreementLi .agreementToggle img{vertical-align:middle; display:inline-block;}
 .reserve .agreementLi .agreementToggle span.require{width:8px;height:8px;}
+.reserve .agreementLi .promotionAgreementToggle img{vertical-align:middle; display:inline-block;}
+.reserve .agreementLi .promotionAgreementToggle span.require{width:8px;height:8px;}
 .agreesec .agreementLi .columnDd{box-sizing:border-box; font-size:15px; line-height:20px; padding:5px 0;}
 .termsLi{text-align:left; font-size:12px; line-height:150%;}
 .columnDl.typeTerms.dlbx{display:inline-block; width:100%; border-top:1px solid #e5e5e5; padding-top:15px; color:#757575;}
@@ -1641,9 +1655,9 @@ header img {
 .jejuRadioButton.jjrb{color:#55585b;}
 .pageDescription .sb{font-size:12.5px;}
 .pay .submitbox .buttonTypeCyan.py{font-weight:700;}
-/* 나이스 작업물 복사 시작 */
+/* �굹�씠�뒪 �옉�뾽臾� 蹂듭궗 �떆�옉 */
 
-/** 예약 설명 **/
+/** �삁�빟 �꽕紐� **/
 .beerwalk-desc {
     padding: 100px 0;
     position: relative;
@@ -1895,7 +1909,7 @@ header img {
 .app.prog.ftcolor .beerwalk-desc-title{color:#525252;}
 .app.prog.ftcolor .beerwalk-desc-info-type{color:#525252;}
 
-/* 배너추가 */
+/* 諛곕꼫異붽� */
 .bannerbx .m_jb_banner img{width:100%; display:block;}
 .bannerbx .pc_jb_banner img{width:100%; display:none;}
 
@@ -1915,14 +1929,14 @@ header img {
 .footer.mt{margin-bottom:135px;}
 
 @media screen and (min-width: 400px) {
-	/* 금능해변 페이지 */
+	/* 湲덈뒫�빐蹂� �럹�씠吏� */
 	.kn_main {height:320px;}
 }
 
 
 @media screen and (min-width: 500px) {
 
-	/* 금능해변 페이지 */
+	/* 湲덈뒫�빐蹂� �럹�씠吏� */
 	.kn_main {height:400px;}
 	.kmt_stit {font-size:16px;}
 	.kmt_year:before {width:175px; left:-177px;}
@@ -1943,7 +1957,7 @@ header img {
 
 @media screen and (min-width: 600px) {
 
-	/* 금능해변 페이지 */
+	/* 湲덈뒫�빐蹂� �럹�씠吏� */
 	.kn_main {height:500px;}
 }
 
@@ -2051,7 +2065,7 @@ header img {
     
     
     
-    /* 금능해변 페이지 */
+    /* 湲덈뒫�빐蹂� �럹�씠吏� */
     .kmt_mtit:after {width:650px;}
     .kmt_year:before {width:278px; left:-280px;}
     .kmt_year:after {width:278px; right:-280px;}
@@ -2121,7 +2135,7 @@ header img {
     .kng_beer {background-size:260px !important; background-position:center top 50px !important;}
 	.kng_ib {height:300px;}
 	
-	/* 베럴테이스팅 페이지 */
+	/* 踰좊윺�뀒�씠�뒪�똿 �럹�씠吏� */
 	.bt_main {height:560px;}
 	.bt_2img_area:after {clear:both; content:""; display:block;}
 	.bt_2img_area > div {float:left; width:49%;}
@@ -2147,7 +2161,7 @@ header img {
 .bg-gray.isPc.ewp_isp.mt120{margin-top:120px;}
 .ewp_str {color:#1ecad3;}
 
-/* ewp작업_220223 */
+/* ewp�옉�뾽_220223 */
 .ewp_insert_agree_ex .ewp_insert_agree_tit {font-size:12px;}
 .ewp_insert_agree_top {position:relative;}
 .ewp_insert_agree_top:after {clear:both; content:""; display:block;}
@@ -2167,7 +2181,7 @@ header img {
 
 
 
-/* 나이스 작업물 복사 끝 */
+/* �굹�씠�뒪 �옉�뾽臾� 蹂듭궗 �걹 */
 
 @media screen and (min-width:375px){
 	.tgicon{display:inline-block;}
@@ -2194,7 +2208,7 @@ header img {
 	.ewp_db_lef .sh_text {width:calc(100% - 266px); max-width:235px;}
 	.ewp_db_rig {margin-top:0;}
 	
-	/* 양조장 서브비쥬얼 작업 */
+	/* �뼇議곗옣 �꽌釉뚮퉬伊ъ뼹 �옉�뾽 */
 	
 	
 	.ewp_subm {height:200px; background: url("https://dsfyc8ahox9m2.cloudfront.net/static/images/reservationRenew/beerwalk/img_keyvisual.jpg");}
@@ -2216,7 +2230,7 @@ header img {
 
 @media screen and (min-width: 768px) {
 	
-	/* 양조장 서브비쥬얼 작업 */
+	/* �뼇議곗옣 �꽌釉뚮퉬伊ъ뼹 �옉�뾽 */
 	.ewp_subm {height:260px;}
 	.ewp_subm p {font-size:33px;}
 	.res_padi {padding-bottom:40px;}
@@ -2233,7 +2247,7 @@ header img {
 	.ewp_tlft {padding:80px 0 120px;}
 	
 	
-	/* 베럴테이스팅 페이지 */
+	/* 踰좊윺�뀒�씠�뒪�똿 �럹�씠吏� */
 	.bt_txt_area h2 {font-size:22px;}
 	.bt_inner.mgbt_50 {margin-bottom:120px !important;}
 	.bt_det_tb h3 {font-size:20px;}
@@ -2250,7 +2264,7 @@ header img {
 	.bt_main_mob {display:none;}
 	.sd_tb_bot p {line-height:19px !important;}
 	
-	/* 배너추가 */
+	/* 諛곕꼫異붽� */
 	.bannerbx{margin-bottom:70px; padding-top:20px;}
 	.bannerbx .m_jb_banner img{display:none;}
 	.bannerbx .pc_jb_banner img{display:block;}
@@ -2409,7 +2423,7 @@ header img {
 	.footer {padding-top:40px;}
 	
 	
-	/* insertReserver flex 제거작업 */
+	/* insertReserver flex �젣嫄곗옉�뾽 */
 	.ewp_fe .reserve.reserve-form {float:left;}
 	.ewp_fe .paybx {float:left; margin-left:20px !important;}
 	.ewp_fe:after {clear:both; content:""; display:block;}
@@ -2446,7 +2460,7 @@ header img {
 .md_cont .modal_tb .mt_bot .mt_txt .hyphen{display:block; padding-left:10px; position:relative;}
 .md_cont .modal_tb .mt_bot .mt_txt .hyphen:after{display:block; content:"-"; position:absolute; left:0; top:50%; transform:translateY(-50%);}
 
-/* 결제정보 확인 */
+/* 寃곗젣�젙蹂� �솗�씤 */
 
 .dmzbt_sec.bookingsec{width:100%; max-width:450px; box-sizing:border-box; padding:30px 20px; margin:0 auto; margin-top:30px; box-shadow:1px 1px 10px #ddd;}
 #container_title{padding:10px 0px; font-size:18px; text-align:center; margin-bottom:30px;}
@@ -2460,7 +2474,7 @@ header img {
 .qu_txt{font-size:16px; font-weight:600; color:#0a979c; text-align:center; padding:0px 10px; height:45px; line-height:50px; background:rgba(0, 205, 213, 0.14); margin-bottom:10px; border-radius:3px;}
 .pay_rtb{width:100%; border-top:2px solid #05cdd5; border-bottom:2px solid #05cdd5;}
 
-/* 결제완료 */
+/* 寃곗젣�셿猷� */
 
 .p_tit{width:40%; float:left; height:20px; line-height:20px; font-size:16px; font-weight:600;}
 .p_txt{width:60%; float:left; height:20px; line-height:21px; font-size:16px; color:#484848; font-weight:300;}
@@ -2472,7 +2486,7 @@ header img {
 .erc_ty .qu_txt{font-size:20px;}
 
 
-/* 예약확인 */
+/* �삁�빟�솗�씤 */
 .res_tb {font-size:15px; line-height:150%;}
 .res_tit h1 {font-size:25px !important; line-height:40px; color:#55585b;}
 .res_tit {padding-top:40px !important;}
@@ -2523,7 +2537,7 @@ header img {
 	.ewp_block_m {display:none;}
 	
 	
-	/* 예약확인 */
+	/* �삁�빟�솗�씤 */
 	.res_tb {font-size:22px; line-height:150%; margin-bottom:10px; white-space:nowrap;}
 	.res_wse {white-space:inherit;}
 	.res_tit h1 {font-size:40px !important; line-height:53px;}
@@ -2650,7 +2664,8 @@ header img {
 	.columnDl.typeTerms.dlbx{border-top:0px;}
 	.columnDl.typeTerms.dlbx .columnDt, .columnDl.typeTerms.dlbx .columnDd{font-size:15px;}
 	.agreementLi.question.termsLi{border-bottom:0px !important;}
-	.agreesec .agreementUl.mt40.last_agree{margin-top:40px;}
+	/* .agreesec .agreementUl.mt40.last_agree{margin-top:40px;} */
+	.agreesec .agreementUl.mt40.last_agree{margin-top:28px;}
 	.agreementLi.question.noBorder, .conts_box.ins .agreementUl.last_agree{border-bottom:none !important;}
 	.pageLine.mt10.mb70{margin-top:10px; margin-bottom:63px; border-top:2px solid #e0e0e0; padding:0px;}
 	.pay-info .receiptDl.instR{margin-top:70px;}
@@ -2695,11 +2710,11 @@ header img {
 	.ewp_ecb .order-wrap .submit {width:20%;}
 	.ewp_ecb .order-wrap .js-order {width:100%;}
 	
-	/* 양조장 서브비쥬얼 작업 */
+	/* �뼇議곗옣 �꽌釉뚮퉬伊ъ뼹 �옉�뾽 */
 	.ewp_subm {height:346px;}
 	.ewp_subm p {font-size:40px;}
 	
-	/* 체험장 작업 */
+	/* 泥댄뿕�옣 �옉�뾽 */
 	.ewp_medit {margin-top:160px;}
 	.ewp_widt {margin-top:80px;}
 	.ewp_widt p {font-size:22px; padding:0 15px;}
@@ -2720,7 +2735,8 @@ header img {
 	.conts_box.ins .columnDl .columnDd{width:35%;}
 	
 	.agreesec.line_he .agreementUl .columnDt{line-height:30px;}
-	.agreesec.line_he .agreementUl .columnDl.agree_top{height:50px;}
+	/* .agreesec.line_he .agreementUl .columnDl.agree_top{height:50px;} */
+	.agreesec.line_he .agreementUl .columnDl.agree_top{height:38px;}
 	.agreesec.line_he .agreementUl .columnDt.colMax{width:100% !important;}
 	.conts_box.ins .agreementUl .agreementLi.question.termsLi{padding-bottom:0px;}
 	.pageLine.inst.bd2{border-top:2px solid #e0e0e0;}
@@ -2775,11 +2791,11 @@ header img {
 	.ewp_ecb .order-wrap.time-wrap{width:47%; margin-left:3%;}
 	.ewp_ecb{padding:15px;}
 	
-	/* 금능해변 작업 */
+	/* 湲덈뒫�빐蹂� �옉�뾽 */
 	.knq_q{margin-bottom:20px;}
 	.kn_main {width:100%; height:1000px; background:url("/resources/images/kn_main_bg02.png"); background-position:center top -250px; background-repeat:no-repeat; position:relative;}
 	
-	/* 베럴테이스팅 페이지 */
+	/* 踰좊윺�뀒�씠�뒪�똿 �럹�씠吏� */
 	.bt_main {height:800px;}
 	.bt_intro.mgbt_50 {margin-bottom:0 !important;}
 	.bt_series {margin-top:120px; padding-top:120px;}
@@ -2789,7 +2805,8 @@ header img {
 	.bt_det_tb h3 span {margin-left:15px;}
 	.sd_tb_bot p {line-height:30px !important;}
 	
-	.ewp_insert_agree_ex .ewp_insert_agree_tit {font-size:20px;}
+	/* .ewp_insert_agree_ex .ewp_insert_agree_tit {font-size:20px;} */
+	.ewp_insert_agree_ex .ewp_insert_agree_tit {font-size:17px;}
 
 	.agreementUl .ewp_insert_agree_top > .ewp_iat_left {width:285px !important;}
 	.ewp_insert_agree_ex .agreementLi {padding:0 0 15px 0 !important;}
@@ -2830,10 +2847,10 @@ header img {
 	 .res_bot_box .buttonTypeCyan {font-size:16px;}
 	 
 	 
-	 /* 금능해변 작업 */
+	 /* 湲덈뒫�빐蹂� �옉�뾽 */
 	.kn_main {height:1200px;} 
 	
-	/* 베럴테이스팅 페이지 */
+	/* 踰좊윺�뀒�씠�뒪�똿 �럹�씠吏� */
 	.bt_det_tb {padding-left:0;}
 	.bt_warning {padding:0;}
 	.sd_tb_bot {left:0;}
@@ -2845,7 +2862,7 @@ header img {
 	/* oneday_class */
 	.kn_con3_icon.b_line{position:relative;}
 	.kn_con3_icon.b_line:before{position:absolute; width:270px; height:2px; background:#87898b; top:50px; right:-290px; display:block; content:"";}
-	.kn_con3_icon.b_line:after{position:absolute; width:155px; height:50px; display:block; content:"자차이동 (소요시간:약 7분)"; color:#29d5dc; top:37px; right:-242px; font-weight:bold; font-size:18px; word-break:keep-all; background:#fff; padding:0px 10px;}
+	.kn_con3_icon.b_line:after{position:absolute; width:155px; height:50px; display:block; content:"�옄李⑥씠�룞 (�냼�슂�떆媛�:�빟 7遺�)"; color:#29d5dc; top:37px; right:-242px; font-weight:bold; font-size:18px; word-break:keep-all; background:#fff; padding:0px 10px;}
 	.kn_con3_icon.b_line2{position:relative;}
 	.kn_con3_icon.b_line2:before{position:absolute; width:270px; height:2px; background:#87898b; top:50px; right:-290px; display:block; content:"";}
 	
@@ -2854,7 +2871,7 @@ header img {
 
 
 @media screen and (min-width:1400px){
-	/* 금능해변 작업 */
+	/* 湲덈뒫�빐蹂� �옉�뾽 */
 	.kn_main {height:1100px; background-position:center top -250px;}
 	.kn_main_tb {padding-top:115px;}
 }
