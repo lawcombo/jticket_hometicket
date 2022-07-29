@@ -243,6 +243,32 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 		webPayment.setAgree_1(paymentInfo.isAgree_1() ? "1" : "0");
 		webPayment.setAgree_2(paymentInfo.isAgree_2() ? "1" : "0");
 		
+		
+		//일단 제주맥주일경우, 마케팅 정보동의 체크
+		if(paymentInfo.getProductGroup().getContent_mst_cd().toString().contains("JEJUBEER"))
+		{
+			//sms
+			if(paymentInfo.getAgree_4() != null && "0".equals(paymentInfo.getAgree_4()))
+			{//동의:0, 비동의:null,  bc_web_payment Table에는 동의:1, 비동의:0
+				webPayment.setAgree_4("1");
+			}
+			else
+			{
+				webPayment.setAgree_4("0");
+			}
+			
+			if(paymentInfo.getAgree_5() != null && "0".equals(paymentInfo.getAgree_5()))
+			{//동의:0, 비동의:null
+				webPayment.setAgree_5("1");
+			}
+			else
+			{
+				webPayment.setAgree_5("0");
+			}
+		}
+		
+		
+		
 		int enteredCount = ticketingMapper.insertWebPayment(webPayment);
 		if(enteredCount <= 0) {
 			throw new Exception("예매 정보를 생성 할 수 없습니다.");

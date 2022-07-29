@@ -36,6 +36,10 @@ public class WebPaymentDTO implements Serializable {
 	String agree_1;
 	String agree_2;
 	
+	//마케팅 정보동의
+	String agree_4; //sms
+	String agree_5; //email
+	
 	String merchantID;
 	String merchantKey;
 	String product_group_name;

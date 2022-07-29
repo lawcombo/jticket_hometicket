@@ -74,6 +74,16 @@
 <%@ include file="../include/header-single.jsp"%>
 <meta name="_csrf_header" content="${_csrf.headerName}">
 <meta name="_csrf" content="${_csrf.token}">
+
+
+
+<style>
+table, td, th {
+ 	border : 1px solid gray;
+};
+</style>
+
+
 <div class="app">
 	<%@ include file="../include/top_menu.jsp"%>
 
@@ -294,32 +304,50 @@
 					</div>
 					<section class="reserve reserve-agree agreesec line_he">
 						<div class="verticalAlignMiddle ewp_insert_agree_ex">
+							
+							<!--모두 동의 영역 -->
 							<ul class="agreementUl">
+								<li class="agreementLi question toggleHeader">
+									<div class="columnDl fontSize20 agree_top ewp_insert_agree_top">
+										<div class="columnDd reservationRenewPage ewp_iat_right">
+											<label for="allAgreePrivacy" class="jejuRadioButton jjrb">
+												<input type="radio" name="agree_0" id="allAgreePrivacy" value="1"> 
+												<span class="check"></span> 
+												<span class="ag_txt" style="font-weight:bold;">모두 동의합니다.</span>
+											</label>
+										</div>
+									</div>
+									<p class ="ewp_m_info_tb" style="font-size:smaller; text-align:-webkit-auto; color:darkgrey;">
+										선택 항목에 동의하지 않아도 서비스를 이용하실 수 있습니다.
+									</p>
+								</li>
+							</ul>
+							
+							
+							<ul class="agreementUl mt40 last_agree">
 								<li class="agreementLi question toggleHeader">
 									<div class="columnDl fontSize20 agree_top ewp_insert_agree_top">
 										<div class="columnDt textAlignLeft ewp_iat_left">
 											<div class="agreementToggle ft20 tgicon">
 												<p class="ewp_insert_agree_tit">개인정보 수집 동의 (보기)</p>
-												<img
-													src="https://dsfyc8ahox9m2.cloudfront.net/static/images/reservationRenew/img_icon_arrowDown.png"
-													alt="key visual" class="imgAgreementArrowDown" /> <span
-													class="require"></span>
+												<img src="https://dsfyc8ahox9m2.cloudfront.net/static/images/reservationRenew/img_icon_arrowDown.png" alt="key visual" class="imgAgreementArrowDown" /> 
+												<span class="require"></span>
 											</div>
 										</div>
 										<div
 											class="columnDd textAlignRight reservationRenewPage ewp_iat_right ewp_iat_right2">
 											<label for="agreementPrivacy" class="jejuRadioButton jjrb">
-												<input type="radio" name="agree_1" id="agreementPrivacy"
-												value="1"> <span class="check"></span> <span
-												class="ag_txt">동의</span>
+												<input type="radio" name="agree_1" id="agreementPrivacy" value="1"> 
+												<span class="check"></span> 
+												<span class="ag_txt">동의</span>
 											</label>
 										</div>
 									</div>
 								</li>
-								<li class="agreementLi answer toggleContent"
-									style="display: none;">
+								<li class="agreementLi answer toggleContent" style="display: none;">
 									<div class="pt20 pb20 ag_tg">
-										<%--  <c:out value="${reserveInfo.info_a }" escapeXml="false"/> --%>
+										 <c:out value="${reserveInfo.info_a }" escapeXml="false"/>
+										<!-- 
 										<div>
 											당사는 개인정보보호법(법률 제 10465호) 등 관련법령에 의거하여, 정보주체로부터 개인정보를 수집함에 있어,
 											아래 내용을 안내하고 있습니다.<br> 정보주체가 되는 이용자께서는 아래 내용을 자세히 읽어보신 후에
@@ -345,35 +373,31 @@
 											동의를 하지 않으실 경우에는, 제주맥주에서 주최하는 프로그램에 신청이 이루어지지 않음에 따라 당사의 개인정보
 											처리 요구 서비스를 이용하실 수 없습니다.
 										</div>
+										 -->
 									</div>
 								</li>
 							</ul>
 							<ul class="agreementUl mt40 last_agree">
-								<li class="agreementLi question noBorder">
+								<li class="agreementLi question toggleHeader">
 									<div class="columnDl fontSize20 agree_top ewp_insert_agree_top">
-										<div
-											class="columnDt textAlignLeft ft20 termsOfUseToggle ewp_iat_left">
+										<div class="columnDt textAlignLeft ft20 termsOfUseToggle ewp_iat_left">
 											<div>
 												<p class="ewp_insert_agree_tit">이용 규정에 대한 동의(보기)</p>
-												<img
-													src="https://dsfyc8ahox9m2.cloudfront.net/static/images/reservationRenew/img_icon_arrowDown.png"
-													alt="key visual" class="imgAgreementArrowDown"> <span
-													class="require"></span>
+												<img src="https://dsfyc8ahox9m2.cloudfront.net/static/images/reservationRenew/img_icon_arrowDown.png" alt="key visual" class="imgAgreementArrowDown"> 
+												<span class="require"></span>
 											</div>
 										</div>
 										<div
 											class="columnDd textAlignRight reservationRenewPage ewp_iat_right">
 											<div class="chmd">
-												<input type="radio" name="agreementTermsOfUse"
-													id="agreementTermsOfUse" class="delinp" value="1">
-												<label class="jejuRadioButton jjrb ag_txt"><span
-													class='check'></span> 확인 후 동의</label>
+												<input type="radio" name="agreementTermsOfUse" id="agreementTermsOfUse" class="delinp" value="1">
+												<label class="jejuRadioButton jjrb ag_txt">
+												<span class='check'></span> 동의</label>
 											</div>
 											<div class="rad_modal">
 												<div class="rad_modal_content">
 													<div class="rad_modal_x">
-														<div id="agreementTermsOfUse-modal-section"
-															class="md_cont">
+														<div id="agreementTermsOfUse-modal-section" class="md_cont">
 															<%-- <c:out value="${reserveInfo.info_c }" escapeXml="false"/> --%>
 															<div class="modal_tb">
 																<div class="mt_top">
@@ -415,7 +439,7 @@
 																</div>
 															</div>
 
-															<button class="md_bts">모두 확인했고, 동의합니다.</button>
+															<button class="md_bts" style="cursor:pointer;">모두 확인했고, 동의합니다.</button>
 														</div>
 													</div>
 												</div>
@@ -425,9 +449,10 @@
 									</div>
 								</li>
 								<li class="agreementLi answer termsOfUseToggleContent"
-									style="display: none; border-bottom: none;">
+									style="display: none; ">
 									<div class="pt20 pb20 ag_tg">
-										<%--  <c:out value="${reserveInfo.info_a }" escapeXml="false"/> --%>
+										 <c:out value="${reserveInfo.info_b }" escapeXml="false"/>
+										<!-- 
 										<div>
 											제 1조 (목적)<br> 1. 본 이용약관은 제주맥주 주식회사(이하 ‘회사’)가 제주맥주 양조장 관련
 											온/오프라인 서비스(이하 ‘서비스’)를 운영함에 있어 발생할 수 있는 문제상황에 대하여 일관성 있게 대응하기
@@ -510,9 +535,78 @@
 											<br> &lt;부칙&gt;<br> 제1조(시행일) 이 약관은 2020년 07월 23일부터
 											시행합니다.
 										</div>
+										 -->
 									</div>
 								</li>
 							</ul>
+							
+							
+							<!--프로모션 영역 -->
+							<ul class="agreementUl mt40 last_agree">
+								<li class="agreementLi question noBorder">
+									<div class="columnDl fontSize20 agree_top ewp_insert_agree_top">
+										<div class="columnDt textAlignLeft ewp_iat_left">
+											<div class="promotionAgreementToggle ft20 tgicon">
+												<p class="ewp_insert_agree_tit">프로모션/혜택 안내 수신동의(선택)</p>
+												<img src="https://dsfyc8ahox9m2.cloudfront.net/static/images/reservationRenew/img_icon_arrowDown.png" alt="key visual" class="imgAgreementArrowDown" /> 
+												<span class="require"></span>
+											</div>
+										</div>
+										<div class="columnDd textAlignRight reservationRenewPage ewp_iat_right ewp_iat_right2">
+											<label for="promotionAgree" class="jejuRadioButton jjrb">
+												<input type="radio" name="agree_3" id="promotionAgree" value="1"> 
+												<span class="check"></span> 
+												<span class="ag_txt">동의</span>
+											</label>
+										</div>
+									</div>
+									<p class ="ewp_m_info_tb" style="font-size:smaller; text-align:-webkit-auto; margin-top:0px; margin-bottom:12px; color:darkgrey;">
+										신상품 소식, 이벤트 안내, 고객 혜택 등 다양한 정보를 제공합니다.
+									</p>
+									
+									<div class="columnDl fontSize20 agree_top ewp_insert_agree_top">
+										<div class="columnDd textAlignRight reservationRenewPage ewp_iat_right ewp_iat_right2">
+											<label for="smsAgree" class="jejuRadioButton">
+												<input type="radio" name="agree_4" id="smsAgree" value="1"> 
+												<span class="check"></span> 
+												<span class="ag_txt">SMS</span>
+											</label>
+										</div>
+										<div class="columnDd textAlignRight reservationRenewPage ewp_iat_right ewp_iat_right2">
+											<label for="emailAgree" class="jejuRadioButton">
+												<input type="radio" name="agree_5" id="emailAgree" value="1"> 
+												<span class="check"></span> 
+												<span class="ag_txt">E-Mail</span>
+											</label>
+										</div>
+									</div>
+									
+								</li>
+								<li class="agreementLi answer promotionToggleContent" style="border-bottom: none; display: none;">
+									<div class="pt20 pb20 ag_tg">
+										 <%-- <c:out value="${reserveInfo.info_a }" escapeXml="false"/> --%>
+										 
+										 <table>
+										    <thead>
+										        <tr style="text-align:center; background-color:gainsboro;">
+										            <th style="width:33.3%">수집/이용 목적</th>
+										            <th style="width:33.3%">수집/이용 항목</th>
+										            <th style="width:33.3%">보유 및 이용 기간</th>
+										        </tr>
+										    </thead>
+										    <tbody>
+										        <tr>
+										            <td> 맞춤형 프로모션과 혜택 홍보 및 제공</td>
+										            <td> 이름, 휴대폰번호, 이메일 주소</td>
+										            <td> 동의 철회 시 까지</td>
+										        </tr>
+										    </tbody>
+										</table>
+										
+									</div>
+								</li>
+							</ul>
+							
 						</div>
 					</section>
 					<div class="pageLine mt10 mb70 isPb"></div>
@@ -667,6 +761,13 @@ $(function() {
 	$(".termsOfUseToggle").on('click', function(){
 		$(".termsOfUseToggleContent").slideToggle();
 	});
+	
+	
+	//프로모션 동의 토글
+	$(".promotionAgreementToggle").on('click', function(){
+		$(".promotionToggleContent").slideToggle();
+	});
+	
 	
 	
 	// 쿠폰번호 입력시 
@@ -1026,14 +1127,28 @@ $(function(){
 		
 		
 		if(isChecked) {
+			//이용규정에 대한 동의 체크 해제
 			$("#agreementTermsOfUse").prop("checked", false);
+			
+			
+			//모두 동의 체크 해제
+			$("#allAgreePrivacy").prop("checked", false);
+			$("#allAgreePrivacy").val("1");
+			
+			
 		} else {
 			$(this).next(".rad_modal").fadeIn();
 		}
 	});
 	
 	$(".rad_modal_bk").click(function(){
-		$(".rad_modal").fadeOut();
+		
+		//이용규정 모달 동의 하지않고, 다른 곳 클릭했을 경우, 
+		
+		alert("\'동의\' 버튼을 클릭해주시기 바랍니다.");
+		return;
+		
+		//$(".rad_modal").fadeOut();
 	});
 	
 	$("#agreementTermsOfUse").on('click', function(e){
@@ -1043,6 +1158,10 @@ $(function(){
 	$(".md_bts").click(function(e){
 		e.preventDefault();
 		$("#agreementTermsOfUse").prop("checked", true);
+		
+		//모든 체크박스 체크되어있는지 확인
+		checkBoxEvent.allCheckBtn();
+		
 		$(".rad_modal").fadeOut();
 		
 	});
@@ -1065,15 +1184,243 @@ var isCheckedAgreementPrivacy = false;
 $("#agreementPrivacy").on("click", function(e) {
 	var isChecked = $(this).prop("checked");
 	
-	if(isCheckedAgreementPrivacy && isChecked) {
+	if(isCheckedAgreementPrivacy && isChecked) 
+	{// 개인정보 수집 동의 체크 해제 할때,
+		
 		$(this).prop("checked", false);	
 		isCheckedAgreementPrivacy = false;
-	}else if(!isCheckedAgreementPrivacy && isChecked){
+		
+		//모두 동의 체크 해제
+		$("#allAgreePrivacy").prop("checked", false);
+		$("#allAgreePrivacy").val("1");
+	}
+	else if(!isCheckedAgreementPrivacy && isChecked)
+	{// 개인정보 수집 동의 체크 할때, 
+		
 		isCheckedAgreementPrivacy = true;
-	} else {
+	
+		//모든 체크박스 체크되어있는지 확인
+		checkBoxEvent.allCheckBtn();
+	} 
+	else 
+	{
 		isCheckedAgreementPrivacy = false;
 	}
 });
+
+
+//모두동의, 전체동의 체크박스 클릭시
+$("#allAgreePrivacy").on("click", function(e) {
+
+	// 1: 체크 안된상태, 0: 체크된 상태.
+	var flag = $("#allAgreePrivacy").val();
+	
+	if(flag == "1") 
+	{
+		//모두 동의 체크
+		$("#allAgreePrivacy").prop("checked", true);	
+		$("#allAgreePrivacy").val("0");
+		
+		//개인정보 수집동의 체크하기.
+		isCheckedAgreementPrivacy = true;
+		$("#agreementPrivacy").prop("checked", true);
+		
+		//이용 규정에 대한 동의 체크하기
+		if(!$("#agreementTermsOfUse").prop("checked"))
+		{
+			$(".rad_modal").fadeIn();
+		}
+		//$("#agreementTermsOfUse").next(".rad_modal").fadeIn();
+		$("#agreementTermsOfUse").prop("checked", true);
+		
+		//프로모션에 대한 동의 체크하기
+		$("#promotionAgree").val("0");
+		$("#promotionAgree").prop("checked", true);
+		
+		//프로모션의 SMS & E-Mail 체크하기
+		$("#smsAgree").val("0");
+		$("#smsAgree").prop("checked", true);
+		$("#emailAgree").val("0");
+		$("#emailAgree").prop("checked", true);
+	}
+	else
+	{
+		//모두 동의 체크 해제
+		$("#allAgreePrivacy").prop("checked", false);
+		$("#allAgreePrivacy").val("1");
+		
+		//개인정보 수집동의 체크 해제
+		$("#agreementPrivacy").prop("checked", false);	
+		isCheckedAgreementPrivacy = false;
+		
+		//이용 규정에 대한 동의 체크 해제
+		$("#agreementTermsOfUse").prop("checked", false);
+		
+		//프로모션에 대한 동의 체크 해제
+		$("#promotionAgree").val("1");
+		$("#promotionAgree").prop("checked", false);
+		
+		//프로모션의 SMS & E-Mail 체크 해제
+		$("#smsAgree").val("1");
+		$("#smsAgree").prop("checked", false);
+		$("#emailAgree").val("1");
+		$("#emailAgree").prop("checked", false);
+	}
+});
+
+//프로모션체크박스 클릭시
+$("#promotionAgree").on("click", function(e) {
+
+	// 1: 체크 안된상태, 0: 체크된 상태.
+	var flag = $("#promotionAgree").val();
+	
+	if(flag == "1") 
+	{
+		//프로모션 동의 체크
+		$("#promotionAgree").prop("checked", true);	
+		$("#promotionAgree").val("0");
+		
+		//모든 체크박스 체크되어있는지 확인
+		checkBoxEvent.allCheckBtn();
+		
+		//================프로모션 선택 check=======================
+		//프로모션 SMS 동의 체크
+		$("#smsAgree").prop("checked", true);	
+		$("#smsAgree").val("0");
+		
+		//프로모션 E-Mail 동의 체크
+		$("#emailAgree").prop("checked", true);	
+		$("#emailAgree").val("0");
+		//======================================================
+	}
+	else
+	{
+		//프로모션 동의 체크 해제
+		$("#promotionAgree").prop("checked", false);
+		$("#promotionAgree").val("1");
+		
+		if($("#allAgreePrivacy").val("0"))
+		{
+			$("#allAgreePrivacy").val("1")
+			$("#allAgreePrivacy").prop("checked", false);
+		}
+		
+		
+		//================프로모션 선택 해제=======================
+		//프로모션 SMS 동의 체크
+		$("#smsAgree").prop("checked", false);	
+		$("#smsAgree").val("1");
+		
+		//프로모션 E-Mail 동의 체크
+		$("#emailAgree").prop("checked", false);	
+		$("#emailAgree").val("1");
+		//======================================================
+	}
+});
+
+//프로모션 SMS 체크박스
+$("#smsAgree").on("click", function(e) {
+
+	// 1: 체크 안된상태, 0: 체크된 상태.
+	var flag = $("#smsAgree").val();
+	
+	if(flag == "1") 
+	{
+		//프로모션 SMS 동의 체크
+		$("#smsAgree").prop("checked", true);	
+		$("#smsAgree").val("0");
+		
+		
+		//프로모션에 대한 동의 체크하기
+		if(!$("#promotionAgree").prop("checked"))
+		{
+			$("#promotionAgree").val("0");
+			$("#promotionAgree").prop("checked", true);
+			
+			//모든 체크박스 체크되어있는지 확인
+			checkBoxEvent.allCheckBtn();
+		}
+	}
+	else
+	{
+		//프로모션 동의 체크 해제
+		$("#smsAgree").prop("checked", false);
+		$("#smsAgree").val("1");
+		
+		//SMS 체크 해제할때, Email 체크 해제되어 있으면 프로모션 동의 해제
+		if(!$("#emailAgree").prop("checked"))
+		{
+			$("#promotionAgree").val("1");
+			$("#promotionAgree").prop("checked", false);
+			
+			
+			//모두 동의 체크 해제
+			$("#allAgreePrivacy").prop("checked", false);	
+			$("#allAgreePrivacy").val("1");
+		}
+	}
+});
+
+//프로모션 E-Mail 체크박스
+$("#emailAgree").on("click", function(e) {
+
+	// 1: 체크 안된상태, 0: 체크된 상태.
+	var flag = $("#emailAgree").val();
+	
+	if(flag == "1") 
+	{
+		//프로모션 E-Mail 동의 체크
+		$("#emailAgree").prop("checked", true);	
+		$("#emailAgree").val("0");
+		
+		//프로모션에 대한 동의 체크하기
+		if(!$("#promotionAgree").prop("checked"))
+		{
+			$("#promotionAgree").val("0");
+			$("#promotionAgree").prop("checked", true);
+			
+			//모든 체크박스 체크되어있는지 확인
+			checkBoxEvent.allCheckBtn();
+		}
+	}
+	else
+	{
+		//프로모션 동의 체크 해제
+		$("#emailAgree").prop("checked", false);
+		$("#emailAgree").val("1");
+		
+		//E-mail 체크 해제할때, SMS 체크 해제되어 있으면 프로모션 동의 해제
+		if(!$("#smsAgree").prop("checked"))
+		{
+			$("#promotionAgree").val("1");
+			$("#promotionAgree").prop("checked", false);
+			
+			
+			//모두 동의 체크 해제
+			$("#allAgreePrivacy").prop("checked", false);	
+			$("#allAgreePrivacy").val("1");
+		}
+	}
+});
+
+
+
+
+// 각각 체크박스 체크할경우, 각각 체크박스 모드 체크되어져있을때, '모두동의합니다' 체크박스 체크하기
+var checkBoxEvent = {
+		
+		allCheckBtn : function(){
+			
+			if($("#agreementPrivacy").prop("checked") && $("#agreementTermsOfUse").prop("checked") && $("#promotionAgree").prop("checked"))
+			{
+				//모두 동의 체크
+				$("#allAgreePrivacy").prop("checked", true);	
+				$("#allAgreePrivacy").val("0");
+			}
+			
+		}
+}
+
 </script>
 
 </body>

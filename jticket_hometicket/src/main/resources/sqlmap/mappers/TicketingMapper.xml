@@ -505,6 +505,8 @@
 				`VALID_PERIOD`,
 				`AGREE_1`,
 				`AGREE_2`,
+				`AGREE_4`,
+				`AGREE_5`,
 				`PRODUCT_GROUP_TYPE`
 			) VALUES (
 				#{shop_code},
@@ -528,6 +530,8 @@
 				(select IFnulL(valid_period, '') from bc_ticketvalid where shop_code = #{shop_code}),
 				#{agree_1},
 				#{agree_2},
+				#{agree_4},
+				#{agree_5},
 				#{product_group_type}
 			)
 		]]>
@@ -931,7 +935,9 @@
 			info_c_title, 
 			info_c, 
 			info_d_title, 
-			info_d
+			info_d,
+			info_e_title,
+			info_e
 		FROM bc_web_reservation_key
 		WHERE company_code = (SELECT company_code FROM bc_shop WHERE shop_code = #{shop_code})
 

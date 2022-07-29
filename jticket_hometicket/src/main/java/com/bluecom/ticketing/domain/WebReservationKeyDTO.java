@@ -28,4 +28,7 @@ public class WebReservationKeyDTO implements Serializable{
 	private String info_d_title;
 	private String info_d;
 	
+	private String info_e_title;
+	private String info_e;
+	
 }

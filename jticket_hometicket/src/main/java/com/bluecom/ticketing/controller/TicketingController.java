@@ -1176,8 +1176,12 @@ public class TicketingController extends BaseController {
 				!StringUtils.hasText(reserveInfo.getInfo_a()) ||
 				!StringUtils.hasText(reserveInfo.getInfo_b()) ||
 				!StringUtils.hasText(reserveInfo.getInfo_c()) ||
-				!StringUtils.hasText(reserveInfo.getInfo_d())) {			
+				!StringUtils.hasText(reserveInfo.getInfo_d()) ||
+				!StringUtils.hasText(reserveInfo.getInfo_e())) {			
 			redirect.addFlashAttribute("msg", "약관정보가 없습니다. 관리자에게 연락 바랍니다.");
+			
+			ScriptUtils.alertAndClose(response, "약관정보가 없습니다. 관리자에게 연락 바랍니다.");
+			
 			log.error("[ERROR]약관정보가 없습니다. 관리자에게 연락 바랍니다.");
 			if(StringUtils.hasText(content_mst_cd) && StringUtils.hasText(product_group_code)) {
 				return "redirect:/ticketing/selectSchedule?content_mst_cd=" + content_mst_cd + "&product_group_code=" + product_group_code;
@@ -1198,6 +1202,10 @@ public class TicketingController extends BaseController {
 		content = reserveInfo.getInfo_d();
 		reserveInfo.setInfo_d(StringEscapeUtils.unescapeXml(content));
 
+		//프로모션 수신 동의 추가 _ 2022.07.28
+		content = reserveInfo.getInfo_e();
+		reserveInfo.setInfo_e(StringEscapeUtils.unescapeXml(content));
+		
 		model.addAttribute("reserveInfo", reserveInfo);
 		
 		// 본인인증키 가져오기

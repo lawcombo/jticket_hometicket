@@ -36,8 +36,12 @@ public class PaymentInfoDTO implements Serializable{
 	
 	int idx;
 	 
-	boolean agree_1;
-	boolean agree_2;
+	boolean agree_1;	// 개인정보 수집 동의
+	boolean agree_2;	// 사용안함
+	
+	String agree_4;	// 프로모션 혜택 SMS 동의	//0:동의, null:비동의
+	String agree_5;	// 프로모션 혜택 EMAIL 동의	//0:동의, null:비동의
+	
 	
 	String order_num;
 	String member_name;
