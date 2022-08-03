@@ -34,7 +34,7 @@ String coupon			= webPayment.getCouponFee(); //쿠폰 총 금액
 String fee				= webPayment.getTotal_fee().toString(); //총 상품 금액
 
 //운영에는 https 처리
-String returnURL 		= "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/payResult"; // 결과페이지(절대경로) - 모바일 결제창 전용
+String returnURL 		= "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/payResult"; // 결과페이지(절대경로) - 모바일 결제창 전용
 
 /*
 *******************************************************
@@ -121,6 +121,8 @@ function checkPlatform(ua) {
 	return userPlatform;
 }
 </script>
+
+
 <section class="dmzbt_sec bookingsec">
 	<div class="dmz_list ddid_list jw_list edt_ex">
 		<div class="did_list_wrap ot_dlw ewp_ot">
@@ -150,15 +152,6 @@ function checkPlatform(ua) {
 												<input type="hidden" value="<%=fee%>" readonly>
 											</td>
 										</tr>
-										<%-- 
-										<tr>
-											<th><span>쿠폰 적용금액</span></th>
-											<td>
-												<input type="text" id="coupon" readonly>
-												<input type="hidden" name="coupon" value="<%=coupon%>" readonly>
-											</td>
-										</tr>	
-										 --%>
 										<tr>
 											<th><span>총 결제금액</span></th>
 											<td>
@@ -205,12 +198,12 @@ function checkPlatform(ua) {
 								</div>
 							</form>
 						</div>
+						
 					</div>
 				</div>
 			</div>
-			
-			</div>
 		</div>
+	</div>
 </section>	
 
 <script>
