@@ -26,8 +26,8 @@
 	
 	// CheckPlus(본인인증) 처리 후, 결과 데이타를 리턴 받기위해 다음예제와 같이 http부터 입력합니다.
 	//리턴url은 인증 전 인증페이지를 호출하기 전 url과 동일해야 합니다. ex) 인증 전 url : https://www.~ 리턴 url : https://www.~
-	String sReturnUrl = "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/success?content_mst_cd=" + ((com.bluecom.ticketing.domain.EssentialDTO)request.getAttribute("essential")).getContent_mst_cd();     // 성공시 이동될 URL
-	String sErrorUrl = "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/fail?content_mst_cd=" + ((com.bluecom.ticketing.domain.EssentialDTO)request.getAttribute("essential")).getContent_mst_cd();         // 실패시 이동될 URL
+	String sReturnUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/success?content_mst_cd=" + ((com.bluecom.ticketing.domain.EssentialDTO)request.getAttribute("essential")).getContent_mst_cd();     // 성공시 이동될 URL
+	String sErrorUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/fail?content_mst_cd=" + ((com.bluecom.ticketing.domain.EssentialDTO)request.getAttribute("essential")).getContent_mst_cd();         // 실패시 이동될 URL
 	
 	// 입력될 plain 데이타를 만든다.
 	String sPlainData = "7:REQ_SEQ" + sRequestNumber.getBytes().length + ":" + sRequestNumber +
@@ -117,36 +117,23 @@
 						</p>
 					</dt>
 				</dl>
-				<button type="button" id="reserverAuthenticationButton" class="buttonTypeCyan full textLarge">본인인증</button>
 				
-				<!-- <div class="ewp_certi">
+				<!-- <button type="button" id="reserverAuthenticationButton" class="buttonTypeCyan full textLarge">본인인증</button> -->
+				
+				<div class="ewp_certi">
 					<dl class="reserveDl full mt20">
 						<dt class="reserveDt">신청자명 <span class="require"></span></dt>
-						<dd class="reserveDd"><input type="text" name="reserver.name" class="jejuInputBox" id="userName"></dd>
+						<dd class="reserveDd"><input type="text" name="userName" class="jejuInputBox" id="userName"></dd>
 					</dl>
+					
 					<dl class="reserveDl full mt20">
-						<dt class="reserveDt pb15">핸드폰 번호 <span class="require"></span></dt>
-						<dd class="reserveDd">
-							<dl class="columnDl">
-								<dt class="columnDt"><input type="tel" name="reserver.phone" id="userPhone" class="jejuInputBox full gray"></dt>
-								<dd class="columnDd">
-								<button class="buttonTypeCyan full textLarge" id="callCert" type="button">인증번호 발송</button>
-							</dd>
-							</dl>
-						</dd>
+						<dt class="reserveDt">핸드폰번호 <span class="require"></span></dt>
+						<dd class="reserveDd"><input type="text" name="userPhone" class="jejuInputBox" id="userPhone"></dd>
 					</dl>
-					<dl class="reserveDl full mt55">
-						<dt class="reserveDt pb15">인증 번호 <span class="require"></span></dt>
-						<dd class="reserveDd">
-							<dl class="columnDl noPadding mt10">
-								<dt class="columnDt"><input type="number" name="certCode" id="authNo" class="jejuInputBox full gray"></dt>
-								<dd class="columnDd">
-									<button class="buttonTypeCyan full textLarge disabled" id="confirmCert" type="button">확인</button>
-								</dd>
-							</dl>
-						</dd>
-					</dl>
-				</div> -->
+				</div>
+				
+				<button type="button" id="reserveCheck" class="buttonTypeCyan full textLarge" onclick="check.reserveCheck();">예매확인</button>
+				
 			</div>
 		</section>
 		<form name="form_chk" method="post">
@@ -195,164 +182,11 @@ var length = 0;
 $(function(){
 	$("#confirm").attr('class', 'sub-a active');
 	
-	// 인증번호 발송 클릭시 / 2021-09-15 / 조미근 // //문자인증용
-	/* $("#callCert").on('click', function(){
-		var userName = $("#userName").val();
-		if(!userName){
-			alert("신청자명을 입력해주세요.");
-			$("#userName").focus();
-			return false;
-		}
-		
-		var userPhone = $("#userPhone").val();
-		if(!userPhone){
-			alert("핸드폰번호를 입력해주세요.");
-			$("#userPhone").focus();
-			return false;
-		}
-		
-		$('input[name="name"]').val(userName);
-		$('input[name="phone"]').val(userPhone);
-		
-		checkReservedCountAjax(userName, userPhone)
-		
-	}); */
-	
 	/***** 본인확인 *****/
 	$("#reserverAuthenticationButton").on('click', function(e) {
 		showShadow(true);
 		fnReserverAuthenticationPopup();
-			
 	});
-	
-	// 예매정보가 있는지 체크 //문자인증용
-	<%-- function checkReservedCountAjax(userName, userPhone){
-		length = 0;
-		$("#shopCode").val('');
-		$("#saleCode").val('');
-		$("#order_num").val('');
-		$("#dataType").val(0);
-		var data = {'member_tel': userPhone, 'member_name':userName, 'content_mst_cd':'<%=request.getParameter("content_mst_cd")%>'};
-		$.ajax({
-			url:"/ticketing/checkTicketAjax?${_csrf.parameterName}=${_csrf.token}",
-			type:"POST",            
-			dataType : 'json',
-			data : data,
-			success: function(data){
-				console.log(data);
-				length = data.length;
-				if (data[0].result_code == "0"){
-					alert('입력하신 신청자명 및 핸드폰번호에 해당하는 예약 정보가 없습니다.');
-				}
-				else{
-					
-					if(length == 1){ //예약이 1건만 존재하는 경우
-						$("#shopCode").val(data[0].shop_code);
-						$("#saleCode").val(data[0].sale_code);
-						$("#order_num").val(data[0].order_num);
-						$("#dataType").val(0);
-					}
-					else if(length > 1){ //예약이 n건 존재하는 경우
-						$("#dataType").val(1);
-						$("#shopCode").val(data[0].shop_code);
-					}
-					
-					//sendAuthenticationNumber(userName, userPhone);
-				}
-			},
-			error : function(xhr,status,error) {
-				console.log(xhr);
-				console.log(status);
-				console.log(error);
-			}
-		});
-	} --%>
-	
-	// 인증번호 전송 //문자인증용
-/* 	function sendAuthenticationNumber(userName, userPhone) {
-		
-		var data = {'phone':userPhone, 'content_mst_cd':'JEJUBEER_0_1'};
-		
-		var form = $('form[role="addReserverAuthenticationResult"]');
-		$.ajax({
-			type : 'post',  				       
-			url : '<c:url value="/reserverAuthentication/certification" />',
-			headers : {
-				"Content-type" : "application/json;charset=utf-8",
-				"X-HTTP-Method-Override" : "POST"
-			},
-			beforeSend : function(xhr) {
-				xhr.setRequestHeader(header, token);
-			},
-			dataType : 'json',
-			data : JSON.stringify(getFormData(form)),
-			success: function(data, status, xhr) {
-				console.log(data);
-				if(data.returnCode == "0000"){
-					console.log("성공");
-					alert("인증번호가 발송되었습니다.");
-					
-					$("input[name='name']").val(userName);
-					$("input[name='phone']").val(data.phone);	
-					$("input[name='responseSEQ']").val(data.responseSEQ);
-					$("#callCert").attr("class", "buttonTypeCyan full textLarge disabled");
-					$("#confirmCert").attr("class", "buttonTypeCyan full textLarge");
-				}else{
-					alert("인증번호 전송이 실패되었습니다.");
-				}
-				
-			},
-			error: function (jqXhr, textStatus, errorMessage) { // error callback 
-		        alert("인증 데이터를 저장 할 수 없습니다. 반복시 관리자를 호출해 주세요.");
-		      	
-				window.close();
-		    }
-		});
-	} */
-	
-	// 인증번호 확인 클릭 //문자인증용
-	/* $("#confirmCert").on('click', function(){
-		$("input[name='authNo']").val($("#authNo").val());
-		
-		var form = $('form[role="addReserverAuthenticationResult"]');
-		$.ajax({
-			type : 'post',  				       
-			url : '<c:url value="/reserverAuthentication/add" />',
-			headers : {
-				"Content-type" : "application/json;charset=utf-8",
-				"X-HTTP-Method-Override" : "POST"
-			},
-			beforeSend : function(xhr) {
-				xhr.setRequestHeader(header, token);
-			},
-			dataType : 'json',
-			data : JSON.stringify(getFormData(form)),
-			success: function(data, status, xhr) {
-				console.log(data);
-				if(data.returnCode == "0000"){
-					console.log("성공");
-					alert("인증이 완료되었습니다.");
-					$("#confirmCert").attr("class", "buttonTypeCyan full textLarge disabled");
-					//$("input[name='reserver.idx']").val(data.idx);
-					$("input[name='reserver.name']").val(data.name);
-					$("input[name='reserver.phone']").val(data.phone);
-					$("#member_tel").val(data.phone);
-					$("#member_name").val(data.name);
-					var form = document.inputForm;
-					form.action="/ticketing/prevShowTicket";
-					form.submit();
-				}else{
-					alert("인증번호를 확인해주세요.");
-				}
-				
-			},
-			error: function (jqXhr, textStatus, errorMessage) { // error callback 
-		        alert("인증 데이터를 저장 할 수 없습니다. 반복시 관리자를 호출해 주세요.");
-		      	
-				window.close();
-		    }
-		});
-	}); */
 	
 });
 
@@ -372,7 +206,6 @@ var setReturnedReserverAuthenticationValuesFromChildWindow = function (result) {
 		$("input[name='name']").val(result.name);
 		$("input[name='phone']").val(result.phone);	
 		$("input[name='code']").val(result.code);
-	
 		
 		var data = {'member_tel': result.phone, 'member_name':result.name, 'content_mst_cd':'<%=request.getParameter("content_mst_cd")%>'};
 		$.ajax({
@@ -417,36 +250,82 @@ var setReturnedReserverAuthenticationValuesFromChildWindow = function (result) {
 				hideShadow();
             }
 		});
-		/* var form = $('form[role="addReserverAuthenticationResult"]');
-		$.ajax({
-			type : 'post',  				       
-			url : '<c:url value="/reserverAuthentication/add" />',
-			headers : {
-				"Content-type" : "application/json;charset=utf-8",
-				"X-HTTP-Method-Override" : "POST"
-			},
-			beforeSend : function(xhr) {
-				xhr.setRequestHeader(header, token);
-			},
-			dataType : 'json',
-			data : JSON.stringify(getFormData(form)),
-			success: function(data, status, xhr) {
-				console.log(data)
-				
-				$("input[name='reserver.idx']").val(data.idx);
-				$("input[name='reserver.name']").val(data.name);
-				$("input[name='reserver.phone']").val(data.phone);
-				
-			},
-			error: function (jqXhr, textStatus, errorMessage) { // error callback 
-				alert("인증 데이터를 저장 할 수 없습니다. 반복시 관리자를 호출해 주세요.");
-				
-				window.close();
-			}
-		}); */
 	} else {
 		alert('본인인증에 실패하였습니다.');
 	}
 	
 }
+
+// 본인인증 return 핸드폰번호가 안넘어와서 일단 입력받은 핸드폰번호, 이름으로 예매조회하기.
+// 다이아몬드베이는 본인인증 성공시 리턴 핸드폰번호 필수로 신청안되어있음.
+var check = {
+		reserveCheck : function(){
+			
+			
+			if($("#userName").val() == "")
+			{
+				alert("이름을 입력하세요.");
+				$("#userName").focus();
+				return false;
+			}
+			
+			if($("#userPhone").val() == "")
+			{
+				alert("핸드폰번호를 입력하세요.");
+				$("#userPhone").focus();
+				return false;
+			}
+			
+			var data = {'member_tel': $("#userPhone").val(), 'member_name':$("#userName").val(), 'content_mst_cd':'<%=request.getParameter("content_mst_cd")%>'};
+			
+			console.log(data);
+			
+			$.ajax({
+				url:"/ticketing/checkTicketAjax?${_csrf.parameterName}=${_csrf.token}",
+				type:"POST",            
+				dataType : 'json',
+				data : data,
+				success: function(data){
+					console.log(data);
+					length = data.length;
+					if (data[0].result_code == "0"){
+						alert('입력하신 신청자명 및 핸드폰번호에 해당하는 예약 정보가 없습니다.');
+					}
+					else{
+						
+						console.log(data[0]);
+						
+						if(length == 1){ //예약이 1건만 존재하는 경우
+							$("#shopCode").val(data[0].shop_code);
+							$("#saleCode").val(data[0].sale_code);
+							$("#order_num").val(data[0].order_num);
+							$("#dataType").val(0);
+						}
+						else if(length > 1){ //예약이 n건 존재하는 경우
+							$("#dataType").val(1);
+							$("#shopCode").val(data[0].shop_code);
+						}
+						
+						$("#member_tel").val(data[0].member_tel);
+						$("#member_name").val(data[0].member_name);
+						$("#order_num").val(data[0].order_num);
+						
+						var form = document.inputForm;
+						form.action="/ticketing/prevShowTicket";
+						form.submit();
+					}
+				},
+				error : function(xhr,status,error) {
+					console.log(xhr);
+					console.log(status);
+					console.log(error);
+				},
+				complete : function() {
+					showShadow(false);
+					hideShadow();
+	            }
+			});
+		}
+}
+
 </script>

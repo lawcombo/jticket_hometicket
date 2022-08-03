@@ -273,6 +273,10 @@
 				AND SUBSTRING(REPLACE(#{play_date}, '-',''),5,4) between PLAY_DATE_FROM and PLAY_DATE_TO
 				AND (START_TIME > (DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 MINUTE), '%H:%i')) && DATE(NOW()) = STR_TO_DATE(#{play_date}, '%Y-%m-%d') || STR_TO_DATE(#{play_date}, '%Y-%m-%d') > CURDATE())
 				AND if(sale_weekday is null or sale_weekday = '', 1=1, sale_weekday LIKE CONCAT('%', WEEKDAY(#{play_date}), '%'))
+				
+				AND ( SCHEDULE_CODE != '801' and SCHEDULE_CODE != '802' and SCHEDULE_CODE != '803' and SCHEDULE_CODE != '804' and SCHEDULE_CODE != '805' and SCHEDULE_CODE != '806' and
+						SCHEDULE_CODE != '807' and SCHEDULE_CODE != '808' and SCHEDULE_CODE != '901' and  SCHEDULE_CODE != '902' and SCHEDULE_CODE != '903' and SCHEDULE_CODE != '904' and 
+						SCHEDULE_CODE != '905' and SCHEDULE_CODE != '906' )
 		]]>
 		<!-- CONCAT(PLAY_SEQUENCE, '회차 (', START_TIME, '~', END_TIME, ')') AS subject_text, -->
 	</select>
@@ -686,10 +690,12 @@
 			bc_reserver_authentication
 		SET
 			email = #{email}
+			, phone = #{phone}	<!-- 본인인증시 핸드폰번호 없을경우 update -->
 		WHERE
 			1=1
 			AND idx = #{idx}
 	</update>
+	
 	
 	<select id="selectWebPaymentProductsByOrderNo" parameterType="String" resultType="webPaymentProduct">
 		<![CDATA[
@@ -1057,4 +1063,23 @@
 				#{payment_date}, #{decide_date}, #{decide_id}, #{bill_yn}, #{bill_datetime}, NOW(), #{turn_idx})
 	</insert>
 	
+	
+	
+	
+	
+	
+	
+	<!-- KIS PG 결제를 위한 사이트 Key 가져오기 -->
+	<select id="selectSitekeyInfo" parameterType="String" resultType="verificationKeyVO">
+		<![CDATA[
+			SELECT 
+				bwrk.pay_merchant_key,
+				bwrk.pay_merchant_id
+			FROM bc_web_reservation_key bwrk
+			left join bc_shop bc on bc.company_code  		= bwrk.COMPANY_CODE 
+			left join bc_web_payment bwp on bwp.SHOP_CODE 	= bc.SHOP_CODE 
+			WHERE 1=1
+			and bwp.ORDER_NO = #{ordNo}
+		]]>
+	</select>
 </mapper>

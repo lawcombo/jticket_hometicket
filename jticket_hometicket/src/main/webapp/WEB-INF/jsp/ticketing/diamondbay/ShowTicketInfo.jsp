@@ -56,6 +56,22 @@
 						</li>
 						<li class="reserveDt mb50">
 							<p class="sh_tit">
+								주문번호
+							</p>
+							<p class="sh_text">
+								${product.order_num}
+							</p>
+						</li>
+						<li class="reserveDt mb50">
+							<p class="sh_tit">
+								핸드폰 번호
+							</p>
+							<p class="sh_text">
+								<span id="memberTelSpan">${product.person_mobile_no}</span>
+							</p>
+						</li>
+						<li class="reserveDt mb50">
+							<p class="sh_tit">
 								프로그램 명
 							</p>
 							<p class="sh_text">
@@ -72,10 +88,38 @@
 								</c:forEach>
 							</p>
 						</li>
+						
+						<li class="reserveDt mb50">
+							<p class="sh_tit">
+								총 인원
+							</p>
+							<p class="sh_text">
+								${product.actual_quantity} 명
+							</p>
+						</li>
+						<%-- 
+						<li class="reserveDt mb50">
+							<p class="sh_tit">
+								상품금액
+							</p>
+							<p class="sh_text">
+								<fmt:formatNumber type="number" maxFractionDigits="3" value="${product.product_fee}"/> 원
+							</p>
+						</li>
+						 --%>
+						<li class="reserveDt mb50">
+							<p class="sh_tit">
+								총 결제금액
+							</p>
+							<p class="sh_text">
+<%-- 								<fmt:formatNumber type="number" maxFractionDigits="3" value="${product.product_fee - coupon[0].couponFee}"/> 원 --%>
+								<fmt:formatNumber type="number" maxFractionDigits="3" value="${product.real_fee}"/> 원
+							</p>
+						</li>
 						<li class="reserveDt ewp_date_box mb50">
 							<div class="ewp_db_lef">
 								<p class="sh_tit">
-									예약일시 <input type="hidden" id="playDate" value="${product.play_date}" />
+									탑승일시 <input type="hidden" id="playDate" value="${product.play_date}" />
 								</p>
 								<p class="sh_text">
 									${product.play_date} ${product.schedule_text}
@@ -99,40 +143,6 @@
 								<div class="cb_bot"></div>
 							</div>
 						</li>
-						<li class="reserveDt mb50">
-							<p class="sh_tit">
-								총 인원
-							</p>
-							<p class="sh_text">
-								${product.actual_quantity} 명
-							</p>
-						</li>
-						
-						<li class="reserveDt mb50">
-							<p class="sh_tit">
-								핸드폰 번호
-							</p>
-							<p class="sh_text">
-								<span id="memberTelSpan">${product.person_mobile_no}</span>
-							</p>
-						</li>
-						<li class="reserveDt mb50">
-							<p class="sh_tit">
-								결제 상품금액
-							</p>
-							<p class="sh_text">
-								<fmt:formatNumber type="number" maxFractionDigits="3" value="${product.product_fee}"/> 원
-							</p>
-						</li>
-						<li class="reserveDt mb50">
-							<p class="sh_tit">
-								총 결제금액
-							</p>
-							<p class="sh_text">
-<%-- 								<fmt:formatNumber type="number" maxFractionDigits="3" value="${product.product_fee - coupon[0].couponFee}"/> 원 --%>
-								<fmt:formatNumber type="number" maxFractionDigits="3" value="${product.real_fee}"/> 원
-							</p>
-						</li>
 						<li class="reserveDt">
 							<p class="sh_tit">
 								결제일자
@@ -147,8 +157,7 @@
 							<c:choose>
 								<c:when test="${(product.quantity eq product.actual_quantity) && (product.real_fee eq (product.product_fee - coupon[0].couponFee)) }">
 									<div>
-										<%-- <button id="cancelButton" class="buttonTypeCyan full textLarge ewp_bot_cant" style='<c:out value="${isUsed eq true || isRefunded eq true ? 'pointer-events: none;background-color:#ddd' : '' }" />;'>예약 취소</button> --%>
-										<button id="cancelButton" class="buttonTypeCyan full textLarge ewp_bot_cant" style="width:285px;">예약 취소</button>
+										<button id="cancelButton" class="buttonTypeCyan full textLarge" style="width:285px; cursor: pointer;">예약 취소</button>
 									</div>
 								</c:when>
 								<c:otherwise>
@@ -201,7 +210,7 @@
 		</section>
 		<div id="hidden-section" style="display:none;">
 			<!-- 취소 form -->
-			<form:form role="cancel" action="/ticketing/cancelTicket" method="POST">
+			<form:form role="cancel" action="/ticketing/diamondbay/cancelTicket" method="POST">
 				<input type="hidden" name="order_num" value="${buyerInfo.order_num }" />
 				<input type="hidden" name="content_mst_cd" value="${buyerInfo.content_mst_cd }" />
 				<input type='hidden' name='shop_code' id="product_shop_code" value="${buyerInfo.shop_code }">

@@ -86,9 +86,6 @@
 		
 			<div class="intro res_padi" style="padding-top:35px;">
 				<p style="font-size:40px; font-weight:bold;">코스 선택</p>
-				<div style="padding-top:20px">
-					<button type="button" class="" style="cursor:pointer;" onclick="check.reserveCheck();">예약확인 및 취소</button>
-				</div>
 			</div>
 			
 			 <div class="container">
@@ -120,6 +117,19 @@
 							</a>
 						</figure>
 					</content>
+				</div>
+			</div>
+			
+			
+			<div style="text-align: -webkit-center;">
+				<div style="width:44%">
+					<section class="reserve reserve-form">
+						<div class="verticalAlignMiddle">
+							<div style="padding-top:20px">
+								<button type="button" class="buttonTypeCyan full textLarg" style="cursor:pointer;" onclick="check.reserveCheck();">예약확인 및 취소</button>
+							</div>
+						</div>
+					</section>
 				</div>
 			</div>
 			
