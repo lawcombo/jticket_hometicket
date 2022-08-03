@@ -28,6 +28,15 @@
 	        	<!-- <entry key="userApi" value="https://ticketsvc.nicetcm.co.kr:443/Apis/Services/SetReservationInfo.ashx"/> -->
 
 
+				<!-- kis pg 결제모듈 결제 승인 url -->
+				<!-- 개발 -->
+				<entry key="kisPgPayModule" 		value="https://testapi.kispg.co.kr/v2/payment"/>
+				<entry key="kisPgPayCanelModule" 	value="https://testapi.kispg.co.kr/v2/cancel"/>
+				<!-- 운영 -->
+				<!-- <entry key="kisPgPayModule" value="https://api.kispg.co.kr/v2/payment"/> -->
+				<!-- <entry key="kisPgPayCanelModule" value="https://api.kispg.co.kr/v2/cancel"/> -->
+				
+
 				<!-- 에러시 리다이렉트할 제주맥주 페이지 -->
 				<entry key="jejubeer" value="https://jejubeer.co.kr/brewery-program"/>
 				<entry key="diamondbay" value="http://www.diamondbay.co.kr/"/>

@@ -1,6 +1,10 @@
 package com.bluecom.common.util;
 
+import java.util.HashMap;
+
 import javax.servlet.http.HttpServletRequest;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CommUtil {
 
@@ -77,4 +81,30 @@ public class CommUtil {
 	}
 	
 	
+	
+	/**
+     * map to json string
+     * @return
+     * @throws Exception
+     */
+    public static String convertMapToJsonString(HashMap<String, String> map) throws Exception{
+    	
+    	ObjectMapper mapper = new ObjectMapper();
+    		 
+    	// convert map to JSON string
+        String json = mapper.writeValueAsString(map);
+
+        System.out.println(json);   // compact-print
+        
+        //json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(map);
+        //System.out.println(json);   // pretty-print
+        	
+    	return json;
+    }
+	
+    public static String rmQuatations(String text) {
+		text = text.replaceAll("\"", "");
+		text = text.replaceAll("\'", "");
+		return text;
+	}
 }

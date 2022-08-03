@@ -3,6 +3,12 @@ package com.bluecom.ticketing.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.bluecom.common.domain.MemberSalesCriteria;
 import com.bluecom.ticketing.domain.ApiResultVO;
 import com.bluecom.ticketing.domain.ApiSocialCancelDTO;
@@ -124,4 +130,9 @@ public interface TicketingService{
 	
 	// 부분환불시 paymentsale 기록 / 2021-10-26 / 조미근
 	public int insertPaymentSale(ShopPaymentsaleVO vo) throws Exception;
+	
+	
+	public Model kisPgPayReult(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception;
+	public String kisPgPayCancelReult(SaleDTO sale,  HttpServletRequest request, HttpServletResponse response, RedirectAttributes rttr, String redirectPage) throws Exception;
+	
 }

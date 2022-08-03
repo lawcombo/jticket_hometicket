@@ -49,6 +49,14 @@
 					</li>
 					<li class="reserveDt">
 						<p class="sh_tit">
+							주문번호
+						</p>
+						<p class="sh_text">
+							${trade[0].order_num }
+						</p>
+					</li>
+					<li class="reserveDt">
+						<p class="sh_tit">
 							프로그램 명
 						</p>
 						<p class="sh_text">
@@ -91,18 +99,6 @@
 						</p>
 					</li>
 				</ul>
-<!-- 			        <div class="bannerbx"> -->
-<!-- 			        	<p class="m_jb_banner"> -->
-<!-- 			        		<a href="https://www.instagram.com/kash_gvng/" target="_blank"> -->
-<!-- 			        			<img src="/resources/images/JBjmkt_banner_mo03_2.png"> -->
-<!-- 			        		</a> -->
-<!-- 			        	</p> -->
-<!-- 			        	<p class="pc_jb_banner"> -->
-<!-- 			        		<a href="https://www.instagram.com/kash_gvng/" target="_blank"> -->
-<!-- 			        			<img src="/resources/images/JBjmkt_banner_pc01.png"> -->
-<!-- 			        		</a> -->
-<!-- 			        	</p> -->
-<!-- 			        </div> -->
 				<div class="pageLine"></div>
 				<ul class="reserveDl full mt50 ewp_show_wrapper show_bot_tb">
 					<li class="reserveDt">
