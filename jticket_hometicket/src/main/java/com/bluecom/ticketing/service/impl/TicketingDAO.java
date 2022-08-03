@@ -301,4 +301,11 @@ public class TicketingDAO extends EgovAbstractMapper {
 	public int insertPaymentSale(ShopPaymentsaleVO vo) throws Exception{
 		return insert("ticketingMapper.insertPaymentSale", vo);
 	}
+	
+	
+	
+	
+	public VerificationKeyVO selectSitekeyInfo(String ordNo) throws Exception{
+		return selectOne("ticketingMapper.selectSitekeyInfo", ordNo);
+	}
 }

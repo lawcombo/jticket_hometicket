@@ -166,7 +166,6 @@ public class TicketingController extends BaseController {
 	// 결제요청
 	@PostMapping("/payRequest")	
 	public String payRequest(@ModelAttribute("paymentInfo") @Valid PaymentInfoDTO info, HttpServletResponse response, Errors errors, Model model) throws Exception {
-		System.out.println(info.getReserver().getPhone());
 		
 		log.info("::payRequest CALL");
 		
@@ -273,11 +272,9 @@ public class TicketingController extends BaseController {
 			//..
 		}
 		
-		
-		
 		// 판매 금액이 0원이면  결제수단을 0원결제로 변경
 		if("0".equals(info.getFee()) ) info.setPayMethod("0000");
-		
+				
 		WebPaymentDTO webPayment = ticketingService.addWebPaymentInfo(info); //web_payment insert (get order_no)
 		
 		model.addAttribute("webPayment", webPayment);
@@ -291,7 +288,8 @@ public class TicketingController extends BaseController {
 		}
 		else if(info.getProductGroup().getContent_mst_cd().toString().contains("DIAMONDBAY"))
 		{
-			callBackJsp = "/ticketing/diamondbay/payRequest";
+			//callBackJsp = "/ticketing/diamondbay/payRequest";
+			callBackJsp = "/ticketing/diamondbay/payRequestToKisPG";
 		}
 		else
 		{
@@ -998,6 +996,8 @@ public class TicketingController extends BaseController {
 		
 		return "/ticketing/finish";
 	}
+	
+	
 	@GetMapping("/diamondbay/finish")
 	public String finishForDiamondbay(@ModelAttribute("essential") @Valid EssentialDTO essential, @RequestParam("orderNo") String orderNo, Model model) throws Exception {
 		
@@ -1379,13 +1379,13 @@ public class TicketingController extends BaseController {
 			}
 		}
 		
-		
-		
 		//redirectPage = "redirect:/ticketing/showTicketInfoList?content_mst_cd=" + essential.getContent_mst_cd();
 		//rttr.addFlashAttribute("saleDTO", saleDTO);
 		//request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
 		return redirectPage;
 	}
+	
+	
 	/*
 	 * 예매내역 페이지 / n건인 경우
 	 * 추가 / 2021-09-08 / 조미근
@@ -1599,8 +1599,15 @@ public class TicketingController extends BaseController {
 		}
 	}
 	
-	/*
-	 * 티켓 환불(취소)
+	/**
+	 * 나이스페이먼츠 PG 결제 취소
+	 * @param sale
+	 * @param request
+	 * @param response
+	 * @param rttr
+	 * @param model
+	 * @return
+	 * @throws Exception
 	 */
 	@PostMapping("/cancelTicket")
 	public String cancelTicket(@ModelAttribute("buyerInfo") SaleDTO sale,  HttpServletRequest request, HttpServletResponse response,
@@ -2654,5 +2661,68 @@ public class TicketingController extends BaseController {
 		}
 
 		return "/ticketing/diamondbay/insertReserverDiamondbay";
+	}
+	
+	/**
+	 * KIS PG 결제 승인 프로세스
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/diamondbay/payResultFromKisPG")	
+	public String payResultOfDiamondBay(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		
+		log.info("::payResultFromKisPG CALL");
+		
+		//KIS 결제 모듈
+		model = ticketingService.kisPgPayReult(request, response, model);
+		
+		return "/ticketing/payResult";
+	}
+	
+	
+	/**
+	 * 다이아몬드베이 
+	 * KIS PG 결제 취소
+	 * @param sale
+	 * @param request
+	 * @param response
+	 * @param rttr
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/diamondbay/cancelTicket")
+	public String cancelTicketOfKisPg(@ModelAttribute("buyerInfo") SaleDTO sale,  HttpServletRequest request, HttpServletResponse response,
+			RedirectAttributes rttr, Model model) throws Exception {
+		
+		String redirectPage = "redirect:/ticketing/diamondbay/showTicketInfo";
+		
+		log.info("::payResultFromKisPG Cancel CALL");
+		
+		//결제 취소 호출
+		redirectPage = ticketingService.kisPgPayCancelReult(sale, request, response, rttr, redirectPage);
+		
+		return redirectPage;
+	}
+	
+	
+	@RequestMapping("/diamondbay/prevShowTicket")
+	public String prevShowTicketListOfDiamondbay(@ModelAttribute("essential")EssentialDTO essential, SaleDTO saleDTO, 
+										HttpServletRequest request, HttpServletResponse response, Model model,
+										RedirectAttributes rttr) throws Exception{
+		request.getSession().setAttribute("saleDTO", saleDTO);
+		
+		String redirectPage = null;
+		
+		if(saleDTO.getType().equals("0")) {
+			redirectPage = "redirect:/ticketing/diamondbay/showTicketInfo?content_mst_cd=" + essential.getContent_mst_cd();
+		}else {
+			redirectPage = "redirect:/ticketing/diamondbay/showTicketInfoList?content_mst_cd=" + essential.getContent_mst_cd();
+		}
+		
+		return redirectPage;
 	}
 }

@@ -373,6 +373,8 @@
 			
 			$('#ticket_frm').submit();
 		});
+		
+		
 		//예매 오픈기간 가져오기
 		var todayDate = moment().format('YYYY-MM-DD');
 		//var min=moment().add(1, 'days').format('YYYY-MM-DD');

@@ -44,8 +44,18 @@ public class ErrorController extends BaseController {
 	@RequestMapping("/403")
 	public void page403(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
 		
+		String siteNm = "";
+		if(request.getAttribute("javax.servlet.error.request_uri").toString().contains("diamondbay"))
+		{
+			siteNm = "diamondbay";
+		}
+		else
+		{
+			siteNm = "jejubeer";
+		}
+		
 		pageErrorLog(request);
-		String jejuUrl = properties.getString("jejubeer");
+		String jejuUrl = properties.getString(siteNm);
 		ScriptUtils.alertAndMovePage(response, "접근권한이 없습니다.", jejuUrl);
 	}
 

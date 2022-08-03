@@ -1,22 +1,48 @@
 package com.bluecom.ticketing.service.impl;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -24,14 +50,24 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.bluecom.common.domain.MemberSalesCriteria;
+import com.bluecom.common.service.MailService;
+import com.bluecom.common.service.MessageService;
+import com.bluecom.common.util.CommUtil;
+import com.bluecom.common.util.DateHelper;
+import com.bluecom.common.util.ScriptUtils;
+import com.bluecom.ticketing.controller.TicketingController.DataEncrypt;
 import com.bluecom.ticketing.domain.ApiCardInfoDTO;
 import com.bluecom.ticketing.domain.ApiParamDTO;
 import com.bluecom.ticketing.domain.ApiPaymentsInfoDTO;
+import com.bluecom.ticketing.domain.ApiProductRefundDTO;
 import com.bluecom.ticketing.domain.ApiResultVO;
 import com.bluecom.ticketing.domain.ApiSaleProductDTO;
 import com.bluecom.ticketing.domain.ApiSocialCancelDTO;
@@ -77,6 +113,14 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 	
 	@Autowired
 	EgovPropertyService propertyService;
+	
+	@Autowired
+	@Qualifier("jejuMail")
+	MailService mailService;
+
+	@Autowired
+	@Qualifier("bgfAlimTalk")
+	MessageService messageService;
 	
 	/*
 	 *  쿠폰 존재유무 확인 / 2021-10-13 / 조미근
@@ -481,8 +525,10 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 			String ticketingDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now);
 			
 			String paymentCode = getPaymentCode(pgResult.getPay_method());
-			if(webPayment.getVisitor_type().equals("A")) { // 일반입장
-				if(webPayment.getPiece_ticket_yn().equals("0")) { // 묶음 티켓
+			if(webPayment.getVisitor_type().equals("A")) 
+			{ // 일반입장
+				if(webPayment.getPiece_ticket_yn().equals("0")) 
+				{ // 묶음 티켓
 					ApiSocialSaleDTO socialSale = getApiSocialSale(pgResult, webPayment, now);
 					
 					List<ApiSaleProductDTO> saleProducts = new ArrayList<>();
@@ -1405,6 +1451,1091 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 	@Override
 	public int insertPaymentSale(ShopPaymentsaleVO vo) throws Exception {
 		return ticketingMapper.insertPaymentSale(vo);
+	}
+	
+	
+	//==========================================================================KSI PG 결제모듈=====================================================================
+	/**
+	 * kis pg 결제 모듈
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public Model kisPgPayReult(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		
+		//String apprReqUrl  = "https://testapi.kispg.co.kr/v2/payment";  	//개발
+		//String apprReqUrl  = "https://api.kispg.co.kr/v2/payment";      	//운영
+		String apprReqUrl 		= propertyService.getString("kisPgPayModule"); 
+		String apprCancelReqUrl = propertyService.getString("kisPgPayCanelModule"); 
+		
+		int resultSuccess 		= 0;
+		String resultOrderNum 	= "";
+		String resultMessage 	= "";
+		
+		/*------------ 인증 데이터 로깅 --------------*/
+		request.setCharacterEncoding("utf-8");
+		
+		Enumeration params = request.getParameterNames();
+		  
+		/*
+		while(params.hasMoreElements()) {
+			String name = (String) params.nextElement();
+			System.out.print(name + " : " + request.getParameter(name) + "\r\n"); 
+		}  
+		*/
+		
+		String charset     = "utf-8";   							// 가맹점 charset
+		
+
+		String resultCd    = request.getParameter("resultCd");		//  인증 결과코드 (정상 : 0000)
+		String resultMsg   = request.getParameter("resultMsg");		//  인증 결과메시지
+		String payMethod   = request.getParameter("payMethod");		//  인증 결제수단 (ex. card)
+		String tid         = request.getParameter("tid");			//  KISPG TID
+		String goodsAmt    = request.getParameter("amt");			//  결제금액
+		String mbsReserved = request.getParameter("mbsReserved");	//  가맹점 에코필드  
+		String ediDate     = getyyyyMMddHHmmss();					//  결제요청시간 (yyyyMMddHHmmss)
+		
+		
+		String ordNo 		= request.getParameter("ordNo");		//  상품 주문번호
+		VerificationKeyVO key = ticketingMapper.selectSitekeyInfo(ordNo);
+		
+		String mid         	= key.getPay_merchant_id();				// 상점아이디
+		String merchantKey 	= key.getPay_merchant_key();			// 상점키
+		
+		String encData     	= encrypt(mid + ediDate + goodsAmt + merchantKey);	// 가맹점 검증 해쉬값
+		
+
+		//결제인증 정상
+		if(null != resultCd && resultCd.equals("0000"))
+		{
+			
+			// 결제 인증 완료 기록 저장
+			WebPaymentStatusDTO authenticationFinishedStatus = WebPaymentStatusDTO.builder()
+				.status("고객-예매-결제인증성공")
+				.message("AuthResultCode: " + resultCd)
+				.orderNo(ordNo)
+				.build();
+			addWebPaymentStatus(authenticationFinishedStatus);
+			
+			//결제 승인 요청 및 상태 저장
+			HashMap<String, String> returnMap = callKisPgModulePay(charset, tid, goodsAmt, ediDate, mid, encData, ordNo, apprReqUrl);
+			
+			
+			if(returnMap.get("payResultFlag").equals("success"))
+			{//결제 승인 요청 성공 시
+				
+				//PG사 결제승인 결과 정보 저장 
+				WebPaymentPgResultDTO pgResult = new WebPaymentPgResultDTO();
+				pgResult = insertPgResultTable(resultCd, resultMsg, apprReqUrl, mid, returnMap );
+				
+				//결제수단별 승인 응답코드, 정상인지 check
+				if(getPaymentResultStatus(returnMap))
+				{
+					//결제 승인 응답코드 정상이면 발권솔루션(ISMS) 예매API 호출
+					ApiResultVO apiResultVO = callTicketApi(pgResult); //pg결제 성공 후 api 호출
+					
+					
+					if(apiResultVO.getSuccess() == 1) 
+					{// API 호출 성공 
+						
+						WebPaymentStatusDTO apiCallStatus = WebPaymentStatusDTO.builder()
+								.status("고객-예매-Api호출-성공")
+								.message("ApiCallResult: " + apiResultVO.toString())
+								.orderNo(ordNo)
+								.build();
+						addWebPaymentStatus(apiCallStatus);
+						
+						ShopDetailVO shopDetail = getShopDetail(apiResultVO.getWebPayment().getShop_code());
+						
+						try {
+							//알림톡 저장
+							messageService.send(request, response, apiResultVO, pgResult, shopDetail);
+							
+						} catch(Exception ex) {
+							ex.printStackTrace();
+						}
+						
+						if(null != apiResultVO.getWebPayment().getReserverEmail() && !"".equals(apiResultVO.getWebPayment().getReserverEmail()))
+						
+						//메일
+						//if(StringUtils.hasText(apiResultVO.getWebPayment().getReserverEmail()))
+						if(null != apiResultVO.getWebPayment().getReserverEmail() && !"".equals(apiResultVO.getWebPayment().getReserverEmail()))
+						{
+							try {
+								
+								CompanyVO company = getCompany(apiResultVO.getWebPayment().getShop_code());
+								mailService.sendReserve(request, apiResultVO, pgResult);
+								
+							} catch(Exception ex) {
+								ex.printStackTrace();
+							}
+						}
+						
+						resultSuccess 	= 1;
+						resultOrderNum 	= ordNo;
+						resultMessage 	= "결제에 성공하였습니다.";
+					}
+					else
+					{// API호출 실패
+						
+						WebPaymentStatusDTO apiCallStatus = WebPaymentStatusDTO.builder()
+								.status("고객-예매-Api호출-실패")
+								.message("ApiCallResult: " + apiResultVO.toString())
+								.orderNo(ordNo)
+								.build();
+						addWebPaymentStatus(apiCallStatus);
+						
+						WebPaymentDTO webPayment = getWebPayment(ordNo);
+						SaleVO searchSale = new SaleVO();
+						searchSale.setShop_code(webPayment.getShop_code());
+						searchSale.setOrder_num(ordNo);
+						
+						SaleVO saleVO = getSaleSsByOrderNum(searchSale);
+						
+						if(saleVO != null) {
+							SaleDTO sale = new SaleDTO();
+							sale.setSale_code(saleVO.getSale_code());
+							
+							List<SaleProductDTO> bookNoList = getBookNoBySaleCode(sale);
+							
+							//발권솔루션 API 호출 실패시, 통합권시스템 예매내역 삭제 api 호출.
+							callReserveCancelApi(pgResult, bookNoList, apiResultVO.getWebPayment().getContent_mst_cd());
+							
+						}
+						
+						
+						//결제 승인 취소 요청 및 상태 저장
+						String cancelMsg = "niceFail";
+						HashMap<String, String> returnCancelMap = callKisPgModulePayCancel(charset, tid, goodsAmt, ediDate, mid, encData, ordNo, apprCancelReqUrl, payMethod, cancelMsg);
+						
+						if(returnCancelMap.get("payResultFlag").equals("success"))
+						{
+							resultSuccess = 0;
+							resultMessage = "결제 API 호출에 실패하였습니다.\n결제취소 되었습니다." + apiResultVO.getErrMsg();
+						}
+						else
+						{
+							resultSuccess = 0;
+							resultMessage = "결제 API 호출에 실패하였습니다.\n결제취소실패!\n관리자에게 문의하세요." + apiResultVO.getErrMsg();
+						}
+					}
+				}
+				else
+				{// 성공 응답코드 아닐 경우 
+					
+					// 결제승인에러 기록
+					WebPaymentStatusDTO approvalFailStatus = WebPaymentStatusDTO.builder()
+						.status("고객-예매-결제승인-에러")
+						.message(CommUtil.convertMapToJsonString(returnMap))
+						.orderNo(ordNo)
+						.build();
+					addWebPaymentStatus(approvalFailStatus);
+					
+					resultSuccess = 0;
+					resultMessage = "결제에 실패 하였습니다.\n" + returnMap.get("r_resultMsg");;
+				}
+			}
+			else
+			{
+				//결제승인 요청 실패, 통신에러 ( return : 9999 )
+				
+				resultSuccess = 0;
+				resultMessage = "결제 승인 통신에 실패하였습니다.\n" + returnMap.get("r_resultMsg");;
+			}
+			
+			
+		}
+		else
+		{// 결제 인증이 실패시
+			
+			// 결제인증실패 기록
+			WebPaymentStatusDTO authenticationFinishedStatus = WebPaymentStatusDTO.builder()
+					.status("고객-예매-결제인증실패")
+					.message("AuthResultCode: " + resultCd + " | AuthResultMsg" + resultMsg)
+					.orderNo(ordNo)
+					.build();
+			
+			addWebPaymentStatus(authenticationFinishedStatus);
+			
+			resultSuccess = 0;
+			resultMessage = "결제인증에 실패하였습니다.";
+		}
+		
+		resultOrderNum = CommUtil.rmQuatations(resultOrderNum);
+		resultMessage = CommUtil.rmQuatations(resultMessage);
+		
+		model.addAttribute("success", resultSuccess);
+		model.addAttribute("orderNo", resultOrderNum);
+		model.addAttribute("message", resultMessage);
+		
+		return model;
+	}
+	
+	
+	/**
+	 * kis pg 사용자 결제 취소 모듈
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public String kisPgPayCancelReult(SaleDTO sale,  HttpServletRequest request, HttpServletResponse response, RedirectAttributes rttr, String redirectPage) throws Exception {
+		
+		if(reserveTicketCancelCheck(sale, request, rttr, redirectPage))
+		{
+			return redirectPage;
+		}
+		
+		WebPaymentDTO webPayment 		= getWebPayment(sale.getOrder_num());
+		WebPaymentPgResultDTO pgResult 	= getWebPaymentPgResult(sale.getOrder_num());
+		
+		if(pgResult == null) {
+			rttr.addFlashAttribute("buyerInfo", sale);
+			rttr.addFlashAttribute("message", "결제 되지 않은 티켓은 고객페이지에서의 취소가 불가능합니다. 관리자에게 연락해 주세요.");
+			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
+			return redirectPage;
+		}
+		
+		
+		WebPaymentStatusDTO cancelTicketStatus = WebPaymentStatusDTO.builder()
+				.status("고객-전체취소-시작")
+				.message("OrderNo: " + sale.getOrder_num() + " | Name:" + pgResult.getName() + " | Phone: " + pgResult.getPhone())
+				.orderNo(sale.getOrder_num())
+				.build();
+		addWebPaymentStatus(cancelTicketStatus);
+		
+		
+		String partialCancel	= "0";
+		String cancelAmount		= pgResult.getAmt();
+		
+		// 1. sale_code 기준으로 bc_sale_product 탐색 후 결과 리스트(book_no) 갖고오기
+		List<SaleProductDTO> bookNoList = getBookNoBySaleCode(sale);
+		
+		
+		if(sale.getType().equals("1")) 
+		{
+			/*
+			 *  부분환불 
+			 *  환불 규정에 의해 전체금액의 50%를 환불, 전체인원이 취소되는 경우 (상황4)
+			 *  1. 환불하고자 하는 book_no와 refund_fee를 담아 보내기
+			 *  2. pgResult.getAmt() 는 환불하고자 하는 금액 (refund_fee)를 보내기
+			 */
+			
+			partialCancel = "1";
+			BigDecimal percent = new BigDecimal("0.5");
+			for(int i=0; i<bookNoList.size(); i++) 
+			{
+				BigDecimal productFee = new BigDecimal(String.valueOf(bookNoList.get(i).getProduct_fee()));
+				bookNoList.get(i).setRefund_fee(productFee.multiply(percent));
+			}
+			
+			BigDecimal originalAmount = new BigDecimal(String.valueOf(pgResult.getAmt()));
+			int amount 		= originalAmount.multiply(percent).intValue();
+			cancelAmount 	= String.valueOf(amount);
+		}
+		else if(sale.getType().equals("0")) 
+		{
+			/*
+			 *  전체환불
+			 *  환불규정에 의해 전체금액 100%를 환불, 전체인원이 취소되는 경우 (상황2)
+			 *  1. callCancelApi 호출시 모든 bc_sale_product의 book_no & refund_fee를 list에 담아 보내기
+			 *  2. pgResult.getAmt() 는 기존 전체 금액 그대로 보내기 (수정 필요 X)
+			 */
+			partialCancel = "0";
+			
+			for(int i=0; i<bookNoList.size(); i++) 
+			{
+				bookNoList.get(i).setRefund_fee(bookNoList.get(i).getProduct_fee());
+			}
+		}
+		
+		
+		
+		//ISMS 취소 API 호출
+		ApiResultVO apiResult = callReserveCancelApi(pgResult, bookNoList, sale.getContent_mst_cd()); 
+		
+		if(apiResult.getSuccess() != 1) 
+		{//ISMS 예매 취소 실패
+			
+			rttr.addFlashAttribute("buyerInfo", sale);
+			rttr.addFlashAttribute("message", "예매취소에 실패하였습니다" + apiResult.getErrMsg());
+			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
+			return redirectPage;
+		}
+		else
+		{//ISMS 예매 취소 성공
+			
+			//KIS PG 결제 취소를 위해 호출
+			HashMap<String, String> returnCancelMap = callKisPgCancelModule(pgResult, cancelAmount, webPayment);
+			
+			if(returnCancelMap.get("payResultFlag").equals("success"))
+			{//취소성공
+				
+				// 2001 : 취소성공, 2211 : 환불성공
+				if(returnCancelMap.get("r_resultCode").equals("2001") || returnCancelMap.get("r_resultCode").equals("2211")) 
+				{//취소 응답이 성공인 경우
+					
+					//취소 성공 내용 PG_RESULT 에 기록하기
+					updatePgResultTable(returnCancelMap, cancelAmount);
+					
+					
+					SaleVO searchSale = new SaleVO();
+					searchSale.setShop_code(webPayment.getShop_code());
+					searchSale.setOrder_num(webPayment.getOrder_no());
+					
+					SaleVO saleVO = getSaleSsByOrderNum(searchSale);
+					
+					List<SaleProductDTO> saleProducts = getSaleProductDTO(sale);
+					saleVO.setSaleProducts(saleProducts);
+					
+					
+					//bc_paymentsale에 마이너스금액으로 기록
+					BigDecimal refundFee = insertPaymentMinusSale(sale, saleProducts);
+					
+					
+					//bc_refund_history 기록
+					insertRefundHistory(sale, bookNoList, refundFee);
+					
+					
+					ShopDetailVO shopDetail = getShopDetail(webPayment.getShop_code());
+					
+					//알림톡 메시지 전송
+					messageService.sendRefund(request, saleVO, webPayment, pgResult, shopDetail); 
+
+					//알림톡 메시지 전송
+					mailService.sendRefund(request, saleVO, webPayment, pgResult); 
+					
+					
+					sale.setType("1");
+					
+					List<SaleProductDTO> saleProductDTOList = getSaleProductDTOList(sale);
+					if(saleProductDTOList.isEmpty() == false && saleProductDTOList.size() > 1)
+					{
+						ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "prevShowTicket?type=1&content_mst_cd=" + sale.getContent_mst_cd()+"&member_name="+sale.getMember_name()+"&member_tel="+sale.getMember_tel()+"&shop_code="+sale.getShop_code());
+					}
+					else if(saleProductDTOList.isEmpty() == false && saleProductDTOList.size() == 1)
+					{
+						ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "prevShowTicket?type=0&content_mst_cd=" + sale.getContent_mst_cd()+"&member_name="+sale.getMember_name()+"&member_tel="+sale.getMember_tel()+"&shop_code="+sale.getShop_code()+"&sale_code="+saleProductDTOList.get(0).getSale_code()+"&order_num="+saleProductDTOList.get(0).getOrder_num());
+					}
+					else
+					{
+						ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "checkTicket?content_mst_cd=" + sale.getContent_mst_cd());
+					}
+					
+					return null;
+				}
+				else
+				{//취소 응답이 정상이 아닌경우
+					CompanyVO company = getCompany(webPayment.getShop_code());
+					
+					sale.setType("1");
+					
+					List<SaleProductDTO> saleProductDTOList = getSaleProductDTOList(sale);
+					if(saleProductDTOList.isEmpty() == false && saleProductDTOList.size() > 1)
+					{
+						ScriptUtils.alertAndMovePage(response, "예약취소에 장애가 발생하였습니다.[" +  returnCancelMap.get("r_resultCode") + 
+								"-" + returnCancelMap.get("r_resultMsg") + "] 예매가 취소되었으나 환불 금액이 정상적으로 반환되지 않았을 경우, 관리자(" + 
+								company.getComp_tel() + ")에게 연락 부탁드립니다.", "prevShowTicket?type=1&content_mst_cd=" + sale.getContent_mst_cd()+"&member_name="+sale.getMember_name()+"&member_tel="+sale.getMember_tel()+"&shop_code="+sale.getShop_code());
+					}
+					else if(saleProductDTOList.isEmpty() == false && saleProductDTOList.size() == 1)
+					{
+						ScriptUtils.alertAndMovePage(response, "예약취소에 장애가 발생하였습니다.[" +  returnCancelMap.get("r_resultCode") + 
+								"-" + returnCancelMap.get("r_resultMsg") + "] 예매가 취소되었으나 환불 금액이 정상적으로 반환되지 않았을 경우, 관리자(" + 
+								company.getComp_tel() + ")에게 연락 부탁드립니다.", "prevShowTicket?type=0&content_mst_cd=" + sale.getContent_mst_cd()+"&member_name="+sale.getMember_name()+"&member_tel="+sale.getMember_tel()+"&shop_code="+sale.getShop_code()+"&sale_code="+saleProductDTOList.get(0).getSale_code()+"&order_num="+saleProductDTOList.get(0).getOrder_num());
+					}
+					else
+					{
+						ScriptUtils.alertAndMovePage(response, "예약취소에 장애가 발생하였습니다.[" +  returnCancelMap.get("r_resultCode") + 
+								"-" + returnCancelMap.get("r_resultMsg") + "] 예매가 취소되었으나 환불 금액이 정상적으로 반환되지 않았을 경우, 관리자(" + 
+								company.getComp_tel() + ")에게 연락 부탁드립니다.", "checkTicket?content_mst_cd=" + sale.getContent_mst_cd());
+					}
+
+					return null;
+				}
+			}
+			else
+			{//통신실패
+				
+				CompanyVO company = getCompany(webPayment.getShop_code());
+				
+				rttr.addFlashAttribute("buyerInfo", sale);
+				rttr.addFlashAttribute("message", "예약취소를 위한 통신에 장애가 발생하였습니다.[" +  returnCancelMap.get("r_resultCode") + 
+						"-" + returnCancelMap.get("r_resultMsg") + "] 예매가 취소되었으나 환불 금액이 정상적으로 반환되지 않았을 경우, 관리자(" + 
+						company.getComp_tel() + ")에게 연락 부탁드립니다.");
+				request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
+				return redirectPage;
+			}
+		}
+		
+	}
+	
+	
+	/**
+	 * 취소 성공 내용 PG_RESULT 에 기록하기
+	 * @param returnCancelMap
+	 * @param cancelAmount
+	 * @throws Exception
+	 */
+	public void updatePgResultTable(HashMap<String, String> returnCancelMap, String cancelAmount) throws Exception{
+		
+		WebPaymentPgResultDTO result = new WebPaymentPgResultDTO();
+		result.setResult_code(returnCancelMap.get("r_resultCode"));
+		result.setResult_msg(returnCancelMap.get("r_resultMsg"));
+		result.setCancel_amt(cancelAmount);
+		result.setCancel_time(returnCancelMap.get("r_appDtm"));
+		result.setTid(returnCancelMap.get("r_tid"));
+		
+		updateWebPaymentPgResult(result);
+	}
+	
+	/**
+	 * bc_paymentsale에 마이너스금액으로 기록
+	 * @param sale
+	 * @param saleProducts
+	 * @throws Exception
+	 */
+	public BigDecimal insertPaymentMinusSale(SaleDTO sale, List<SaleProductDTO> saleProducts) throws Exception{
+		
+		ShopPaymentsaleVO paymentsale = new ShopPaymentsaleVO();
+		paymentsale.setShop_code(sale.getShop_code());
+		paymentsale.setSale_code(sale.getSale_code());
+		paymentsale.setPayment_no(saleProducts.get(0).getSale_sequence());
+		List<ShopPaymentsaleVO> list = selectPaymentSale(paymentsale);
+		for(int i=0; i<list.size(); i++) 
+		{
+			if(list.get(i).getPayment_idx().equals("1")) 
+			{
+				paymentsale = list.get(i);
+				int idx = Integer.parseInt(list.get((list.size()-1)).getPayment_idx())+1;
+				paymentsale.setPayment_idx(String.valueOf(idx));
+			}
+		}
+		BigDecimal refundFee =  new BigDecimal(paymentsale.getPayment_fee().intValue());
+		BigDecimal minus = new BigDecimal(-1);
+		paymentsale.setPayment_fee(refundFee.multiply(minus));
+		
+		insertPaymentSale(paymentsale);
+		
+		return refundFee;
+	}
+	
+	/**
+	 * bc_refund_history 기록
+	 * @param sale
+	 * @param bookNoList
+	 * @param refundFee
+	 * @throws Exception
+	 */
+	public void insertRefundHistory(SaleDTO sale, List<SaleProductDTO> bookNoList, BigDecimal refundFee) throws Exception{
+		
+		RefundHistoryVO historyVO = new RefundHistoryVO();
+		historyVO.setShop_code(sale.getShop_code());
+		historyVO.setSale_code(sale.getSale_code());
+		historyVO.setCount(bookNoList.size());
+		historyVO.setFee(refundFee.toString());
+		String bookNo="";
+		if(bookNoList != null && !bookNoList.isEmpty()) {
+			
+			for(int i=0; i<bookNoList.size(); i++) {
+				if(i !=( bookNoList.size()-1)) {
+					bookNo += bookNoList.get(i).getBook_no()+",";
+				}else {
+					bookNo += bookNoList.get(i).getBook_no();
+				}
+			}
+		}
+		historyVO.setBook_no(bookNo);
+		historyVO.setWork_id("WEBRESERVE");
+		
+		insertRefundHistory(historyVO);
+	}
+	
+	
+	/**
+	 * 고객 예매 취소 KIS PG 호출
+	 * @param pgResult
+	 * @param cancelAmount
+	 * @param webPayment
+	 * @return
+	 * @throws Exception
+	 */
+	public HashMap<String, String> callKisPgCancelModule(WebPaymentPgResultDTO pgResult, String cancelAmount, WebPaymentDTO webPayment) throws Exception{
+		
+		String charset     		= "utf-8";   
+		String apprCancelReqUrl = propertyService.getString("kisPgPayCanelModule");
+		
+		/*
+		****************************************************************************************
+		* <취소요청 파라미터>
+		* 취소시 전달하는 파라미터입니다.
+		* 샘플페이지에서는 기본(필수) 파라미터만 예시되어 있으며, 
+		* 추가 가능한 옵션 파라미터는 연동메뉴얼을 참고하세요.
+		****************************************************************************************
+		*/
+		String tid 			= pgResult.getTid();		// 거래 ID
+		String cancelAmt 	= cancelAmount;				// 취소금액
+		String mid 			= pgResult.getMid();		// 상점 ID
+		String moid			= pgResult.getMoid();		// 주문번호
+		String cancelMsg 	= "clientCancel";			// 취소사유
+		String payMethod	= pgResult.getPay_method();	// 결제타입 ( CARD, BANK.. )
+		
+		VerificationKeyVO keys = getKeys(webPayment.getShop_code());
+		
+		/*
+		 ****************************************************************************************
+		 * <해쉬암호화> (수정하지 마세요) SHA-256 해쉬암호화는 거래 위변조를 막기위한 방법입니다.
+		 ****************************************************************************************
+		 */
+		String merchantKey 	= keys.getPay_merchant_key(); // 상점키
+		String ediDate 		= getyyyyMMddHHmmss();
+		String encData     	= encrypt(mid + ediDate + cancelAmt + merchantKey);	// 가맹점 검증 해쉬값
+		
+		
+		//결제 승인 취소 요청! 및 상태 저장
+		return callKisPgModulePayCancel(charset, tid, cancelAmt, ediDate, mid, encData, moid, apprCancelReqUrl, payMethod, cancelMsg);
+		
+	}
+	
+	
+	
+	/**
+	 * 취소 가능한 티켓인지 validation 체크
+	 * @param sale
+	 * @param request
+	 * @param rttr
+	 * @param redirectPage
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean reserveTicketCancelCheck(SaleDTO sale, HttpServletRequest request, RedirectAttributes rttr, String redirectPage) throws Exception {
+		
+		Date now = new Date();
+		Date today = DateHelper.getDateStart(now);
+		
+		boolean status = false;
+		
+		List<RefundVO> refunds = getRefund(sale);
+		
+		if(refunds == null || refunds.size() == 0) {
+			rttr.addFlashAttribute("buyerInfo", sale);
+			rttr.addFlashAttribute("message", "환불 정보가 존재하지 않습니다.");
+			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
+			
+			status = true;
+			return status;
+		}
+		
+		for(RefundVO refund : refunds) {
+			if(refund.getRefund_yn().equals("1")) {
+				rttr.addFlashAttribute("buyerInfo", sale);
+				rttr.addFlashAttribute("message", "이미 환불처리된 티켓입니다.");
+				request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
+				
+				status = true;
+				return status;
+			}
+			
+			if(refund.getUsed_count() > 0) {
+				rttr.addFlashAttribute("buyerInfo", sale);
+				rttr.addFlashAttribute("message", "이미 사용된 티켓입니다.");
+				request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
+				
+				status = true;
+				return status;
+			}
+			
+			if(now.after(refund.getPlay_datetime())) {
+				rttr.addFlashAttribute("buyerInfo", sale);
+				rttr.addFlashAttribute("message", "사용기간이 지난 티켓은 환불이 불가능합니다.");
+				request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
+				
+				status = true;
+				return status;
+			}
+		}
+		
+		return status;
+	}
+	
+	
+	/**
+	 * 발권솔루션 API 호출 실패시, 통합발권시스템에 등록된 예매내역 삭제를 위한 자체 API 호출
+	 * @param pgResult
+	 * @param bookNoList
+	 * @param contentMstCd
+	 * @return
+	 * @throws Exception
+	 */
+	private ApiResultVO callReserveCancelApi(WebPaymentPgResultDTO pgResult, List<SaleProductDTO> bookNoList, String contentMstCd) throws Exception {
+		List<ApiProductRefundDTO> productRefund = new ArrayList<>();
+		
+		for(int i=0; i<bookNoList.size(); i++) {
+			productRefund.add(ApiProductRefundDTO.builder()
+					.BOOK_NO(bookNoList.get(i).getBook_no())
+					.REFUND_FEE(bookNoList.get(i).getRefund_fee().intValue())
+					.build());
+		}
+		
+		// api 취소 요청
+		ApiSocialCancelDTO apiSocialCancel = ApiSocialCancelDTO.builder()
+				.CONTENT_MST_CD(contentMstCd)
+				.ONLINE_CHANNEL("1001")
+				.ORDER_NUM(pgResult.getMoid())
+				.USER_ID("WEBTICKET")
+				.TERMINAL_CODE("WEBCANCEL")
+				.TERMINAL_DATETIME(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()))
+				.CANCEL_TYPE("A") 
+				.SALE_PRODUCT_LIST(productRefund)
+				.build();
+		ApiResultVO apiCancelResult =  callCancelApi(apiSocialCancel);
+		
+		// 결제승인에러 기록				
+		WebPaymentStatusDTO apiCancelStatus = WebPaymentStatusDTO.builder()
+			.status(apiCancelResult.getSuccess() == 1 ? "고객-취소Api-성공" : "고객-취소Api-실패")
+			.message("Success: " + apiCancelResult.getSuccess() + " | Message: " + apiCancelResult.getErrMsg())
+			.orderNo(pgResult.getMoid())
+			.build();
+		addWebPaymentStatus(apiCancelStatus);
+		
+		return apiCancelResult;
+	}
+	
+	public HashMap<String, String> callKisPgModulePay(String charset, String tid, String goodsAmt, String ediDate, String mid, String encData, String ordNo, String apprReqUrl) throws Exception {
+		
+		HashMap<String, String> returnMap = new HashMap<String, String>();
+		
+		// 결제 승인 요청 기록
+		WebPaymentStatusDTO approvalRequestStatus = WebPaymentStatusDTO.builder()
+			.status("고객-예매-결제승인요청")
+			.message("")
+			.orderNo(ordNo)
+			.build();
+		addWebPaymentStatus(approvalRequestStatus);
+		
+		
+		//결제 승인 데이터 json 가공
+		JSONObject jsonObj = new JSONObject();
+
+	    jsonObj.put("mid"     , mid);
+	    jsonObj.put("tid"     , tid);
+	    jsonObj.put("goodsAmt", goodsAmt);
+	    jsonObj.put("ediDate" , ediDate);
+	    jsonObj.put("encData" , encData);
+	    jsonObj.put("charset" , charset);
+	  
+	    String apprReqMsg = jsonObj.toString();
+	    
+	    log.debug("=================KIS PG PAY CALL=======================");
+	    log.debug("[apprReqMsg : " + apprReqMsg + "]");
+	    String apprRecvMsg = callKisPgApi(apprReqMsg, apprReqUrl, charset);
+	    log.debug("[apprRecvMsg : " + apprRecvMsg + "]");
+	    log.debug("=======================================================");
+	  
+	    
+	    if("9999".equals(apprRecvMsg))
+	    {//결제 승인 실패
+	    	// 결제승인에러 기록
+			WebPaymentStatusDTO approvalErrorStatus = WebPaymentStatusDTO.builder()
+				.status("고객-예매-결제승인통신에러")
+				.message(apprRecvMsg)
+				.orderNo(ordNo)
+				.build();
+			addWebPaymentStatus(approvalErrorStatus);
+			
+			
+			//KIS PG 결제 모듈은 망취소가 따로 없는 것 같음
+			//..
+			
+			returnMap.put("payResultFlag"	, "fail");
+	    }
+	    else
+	    {
+	    	/*승인 응답파라미터 정의*/
+	    	HashMap<String,String> apprRecvHash = jsonDataParser(apprRecvMsg);
+	    	
+	    	returnMap.put("payResultFlag"	, "success");
+		    returnMap.put("r_resultCode"	, apprRecvHash.get("resultCd"));	//승인 결과코드	
+		    returnMap.put("r_resultMsg"		, apprRecvHash.get("resultMsg"));	//승인 결과메시지
+		    returnMap.put("r_payMethod"		, apprRecvHash.get("payMethod"));	//승인 결제수단
+		    returnMap.put("r_tid"			, apprRecvHash.get("tid"));			//거래번호
+		    returnMap.put("r_appDtm"		, apprRecvHash.get("appDtm"));		//거래일시
+		    returnMap.put("r_appNo"			, apprRecvHash.get("appNo"));		//승인번호
+		    returnMap.put("r_ordNo"			, apprRecvHash.get("ordNo"));		//주문번호
+		    returnMap.put("r_goodsName"		, apprRecvHash.get("goodsName"));	//결제 상품명
+		    returnMap.put("r_amt"			, apprRecvHash.get("amt"));			//결제 금액
+		    returnMap.put("r_ordNm"			, apprRecvHash.get("ordNm"));		//주문자명 (결제자이름)
+		    returnMap.put("r_fnNm"			, apprRecvHash.get("fnNm"));		//카드사명
+		    returnMap.put("r_appCardCd"		, apprRecvHash.get("appCardCd"));	//발급사 코드
+		    returnMap.put("r_acqCardCd"		, apprRecvHash.get("acqCardCd"));	//매입사 코드
+		    returnMap.put("r_quota"			, apprRecvHash.get("quota"));		//승인 할부개월 (카드할부기간)
+		    returnMap.put("r_usePointAmt"	, apprRecvHash.get("usePointAmt"));	//사용 포인트 양
+		    returnMap.put("r_cardType"		, apprRecvHash.get("cardType"));	//카드타입 (0 : 신용, 1 : 체크 )
+		    returnMap.put("r_authType"		, apprRecvHash.get("authType"));	//인증타입 (01 : Keyin, 02 : ISP, 03 : VISA)
+		    returnMap.put("r_cashCrctFlg"	, apprRecvHash.get("cashCrctFlg"));	//현금영수증 (0 : 사용안함, 1 : 사용 )
+		    returnMap.put("r_vacntNo"		, apprRecvHash.get("vacntNo"));		//가상계좌번호
+		    returnMap.put("r_lmtDay"		, apprRecvHash.get("lmtDay"));		//입금기한
+		    returnMap.put("r_socHpNo"		, apprRecvHash.get("socHpNo"));		//휴대폰번호
+		    returnMap.put("r_cardNo"		, apprRecvHash.get("cardNo"));		//카드번호 (마스킹 카드번호)
+		    returnMap.put("r_mbsReserved"	, apprRecvHash.get("mbsReserved"));	//가맹점 예약 필드
+		    returnMap.put("r_crctType"		, apprRecvHash.get("crctType"));	//현금영수증타입 (0:미발행 1:소득공제 2:지출증빙)
+		    returnMap.put("r_crctNo"		, apprRecvHash.get("crctNo"));		//현금영수증번호 (휴대폰번호 | 사업자번호)
+		    
+		    
+		    // 결제 승인 결과 기록
+			WebPaymentStatusDTO approvalResultStatus = WebPaymentStatusDTO.builder()
+				.status("고객-예매-승인-성공")
+				.message(returnMap.get("r_payMethod") + ": " + returnMap.get("r_resultCode"))
+				.orderNo(ordNo)
+				.build();
+			addWebPaymentStatus(approvalResultStatus);
+	    }
+	    
+		return returnMap;
+	}
+	
+	
+	public HashMap<String, String> callKisPgModulePayCancel(String charset, String tid, String goodsAmt, String ediDate, String mid, String encData, String ordNo, String apprReqUrl, String payMethod, String cancelMsg) throws Exception {
+		
+		HashMap<String, String> returnMap = new HashMap<String, String>();
+		
+		// 결제 승인 요청 기록
+		WebPaymentStatusDTO approvalRequestStatus = WebPaymentStatusDTO.builder()
+			.status("고객-예매-결제승인취소요청")
+			.message("")
+			.orderNo(ordNo)
+			.build();
+		addWebPaymentStatus(approvalRequestStatus);
+		
+		
+		//결제 승인 취소 데이터 json 가공
+		JSONObject jsonObj = new JSONObject();
+
+		jsonObj.put("payMethod"		, payMethod);
+		jsonObj.put("tid"     		, tid);
+	    jsonObj.put("mid"     		, mid);
+	    jsonObj.put("ordNo"			, ordNo);
+	    jsonObj.put("canAmt"		, goodsAmt);
+	    jsonObj.put("canMsg"		, cancelMsg);
+	    jsonObj.put("partCanFlg"	, "0");			//전체취소 : 0;
+	    jsonObj.put("encData" 		, encData);
+	    jsonObj.put("ediDate" 		, ediDate);
+	    jsonObj.put("charset" 		, charset);
+	    
+	    
+	    String apprReqMsg = jsonObj.toString();
+	    
+	    
+	    log.debug("=====================KIS PG PAY CANCEL CALL===============");
+	    log.debug("[apprReqMsg : " + apprReqMsg + "]");
+	    String apprRecvMsg = callKisPgApi(apprReqMsg, apprReqUrl, charset);
+	    log.debug("[apprRecvMsg : " + apprRecvMsg + "]");
+	    log.debug("==========================================================");
+	    
+	    if("9999".equals(apprRecvMsg))
+	    {//결제 승인 실패
+	    	// 결제승인에러 기록
+			WebPaymentStatusDTO approvalErrorStatus = WebPaymentStatusDTO.builder()
+				.status("고객-예매-결제승인취소 통신에러 999")
+				.message(apprRecvMsg)
+				.orderNo(ordNo)
+				.build();
+			addWebPaymentStatus(approvalErrorStatus);
+			
+			
+			//KIS PG 결제 모듈은 망취소가 따로 없는 것 같음
+			//..
+			
+			returnMap.put("payResultFlag"	, "fail");
+	    }
+	    else
+	    {
+	    	/*승인 응답파라미터 정의*/
+	    	HashMap<String,String> apprRecvHash = jsonDataParser(apprRecvMsg);
+	    	
+	    	returnMap.put("payResultFlag"	, "success");
+	    	
+		    returnMap.put("r_resultCode"	, apprRecvHash.get("resultCd"));	//승인취소 결과코드	
+		    returnMap.put("r_resultMsg"		, apprRecvHash.get("resultMsg"));	//승인취소 결과메시지
+		    returnMap.put("r_payMethod"		, apprRecvHash.get("payMethod"));	//승인취소 결제수단
+		    returnMap.put("r_tid"			, apprRecvHash.get("tid"));			//거래번호
+		    returnMap.put("r_appDtm"		, apprRecvHash.get("appDtm"));		//거래일시
+		    returnMap.put("r_appNo"			, apprRecvHash.get("appNo"));		//승인번호
+		    returnMap.put("r_ordNo"			, apprRecvHash.get("ordNo"));		//주문번호
+		    returnMap.put("r_amt"			, apprRecvHash.get("amt"));			//결제 금액
+		    returnMap.put("r_cancelYN"		, apprRecvHash.get("cancelYN"));	//취소여부
+		    
+		    
+		    // 결제 승인취소 결과 기록
+			WebPaymentStatusDTO approvalResultStatus = WebPaymentStatusDTO.builder()
+				.status("고객-예매-승인취소-성공")
+				.message(returnMap.get("r_payMethod") + ": " + returnMap.get("r_resultCode"))
+				.orderNo(ordNo)
+				.build();
+			addWebPaymentStatus(approvalResultStatus);
+	    }
+	    
+		return returnMap;
+	}
+	
+	public WebPaymentPgResultDTO insertPgResultTable(String resultCd, String resultMsg, String apprReqUrl, String mid, HashMap<String, String> returnMap ) throws Exception{
+		
+		// PG사 결제 결과 정보 저장
+		WebPaymentPgResultDTO pgResult = new WebPaymentPgResultDTO();
+		
+		pgResult.setAuth_result_code(resultCd);		//인증 응답코드
+		pgResult.setAuth_result_msg(resultMsg);
+		pgResult.setNext_ap_url(apprReqUrl);
+		pgResult.setTransaction_id(returnMap.get("r_appNo"));	//kispg는 승인번호 apprNo로 대체
+		pgResult.setAuth_token("");
+		pgResult.setPay_method(returnMap.get("r_payMethod"));
+		pgResult.setMid(mid);
+		pgResult.setMoid(returnMap.get("r_ordNo"));
+		pgResult.setAmt(returnMap.get("r_amt"));
+		pgResult.setNet_cancel_url("");
+		pgResult.setAuth_signature_comparison("0");
+		pgResult.setApproval_result_code(returnMap.get("r_resultCode"));
+		pgResult.setApproval_result_msg(returnMap.get("r_resultMsg"));
+		pgResult.setTid(returnMap.get("r_tid"));
+		
+		if(returnMap.get("r_payMethod").equals("CARD"))
+		{
+			pgResult.setCardNo(returnMap.get("r_cardNo"));
+			pgResult.setCardQuota(returnMap.get("r_quota"));
+			pgResult.setCardCode(returnMap.get("r_appCardCd"));
+			pgResult.setAcquCardCode(returnMap.get("r_acqCardCd"));
+			pgResult.setAcquCardName(returnMap.get("r_fnNm"));
+			pgResult.setRcptType("");	//뭔지모름;; 블루컴아놔
+		}
+		else if(returnMap.get("r_payMethod").equals("BANK"))
+		{
+			pgResult.setCardCode(returnMap.get("vacntNo"));	//가상계좌
+			pgResult.setCardName(returnMap.get("fnNm"));	//은행명
+			pgResult.setRcptType("");
+		}
+		
+		pgResult.setAuth_code(returnMap.get("r_appNo"));
+		pgResult.setAuth_date(returnMap.get("r_appDtm"));
+		
+		addWebPaymentPgResult(pgResult);
+		
+		return pgResult;
+	}
+	
+	
+	public HashMap<String,String> jsonDataParser(String jsonStr){
+		HashMap<String,String> jsonHash = new HashMap<String,String>();
+	    
+	    try{
+	    	JSONParser parser = new JSONParser();    
+	        Object obj = parser.parse(jsonStr);  
+	        JSONObject jsonObj = (JSONObject) obj;
+	        
+	        Iterator iter = jsonObj.keySet().iterator();
+	        
+	        while(iter.hasNext()){
+	           String key   = (String) iter.next();
+	           String value = (String) jsonObj.get(key);
+	    
+	           jsonHash.put(key, value);
+	        }
+	    }
+	    catch(Exception e){
+	        e.printStackTrace();
+	    }
+
+	    return jsonHash;
+	}
+	
+	public final synchronized String getyyyyMMddHHmmss(){
+	  	SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
+	  	return yyyyMMddHHmmss.format(new Date());
+	}
+	
+	public String encrypt(String strData){
+		String passACL = null;
+	  	MessageDigest md = null;
+	  	try{
+	  		md = MessageDigest.getInstance("SHA-256");
+	  		md.reset();
+	  		md.update(strData.getBytes());
+	  		byte[] raw = md.digest();
+	  		passACL = encodeHex(raw);
+	  	}catch(Exception e){
+	  		System.out.print("암호화 에러" + e.toString());
+	  	}
+	  	return passACL;
+	  }
+	  
+	public String encodeHex(byte [] b){
+		char [] c = Hex.encodeHex(b);
+		return new String(c);
+	}
+	  
+	  
+	  
+	public static String callKisPgApi(String reqMsg, String reqUrl, String charSet){
+		HttpsURLConnection conn		= null;
+		BufferedReader resultReader	= null;
+		PrintWriter pw				= null;
+		URL url						= null;
+	      
+		// Create a trust manager that does not validate certificate chains
+		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+				return null;
+			}
+	  
+			public void checkClientTrusted(X509Certificate[] certs, String authType) {
+			}
+	  
+			public void checkServerTrusted(X509Certificate[] certs, String authType) {
+			}
+		} };
+
+	      
+		String apprRecvMsg = null;
+
+		int statusCode = 0;
+		int msgLen     = 0;
+		StringBuffer recvBuffer = new StringBuffer();
+	      
+		try{
+			msgLen = reqMsg.getBytes(charSet).length;
+		}
+		catch(UnsupportedEncodingException e){
+			e.printStackTrace();
+
+	        //return apprRecvMsg;
+			return "9999";
+		}
+
+		try{
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+	  
+			// Create all-trusting host name verifier
+			HostnameVerifier allHostsValid = new HostnameVerifier() {
+				public boolean verify(String hostname, SSLSession session) {
+					return true;
+				}
+			};
+
+			HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+			url = new URL(reqUrl);
+			conn = (HttpsURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36");
+			conn.setConnectTimeout(15000);
+			conn.setReadTimeout(25000);
+			conn.setDoOutput(true);
+			conn.setRequestProperty("Content-Type", "application/json; charset=" + charSet);
+			conn.setRequestProperty("Content-Length", String.valueOf(msgLen));
+
+			
+			pw = new PrintWriter(conn.getOutputStream());
+			pw.write(reqMsg);
+			pw.flush();
+	          
+			statusCode = conn.getResponseCode();
+
+			resultReader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+
+			for(String temp; (temp = resultReader.readLine()) != null;){
+				recvBuffer.append(temp).append("\n");
+			}
+	          
+			if(!(statusCode == HttpURLConnection.HTTP_OK)){
+				throw new Exception();
+			}
+
+			apprRecvMsg = recvBuffer.toString().trim();
+	          
+			return apprRecvMsg;
+		}catch (Exception e){
+			e.printStackTrace();
+
+			//return apprRecvMsg;
+			return "9999";
+		}finally{
+			recvBuffer.setLength(0);
+	          
+			try{
+				if(resultReader != null){
+					resultReader.close();
+				}
+			}catch(Exception ex){
+				resultReader = null;
+			}
+	          
+			try{
+				if(pw != null) {
+					pw.close();
+				}
+			}catch(Exception ex){
+				pw = null;
+			}
+	          
+			try{
+				if(conn != null) {
+					conn.disconnect();
+				}
+			}catch(Exception ex){
+				conn = null;
+			}
+		}
+	}
+	
+	
+	public boolean getPaymentResultStatus(HashMap<String, String> returnMap) {
+		
+		boolean resultBool = false;
+		
+		if(returnMap.get("r_payMethod").equals("CARD"))
+		{
+			if(returnMap.get("r_resultCode").equals("3001"))
+			{
+				resultBool = true;
+			}
+		}
+		else if(returnMap.get("r_payMethod").equals("BANK"))
+		{
+			if(returnMap.get("r_resultCode").equals("4000"))
+			{
+				resultBool = true;
+			}
+		}
+		else if(returnMap.get("r_payMethod").equals("CELLPHONE"))
+		{
+			if(returnMap.get("r_resultCode").equals("A000"))
+			{
+				resultBool = true;
+			}
+		}
+		else if(returnMap.get("r_payMethod").equals("VBANK"))
+		{
+			if(returnMap.get("r_resultCode").equals("4100"))
+			{
+				resultBool = true;
+			}
+		}
+		else if(returnMap.get("r_payMethod").equals("SSG_BANK"))
+		{
+			if(returnMap.get("r_resultCode").equals("0000"))
+			{
+				resultBool = true;
+			}
+		}
+		else if(returnMap.get("r_payMethod").equals("CMS_BANK"))
+		{
+			if(returnMap.get("r_resultCode").equals("0000"))
+			{
+				resultBool = true;
+			}
+		}
+		
+		return resultBool;
 	}
 }
 
