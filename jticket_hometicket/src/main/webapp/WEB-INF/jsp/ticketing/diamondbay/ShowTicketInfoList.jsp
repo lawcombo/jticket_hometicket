@@ -33,17 +33,17 @@ a.disabled {
 	
 
 	<!-- 뒤로가기 버튼 -->
+	<%-- 
 	<div style="text-align:left; padding-top:10px; padding-left:10px;">
-		<!-- <button onclick="history.back(); " style="cursor: pointer";>뒤로가기</button> -->
-		
 		<img src="${pageContext.request.contextPath }/resources/images/diamondbay/backImg.png" onclick="history.back()" style="cursor: pointer; width: 50px;" />
 	</div>
+	 --%>
 	
     <section class="head">
          <div class="intro res_tit">
             <h1>
-            	다이아몬드베이 예약<br>
-            	확인/취소
+            	다이아몬드베이<br>
+            	예매 확인 / 취소
             </h1>
         </div>
     </section>
@@ -51,7 +51,7 @@ a.disabled {
 		<section class="reserve reserve-form ewp_list_ex">
 		    <div class="verticalAlignMiddle">
 				<div class="reserveDl full mt50 el_tit">
-					<h3 class="reserveDt"><span class="ewp_check_em">${buyerInfo.member_name}</span> 님의 예약내역</h3>
+					<h3 class="reserveDt"><span class="ewp_check_em">${buyerInfo.member_name}</span> 님의 예매내역</h3>
 				</div>
 		        <c:forEach var="product" items="${dataList}" varStatus="status">
 			        <div class="reserveDl full mt50 el_btn">

@@ -48,7 +48,7 @@ String ordNo 			= webPayment.getOrder_no(); 						// 상품주문번호
 //String returnURL 		= "./payResultSample.jsp";      
 
 //운영에는 https 처리
-String returnURL 		= "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/diamondbay/payResultFromKisPG"; // 결과페이지(절대경로) - 모바일 결제창 전용
+String returnURL 		= "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/diamondbay/payResultFromKisPG"; // 결과페이지(절대경로) - 모바일 결제창 전용
 
 /*
 *******************************************************
