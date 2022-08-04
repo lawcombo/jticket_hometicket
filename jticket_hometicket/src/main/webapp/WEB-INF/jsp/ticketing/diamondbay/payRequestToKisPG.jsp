@@ -85,9 +85,9 @@ a.disabled {
 <script type="text/javascript">
 
 //운영
-//var url = "https://api.kispg.co.kr";
+var url = "https://api.kispg.co.kr";
 //테스트
-var url = "https://testapi.kispg.co.kr";
+//var url = "https://testapi.kispg.co.kr";
 
 $(document).ready(function() {
 
