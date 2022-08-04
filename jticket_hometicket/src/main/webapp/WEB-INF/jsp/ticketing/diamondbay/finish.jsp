@@ -130,6 +130,25 @@
 				</ul>
 			</div>
 		</section>
+		
+		
+		<div style="text-align: -webkit-center;">
+			<div style="width:44%">
+				<section class="reserve">
+					<div class="verticalAlignMiddle">
+						<div style="padding-top:20px">
+							<button type="button" class="buttonTypeCyan full textLarg" style="cursor:pointer;" onclick="check.reserveCheck();">예약확인 및 취소</button>
+						</div>
+						
+						<div style="padding-top:20px">
+							<button type="button" class="buttonTypeCyan full textLarg" style="cursor:pointer;" onclick="goReserve.itemSelect();">추가 예매하러 가기</button>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+		
+		
 		<div id="hidden-section" style="display:none;">
 			<!-- 취소 form -->
 			<form:form role="cancel" action="/ticketing/cancelTicket" method="POST">
@@ -171,6 +190,19 @@
 		$("#memberTelSpan").text(addHyphenToPhoneNumber($("#memberTelSpan").text()));
 	});
 	
+	
+	var check = {
+			reserveCheck : function(){
+				var newURL = window.location.protocol + "//" + window.location.host + "/ticketing/checkTicket?content_mst_cd=DIAMONDBAY_0_1";
+				 window.location.href=newURL;
+			}
+	}
+	var goReserve = {
+			itemSelect : function(){
+				var newURL = window.location.protocol + "//" + window.location.host + "/ticketing/diamondbay?content_mst_cd=DIAMONDBAY_0_1";
+				 window.location.href=newURL;
+			}
+	}
 </script>
 <%-- <%@ include file="../include/footer-single.jsp" %> --%>
 <%@ include file="../../include/diamondbay/footer-single.jsp" %>
