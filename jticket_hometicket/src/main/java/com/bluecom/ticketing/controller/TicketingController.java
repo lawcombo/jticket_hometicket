@@ -2708,38 +2708,4 @@ public class TicketingController extends BaseController {
 		return redirectPage;
 	}
 	
-	/**
-	 * 다이아몬드 결제 취소 후 화면 분기
-	 * @param essential
-	 * @param saleDTO
-	 * @param request
-	 * @param response
-	 * @param model
-	 * @param rttr
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/diamondbay/prevShowTicket")
-	public String prevShowTicketListOfDiamondbay(@ModelAttribute("essential")EssentialDTO essential, SaleDTO saleDTO, 
-										HttpServletRequest request, HttpServletResponse response, Model model,
-										RedirectAttributes rttr) throws Exception{
-		
-		log.info("::[/diamondbay/prevShowTicket] redired CALL");
-		
-		request.getSession().setAttribute("saleDTO", saleDTO);
-		
-		String redirectPage = null;
-		
-		if(saleDTO.getType().equals("0")) 
-		{
-			//redirectPage = "redirect:/ticketing/diamondbay/showTicketInfo?content_mst_cd=" + essential.getContent_mst_cd();
-			redirectPage = "redirect:/ticketing/checkTicket?content_mst_cd=" + essential.getContent_mst_cd();
-		}
-		else 
-		{
-			redirectPage = "redirect:/ticketing/diamondbay/showTicketInfoList?content_mst_cd=" + essential.getContent_mst_cd();
-		}
-		
-		return redirectPage;
-	}
 }
