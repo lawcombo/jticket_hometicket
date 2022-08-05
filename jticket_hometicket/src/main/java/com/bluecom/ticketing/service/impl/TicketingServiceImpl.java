@@ -1817,12 +1817,12 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 					else if(saleProductDTOList.isEmpty() == false && saleProductDTOList.size() == 1)
 					{
 						
-						ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "prevShowTicket?type=0");
+						ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "prevShowTicket?type=0&content_mst_cd="+sale.getContent_mst_cd());
 						//ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "checkTicket?content_mst_cd=" + sale.getContent_mst_cd());
 					}
 					else
 					{
-						ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "prevShowTicket?type=0");
+						ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "prevShowTicket?type=0&content_mst_cd="+sale.getContent_mst_cd());
 						//ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "checkTicket?content_mst_cd=" + sale.getContent_mst_cd());
 						
 					}
