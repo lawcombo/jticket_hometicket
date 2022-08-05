@@ -2723,6 +2723,9 @@ public class TicketingController extends BaseController {
 	public String prevShowTicketListOfDiamondbay(@ModelAttribute("essential")EssentialDTO essential, SaleDTO saleDTO, 
 										HttpServletRequest request, HttpServletResponse response, Model model,
 										RedirectAttributes rttr) throws Exception{
+		
+		log.info("::[/diamondbay/prevShowTicket] redired CALL");
+		
 		request.getSession().setAttribute("saleDTO", saleDTO);
 		
 		String redirectPage = null;
