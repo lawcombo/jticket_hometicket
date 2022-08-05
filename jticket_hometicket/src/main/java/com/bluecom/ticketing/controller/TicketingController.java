@@ -2699,7 +2699,7 @@ public class TicketingController extends BaseController {
 	public String cancelTicketOfKisPg(@ModelAttribute("buyerInfo") SaleDTO sale,  HttpServletRequest request, HttpServletResponse response,
 			RedirectAttributes rttr, Model model) throws Exception {
 		
-		String redirectPage = "";
+		String redirectPage = "redirect:/ticketing/diamondbay/showTicketInfo";
 		
 		log.info("::payResultFromKisPG Cancel CALL");
 		
@@ -2708,7 +2708,7 @@ public class TicketingController extends BaseController {
 		
 		
 		
-		return null;
+		return redirectPage;
 	}
 	
 	
