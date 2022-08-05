@@ -1816,14 +1816,15 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 					}
 					else if(saleProductDTOList.isEmpty() == false && saleProductDTOList.size() == 1)
 					{
-						//ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "prevShowTicket?type=0&content_mst_cd=" + sale.getContent_mst_cd()+"&member_name="+sale.getMember_name()+"&member_tel="+sale.getMember_tel()+"&shop_code="+sale.getShop_code()+"&sale_code="+saleProductDTOList.get(0).getSale_code()+"&order_num="+saleProductDTOList.get(0).getOrder_num());
-						ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "checkTicket?content_mst_cd=" + sale.getContent_mst_cd());
+						
+						ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "prevShowTicket?type=0&content_mst_cd=" + sale.getContent_mst_cd()+"&member_name="+sale.getMember_name()+"&member_tel="+sale.getMember_tel()+"&shop_code="+sale.getShop_code()+"&sale_code="+saleProductDTOList.get(0).getSale_code()+"&order_num="+saleProductDTOList.get(0).getOrder_num());
+						//ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "checkTicket?content_mst_cd=" + sale.getContent_mst_cd());
 					}
 					else
 					{
-						//로컬에서는 안되고 운영에서는 되고?
-						//ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "prevShowTicket?type=0&content_mst_cd=" + sale.getContent_mst_cd()+"&member_name="+sale.getMember_name()+"&member_tel="+sale.getMember_tel()+"&shop_code="+sale.getShop_code()+"&sale_code="+saleProductDTOList.get(0).getSale_code()+"&order_num="+saleProductDTOList.get(0).getOrder_num());
-						ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "checkTicket?content_mst_cd=" + sale.getContent_mst_cd());
+						ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "prevShowTicket?type=0&content_mst_cd=" + sale.getContent_mst_cd()+"&member_name="+sale.getMember_name()+"&member_tel="+sale.getMember_tel()+"&shop_code="+sale.getShop_code()+"&sale_code="+saleProductDTOList.get(0).getSale_code()+"&order_num="+saleProductDTOList.get(0).getOrder_num());
+						//ScriptUtils.alertAndMovePage(response, "취소에 성공하였습니다", "checkTicket?content_mst_cd=" + sale.getContent_mst_cd());
+						
 					}
 					
 					return null;
