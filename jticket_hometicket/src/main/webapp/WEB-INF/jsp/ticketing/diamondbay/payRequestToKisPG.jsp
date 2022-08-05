@@ -35,6 +35,7 @@ String fee				= webPayment.getTotal_fee().toString(); 		//총 상품 금액
 
  
 String payMethod        = webPayment.getPay_method(); 						// 결제수단 /// CARD(신용카드), BANK(계좌이체)
+payMethod = payMethod.toLowerCase();
 String merchantKey 		= webPayment.getMerchantKey();						// 가맹점 고유 검증키
 String merchantID 		= webPayment.getMerchantID();						// 가맹점아이디
 String goodsNm	 		= webPayment.getProduct_group_name().toString();	// 결제상품명
