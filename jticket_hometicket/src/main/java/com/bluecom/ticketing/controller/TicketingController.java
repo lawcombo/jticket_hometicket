@@ -2699,14 +2699,50 @@ public class TicketingController extends BaseController {
 	public String cancelTicketOfKisPg(@ModelAttribute("buyerInfo") SaleDTO sale,  HttpServletRequest request, HttpServletResponse response,
 			RedirectAttributes rttr, Model model) throws Exception {
 		
-		String redirectPage = "redirect:/ticketing/diamondbay/showTicketInfo";
+		String redirectPage = "";
 		
 		log.info("::payResultFromKisPG Cancel CALL");
 		
 		//결제 취소 호출
 		redirectPage = ticketingService.kisPgPayCancelReult(sale, request, response, rttr, redirectPage);
 		
+		
+		
+		return null;
+	}
+	
+	
+	/**
+	 * 다이아몬드 결제 취소 후 화면 분기
+	 * @param essential
+	 * @param saleDTO
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param rttr
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/diamondbay/prevShowTicket")
+	public String prevShowTicketListOfDiamondbay(@ModelAttribute("essential")EssentialDTO essential, SaleDTO saleDTO, 
+										HttpServletRequest request, HttpServletResponse response, Model model,
+										RedirectAttributes rttr) throws Exception{
+		request.getSession().setAttribute("saleDTO", saleDTO);
+		
+		String redirectPage = null;
+		
+		if(saleDTO.getType().equals("0")) 
+		{
+			//redirectPage = "redirect:/ticketing/diamondbay/showTicketInfo?content_mst_cd=" + essential.getContent_mst_cd();
+			redirectPage = "redirect:/ticketing/checkTicket?content_mst_cd=" + essential.getContent_mst_cd();
+		}
+		else 
+		{
+			redirectPage = "redirect:/ticketing/diamondbay/showTicketInfoList?content_mst_cd=" + essential.getContent_mst_cd();
+		}
+		
 		return redirectPage;
 	}
+	
 	
 }
