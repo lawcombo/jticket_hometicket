@@ -12,9 +12,14 @@ import com.bluecom.ticketing.domain.WebPaymentPgResultDTO;
 
 public interface MailService {
 
+	//제주맥주 , 다이아몬드베이 예매 성공 안내 메일
 	boolean sendReserve(HttpServletRequest request, ApiResultVO apiResult, WebPaymentPgResultDTO pgResult) throws Exception;
 
+	//제주맥주 예매 취소 안내 메일
 	boolean sendRefund(HttpServletRequest request, SaleVO saleVO, WebPaymentDTO webPayment, WebPaymentPgResultDTO pgResult) throws Exception;
+	
+	//다이아몬드베이 예매 취소 안내 메일
+	boolean sendRefundOfDiamondbay(HttpServletRequest request, SaleVO saleVO, WebPaymentDTO webPayment, WebPaymentPgResultDTO pgResult) throws Exception;
 	
 	boolean sendChange(HttpServletRequest request, ApiResultVO apiResult, WebPaymentPgResultDTO pgResult) throws Exception;
 	

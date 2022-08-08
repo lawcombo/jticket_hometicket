@@ -36,8 +36,8 @@
 	<section class="head">
 		<div class="intro res_tit">
 			<h1>
-				다이아몬드베이 예약<br>
-				확인/취소
+				다이아몬드베이<br>
+				예매 확인/취소
 			</h1>
 		</div>
 	</section>
@@ -157,7 +157,7 @@
 							<c:choose>
 								<c:when test="${(product.quantity eq product.actual_quantity) && (product.real_fee eq (product.product_fee - coupon[0].couponFee)) }">
 									<div>
-										<button id="cancelButton" class="buttonTypeCyan full textLarge" style="width:285px; cursor: pointer;">예약 취소</button>
+										<button id="cancelButton" class="buttonTypeCyan full textLarge" style="width:285px; cursor: pointer;">예매 취소</button>
 									</div>
 								</c:when>
 								<c:otherwise>
@@ -170,32 +170,35 @@
 					<ul class="reserveDl full mt50 ewp_show_wrapper show_bot_tb">
 						<li class="reserveDt">
 							<h3>
-								[이용안내]
+							[이용안내]
 							</h3>
 							<p>
 								<span>
-									전화예약은 불가능하며,<br>
-								    당일 잔여 인원에 한해 현장 결제 순으로 예약 가능합니다.
+									안내데스크<br>
+									1577-0003<br>
+									운영시간 오전 10시~ 오후 7시 30분
 								</span>
-								<span>
-									프로그램 정원은 조정이 불가능합니다.
-								</span>
-
+	
 							</p>
 						</li>
 						<li class="reserveDt sbt_bot">
 							<h3>
-								[주의사항]
+							[주의사항]
 							</h3>
 							<p>
 								<span>
-									당일 10분 이상 지각 참여 및 환불 불가<br>
+									환불안내<br>
+									당일 취소 및 환불 절대 불가!<br>
+									탑승일 기준 일주일 전까지만 예매 환불 가능!<br>
+									(ex.탑승일이 1월15일이면 1월7일까지 환불 가능)<br>
 									지각으로 인한 환불은 불가능합니다.
 								</span>
+								<!-- 
 								<span>
 									정원 조정 불가<br>
 									프로그램의 정원 추가는 불가능합니다.
 								</span>
+								 -->
 							</p>
 						</li>
 					</ul>
@@ -302,22 +305,45 @@ $(function() {
 	var playDate = $("#playDate").val();
 	$('#cancelButton').on('click', function(e){
 		e.preventDefault();
+		
 		var text;
-		if(todayDate > playDate){
-			alert("예약날짜가 지났습니다. 예약취소가 불가능합니다.");
+		
+		//탑승일 기준 7일전 날짜 계산.
+		var before7day = new Date(playDate);
+		before7day.setDate(before7day.getDate()-7);
+		before7day = before7day.toJSON().split("T");
+		before7day = before7day[0];
+		
+		
+		if(todayDate > playDate)
+		{
+			alert("예매날짜가 지났습니다. 예매취소가 불가능합니다.");
 			return false;
-		}else if(todayDate == playDate){
-			alert("예약 당일은 취소가 불가능합니다.");
+		}
+		else if(todayDate == playDate)
+		{
+			alert("예매 당일은 취소가 불가능합니다.");
 			return false;
-		}else{
+		}
+		else if(todayDate >= before7day)
+		{//탑승일 기준으로부터 7주일 전까지만 취소 가능
+			alert("탑승일 기준 7일전까지만 취소 가능합니다.");
+			return false;
+		}
+		else
+		{
 			var yesterday = new Date(playDate);
 			yesterday.setDate(yesterday.getDate()-1);
 			yesterday = yesterday.toJSON().split("T");
 			yesterday = yesterday[0];
-			 if(todayDate <= yesterday){ //100% 환불
-				text = "현재 예약을 취소하시겠습니까?";
+			
+			if(todayDate <= yesterday)
+			{ //100% 환불
+				text = "현재 예매을 취소하시겠습니까?";
 				$("#partialCancelCode").val(0);
-			}else{
+			}
+			else
+			{
 				alert("취소 진행이 불가능합니다.");
 				return false;
 			}
@@ -339,7 +365,7 @@ $(function() {
 	
 	$(".ewp_db_rig").click(function(){
 		<c:if test="${today eq dataList[0].play_date}">
-			alert('예약 당일에는 변경 또는 취소가 불가능합니다.');	
+			alert('예매 당일에는 변경 또는 취소가 불가능합니다.');	
 		</c:if>
 		<c:if test="${today ne dataList[0].play_date}">
 			$(".ewp_ecb").css("display","block");
@@ -485,7 +511,7 @@ $(function() {
     $('#confirmButton').on('click', function (e) {
     	
     	<c:if test="${today eq dataList[0].play_date}">
-			alert('예약 당일에는 변경 또는 취소가 불가능합니다.');
+			alert('예매 당일에는 변경 또는 취소가 불가능합니다.');
 			return false;
 		</c:if>
 		<c:if test="${today ne dataList[0].play_date}">
@@ -499,7 +525,7 @@ $(function() {
 	    		return false;
 	    	}
 	    	
-	    	if (confirm("예약을 변경하시겠습니까?") == true){    //확인
+	    	if (confirm("예매을 변경하시겠습니까?") == true){    //확인
 	    		$(this).attr('disabled', true);
 	            
 	            var form = $('form[role="modify"]');

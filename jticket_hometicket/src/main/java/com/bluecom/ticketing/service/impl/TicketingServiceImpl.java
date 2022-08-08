@@ -1803,8 +1803,8 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 					//알림톡 메시지 전송
 					messageService.sendRefund(request, saleVO, webPayment, pgResult, shopDetail); 
 
-					//알림톡 메시지 전송
-					mailService.sendRefund(request, saleVO, webPayment, pgResult); 
+					//취소메일 전송
+					mailService.sendRefundOfDiamondbay(request, saleVO, webPayment, pgResult); 
 					
 					
 					sale.setType("1");

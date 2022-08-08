@@ -40,7 +40,20 @@ public class JejuMailServiceImpl extends EgovAbstractServiceImpl implements Mail
 	@Override
 	public boolean sendReserve(HttpServletRequest request, ApiResultVO apiResult, WebPaymentPgResultDTO pgResult) throws Exception{
 
-		return sendNew(request, apiResult, pgResult, "완료", "정상처리", "제주맥주 양조장 예약이 완료되었습니다.");
+		boolean resultBoolean = false;
+		
+		String contentMstCd = apiResult.getWebPayment().getContent_mst_cd().toString();
+		
+		if(contentMstCd.contains("JEJUBEER"))
+		{
+			resultBoolean = sendNew(request, apiResult, pgResult, "완료", "정상처리", "제주맥주 양조장 예약이 완료되었습니다.");
+		}
+		else if(contentMstCd.contains("DIAMONDBAY"))
+		{
+			resultBoolean = sendNewOfDiamondbay(request, apiResult, pgResult, "완료", "정상처리", "다이아몬드베이 예약이 완료되었습니다.");
+		}
+		
+		return resultBoolean;
 	}
 	
 	public boolean sendNew(HttpServletRequest request, ApiResultVO apiResult, WebPaymentPgResultDTO pgResult, String fifth, String sixth, String subject) throws Exception{
@@ -55,25 +68,12 @@ public class JejuMailServiceImpl extends EgovAbstractServiceImpl implements Mail
 		mailVO.setTo(payment.getReserverEmail());
 		
 		
-		String templateFile = "";
-		if(payment.getContent_mst_cd().toString().contains("JEJUBEER"))
-		{
-			mailVO.setFrom(propertyService.getString("senderEmail"));
-			subject = "제주맥주 양조장 예약이 완료되었습니다.";
-			
-			templateFile = request.getSession().getServletContext().getRealPath("/") + "resources" + File.separator + "jeju_email.html";
-			
-		}
-		else if(payment.getContent_mst_cd().toString().contains("DIAMONDBAY"))
-		{
-			mailVO.setFrom(propertyService.getString("senderEmailOfDiamondbay"));
-			subject = "다이아몬드베이 예매가 완료되었습니다.";
-			
-			templateFile = request.getSession().getServletContext().getRealPath("/") + "resources" + File.separator + "html" + File.separator + "diamondbay_email.html";
-		}
+		mailVO.setFrom(propertyService.getString("senderEmail"));
+		subject = "제주맥주 양조장 예약이 완료되었습니다.";
 		
 		mailVO.setSubject(subject);
-		//String templateFile = request.getSession().getServletContext().getRealPath("/") + "resources" + File.separator + "jeju_email.html";
+		
+		String templateFile = request.getSession().getServletContext().getRealPath("/") + "resources" + File.separator + "jeju_email.html";
 		
 //		0	reserverName
 //		1	14 휴대폰번호
@@ -241,6 +241,173 @@ public class JejuMailServiceImpl extends EgovAbstractServiceImpl implements Mail
 	public String sendMail(MailVO mailVO) {
 		
         return "succ";
+	}
+	
+	/**
+	 * 다이아몬드베이 예매 메일
+	 * @param request
+	 * @param apiResult
+	 * @param pgResult
+	 * @param fifth
+	 * @param sixth
+	 * @param subject
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean sendNewOfDiamondbay(HttpServletRequest request, ApiResultVO apiResult, WebPaymentPgResultDTO pgResult, String fifth, String sixth, String subject) throws Exception{
+		
+		
+		ApiSocialSaleDTO sale 		= apiResult.getSocialSales().get(0);
+		WebPaymentDTO payment 		= apiResult.getWebPayment();
+		NumberFormat numberFormat 	= NumberFormat.getInstance();
+		
+		MailVO mailVO = new MailVO();
+		mailVO.setTo(payment.getReserverEmail());
+		
+		
+		mailVO.setFrom(propertyService.getString("senderEmailOfDiamondbay"));
+		subject = "다이아몬드베이 예매가 완료되었습니다.";
+		
+		
+		mailVO.setSubject(subject);
+		
+		String templateFile = request.getSession().getServletContext().getRealPath("/") + "resources" + File.separator + "html" + File.separator + "diamondbay_email.html";
+		
+//		0	reserverName
+//		1	14 휴대폰번호
+//		2	8 totalCount
+//		3	workdate
+//		4	useDate
+//		5	완료		
+//		6	정상처리
+//		7	이미지 https://jticket.nicetcm.co.kr/resources/images/jeju/email_logo.png		
+//		8	예약확인링크
+	
+		String text = FileUtils.readText(templateFile);
+		text = text.replace("{0}", payment.getReserverName());
+		text = text.replace("{1}", payment.getReserverPhone());
+		text = text.replace("{2}", Integer.toString(payment.getTotal_count()));
+		Date workDatetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sale.getWORK_DATETIME());
+		text = text.replace("{3}", new SimpleDateFormat("yyyy-MM-dd HH:mm").format(workDatetime));
+		String useDate = sale.getVALID_FROM() + " / " + payment.getStart_time();
+		text = text.replace("{4}", useDate);		
+		text = text.replace("{5}", fifth);
+		text = text.replace("{6}", sixth);
+		text = text.replace("{8}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/checkTicket?content_mst_cd=" + payment.getContent_mst_cd());
+		text = text.replace("{9}", payment.getProduct_group_name());
+		
+		mailVO.setText(text);
+		
+		System.out.println(mailVO.getSubject());
+		
+	    try {
+            MimeMessage mail = mailSender.createMimeMessage();
+            MimeMessageHelper mailHelper = new MimeMessageHelper(mail,true,"UTF-8");
+            // true는 멀티파트 메세지를 사용하겠다는 의미
+            
+            /*
+             * 단순한 텍스트 메세지만 사용시엔 아래의 코드도 사용 가능 
+             * MimeMessageHelper mailHelper = new MimeMessageHelper(mail,"UTF-8");
+             */
+            
+            mailHelper.setFrom(mailVO.getFrom());
+            // 빈에 아이디 설정한 것은 단순히 smtp 인증을 받기 위해 사용 따라서 보내는이(setFrom())반드시 필요
+            // 보내는이와 메일주소를 수신하는이가 볼때 모두 표기 되게 원하신다면 아래의 코드를 사용하시면 됩니다.
+            //mailHelper.setFrom("보내는이 이름 <보내는이 아이디@도메인주소>");
+            mailHelper.setTo(mailVO.getTo());
+            mailHelper.setSubject(mailVO.getSubject());
+            mailHelper.setText(mailVO.getText(), true);
+            // true는 html을 사용하겠다는 의미입니다.
+            
+            /*
+             * 단순한 텍스트만 사용하신다면 다음의 코드를 사용하셔도 됩니다. mailHelper.setText(content);
+             */
+            mailSender.send(mail);
+        } catch(Exception e) {
+            e.printStackTrace();
+            log.error("Mail 전송 실패" + e.getMessage());
+            return false;
+        }	
+		
+		
+		return true;
+	}
+	
+	
+	/**
+	 * 다이아몬드베이 예매취소 메일
+	 */
+	@Override
+	public boolean sendRefundOfDiamondbay(HttpServletRequest request, SaleVO sale, WebPaymentDTO payment, WebPaymentPgResultDTO pgResult) throws Exception {
+	
+		
+		NumberFormat numberFormat 	= NumberFormat.getInstance();
+		MailVO mailVO 				= new MailVO();
+		
+		mailVO.setTo(payment.getReserverEmail());
+		mailVO.setFrom(propertyService.getString("senderEmailOfDiamondbay"));
+		
+		mailVO.setSubject("다이아몬드베이 예매 취소되었습니다.");
+		
+		String templateFile = request.getSession().getServletContext().getRealPath("/") + "resources" + File.separator + "html" + File.separator + "diamondbay_email.html";
+		
+//		0	reserverName
+//		1	14 휴대폰번호
+//		2	8 totalCount
+//		3	workdate
+//		4	useDate
+//		5	완료		
+//		6	정상처리
+//		7	이미지 https://jticket.nicetcm.co.kr/resources/images/jeju/email_logo.png		
+//		8	예약확인링크
+	
+		String text = FileUtils.readText(templateFile);
+		text = text.replace("{0}", payment.getReserverName());
+		text = text.replace("{1}", payment.getReserverPhone());
+		text = text.replace("{2}", Integer.toString(payment.getTotal_count()));
+		text = text.replace("{3}", new SimpleDateFormat("yyyy-MM-dd HH:mm").format(sale.getReg_Date()));
+		String useDate = sale.getValid_from() + " / " + payment.getStart_time();
+		text = text.replace("{4}", useDate);		
+		text = text.replace("{5}", "취소");
+		text = text.replace("{6}", "취소");
+		text = text.replace("{8}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/checkTicket?content_mst_cd=" + payment.getContent_mst_cd());
+		text = text.replace("{9}", payment.getProduct_group_name());
+		
+		mailVO.setText(text);
+		
+		System.out.println(mailVO.getSubject());
+		
+	    try {
+            MimeMessage mail = mailSender.createMimeMessage();
+            MimeMessageHelper mailHelper = new MimeMessageHelper(mail,true,"UTF-8");
+            // true는 멀티파트 메세지를 사용하겠다는 의미
+            
+            /*
+             * 단순한 텍스트 메세지만 사용시엔 아래의 코드도 사용 가능 
+             * MimeMessageHelper mailHelper = new MimeMessageHelper(mail,"UTF-8");
+             */
+            
+            mailHelper.setFrom(mailVO.getFrom());
+            // 빈에 아이디 설정한 것은 단순히 smtp 인증을 받기 위해 사용 따라서 보내는이(setFrom())반드시 필요
+            // 보내는이와 메일주소를 수신하는이가 볼때 모두 표기 되게 원하신다면 아래의 코드를 사용하시면 됩니다.
+            //mailHelper.setFrom("보내는이 이름 <보내는이 아이디@도메인주소>");
+            mailHelper.setTo(mailVO.getTo());
+            mailHelper.setSubject(mailVO.getSubject());
+            mailHelper.setText(mailVO.getText(), true);
+            // true는 html을 사용하겠다는 의미입니다.
+            
+            /*
+             * 단순한 텍스트만 사용하신다면 다음의 코드를 사용하셔도 됩니다. mailHelper.setText(content);
+             */
+            mailSender.send(mail);
+        } catch(Exception e) {
+            e.printStackTrace();
+            log.error("Mail 전송 실패" + e.getMessage());
+            return false;
+        }	
+		
+		
+		return true;
 	}
 	
 }
