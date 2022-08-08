@@ -31,7 +31,7 @@
 	<section class="head">
 		<div class="intro res_tit">
 			<h1>
-				예약이 완료되었습니다!
+				예매 완료되었습니다!
 			</h1>
 		</div>
 	</section>
@@ -75,7 +75,7 @@
 					</li>
 					<li class="reserveDt">
 						<p class="sh_tit">
-							방문예약일자
+							방문예매일자
 						</p>
 						<p class="sh_text">
 							${trade[0].play_date } / ${trade[0].start_time }
@@ -107,7 +107,9 @@
 						</h3>
 						<p>
 							<span>
-								프로그램 정원은 조정이 불가능합니다.
+								안내데스크<br>
+								1577-0003<br>
+								운영시간 오전 10시~ 오후 7시 30분
 							</span>
 
 						</p>
@@ -118,13 +120,17 @@
 						</h3>
 						<p>
 							<span>
-								당일 10분 이상 지각 참여 및 환불 불가<br>
+								환불안내<br>
+								당일 취소 및 환불 절대 불가!<br>
+								탑승일 기준 일주일 전까지만 예매 환불 가능!<br>
 								지각으로 인한 환불은 불가능합니다.
 							</span>
+							<!-- 
 							<span>
 								정원 조정 불가<br>
 								프로그램의 정원 추가는 불가능합니다.
 							</span>
+							 -->
 						</p>
 					</li>
 				</ul>
@@ -137,7 +143,7 @@
 				<section class="reserve">
 					<div class="verticalAlignMiddle">
 						<div style="padding-top:20px">
-							<button type="button" class="buttonTypeCyan full textLarg" style="cursor:pointer;" onclick="check.reserveCheck();">예약확인 및 취소</button>
+							<button type="button" class="buttonTypeCyan full textLarg" style="cursor:pointer;" onclick="check.reserveCheck();">예매확인 및 취소</button>
 						</div>
 						
 						<div style="padding-top:20px">

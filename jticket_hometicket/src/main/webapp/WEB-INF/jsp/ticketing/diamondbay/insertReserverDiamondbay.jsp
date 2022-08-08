@@ -30,8 +30,8 @@
 	
 	// CheckPlus(본인인증) 처리 후, 결과 데이타를 리턴 받기위해 다음예제와 같이 http부터 입력합니다.
 	//리턴url은 인증 전 인증페이지를 호출하기 전 url과 동일해야 합니다. ex) 인증 전 url : https://www.~ 리턴 url : https://www.~
-	String sReturnUrl = "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/success?content_mst_cd=" + ((com.bluecom.ticketing.domain.EssentialDTO)request.getAttribute("essential")).getContent_mst_cd();     // 성공시 이동될 URL
-	String sErrorUrl = "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/fail?content_mst_cd=" + ((com.bluecom.ticketing.domain.EssentialDTO)request.getAttribute("essential")).getContent_mst_cd();         // 실패시 이동될 URL
+	String sReturnUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/success?content_mst_cd=" + ((com.bluecom.ticketing.domain.EssentialDTO)request.getAttribute("essential")).getContent_mst_cd();     // 성공시 이동될 URL
+	String sErrorUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/fail?content_mst_cd=" + ((com.bluecom.ticketing.domain.EssentialDTO)request.getAttribute("essential")).getContent_mst_cd();         // 실패시 이동될 URL
 	
 	// 입력될 plain 데이타를 만든다.
 	String sPlainData = "7:REQ_SEQ" + sRequestNumber.getBytes().length + ":" + sRequestNumber +
@@ -255,14 +255,15 @@
 											<div class="chmd">
 												<input type="radio" name="agreementTermsOfUse" id="agreementTermsOfUse" class="delinp" value="1">
 												<label class="jejuRadioButton jjrb ag_txt">
-												<span class='check'></span> 확인 후 동의</label>
+												<span class='check'></span>동의</label>
 											</div>
+											<%-- 
 											<div class="rad_modal">
 												<div class="rad_modal_content">
 													<div class="rad_modal_x">
 														<div id="agreementTermsOfUse-modal-section"
 															class="md_cont">
-															<%-- <c:out value="${reserveInfo.info_c }" escapeXml="false"/> --%>
+															<c:out value="${reserveInfo.info_c }" escapeXml="false"/>
 															<div class="modal_tb">
 																<div class="mt_top">
 																	<h2>
@@ -293,6 +294,7 @@
 												</div>
 												<div class="rad_modal_bk"></div>
 											</div>
+											 --%>
 										</div>
 									</div>
 								</li>
@@ -610,7 +612,7 @@ var setReturnedPayValuesFromChildWindow = function (result) {
 var isCheckedAgreementTermsOfUse = false;
 $(function(){
 	$(".rad_modal").hide();
-	$(".chmd").click(function(){
+	$(".chmd").click(function(e){
 		
 		var isChecked = $("#agreementTermsOfUse").prop("checked");
 		
@@ -618,7 +620,9 @@ $(function(){
 		if(isChecked) {
 			$("#agreementTermsOfUse").prop("checked", false);
 		} else {
-			$(this).next(".rad_modal").fadeIn();
+			//$(this).next(".rad_modal").fadeIn();
+			e.preventDefault();
+			$("#agreementTermsOfUse").prop("checked", true);
 		}
 	});
 	
@@ -630,13 +634,16 @@ $(function(){
 		e.preventDefault();
 	});
 	
+	
+	//모두 확인했고, 동의합니다.
+	/* 
 	$(".md_bts").click(function(e){
 		e.preventDefault();
 		$("#agreementTermsOfUse").prop("checked", true);
 		$(".rad_modal").fadeOut();
 		
 	});
-	
+	 */
 });
 
 /***** 전화번호, 주민번호 입력 숫자만 *****/
