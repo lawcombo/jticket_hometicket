@@ -1527,7 +1527,38 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 				
 				//PG사 결제승인 결과 정보 저장 
 				WebPaymentPgResultDTO pgResult = new WebPaymentPgResultDTO();
-				pgResult = insertPgResultTable(resultCd, resultMsg, apprReqUrl, mid, returnMap );
+				
+				try 
+				{
+					pgResult = insertPgResultTable(resultCd, resultMsg, apprReqUrl, mid, returnMap );
+				}
+				catch (Exception e) 
+				{
+					e.printStackTrace();
+					
+					//결제 승인 취소 요청 및 상태 저장
+					String cancelMsg = "niceFail";
+					HashMap<String, String> returnCancelMap = callKisPgModulePayCancel(charset, tid, goodsAmt, ediDate, mid, encData, ordNo, apprCancelReqUrl, payMethod, cancelMsg);
+					
+					if(returnCancelMap.get("payResultFlag").equals("success"))
+					{
+						resultSuccess = 0;
+						resultMessage = "PG-REULST-INSERT-실패.\n결제취소 되었습니다." + e.getMessage();
+					}
+					else
+					{
+						resultSuccess = 0;
+						resultMessage = "PG-REULST-INSERT-실패.\n결제취소실패!\n관리자에게 문의하세요." + e.getMessage();
+					}
+					
+					WebPaymentStatusDTO apiCallStatus = WebPaymentStatusDTO.builder()
+							.status("PG-REULST-INSERT-실패")
+							.message("ERROR MSG: " + e.getMessage())
+							.orderNo(ordNo)
+							.build();
+					addWebPaymentStatus(apiCallStatus);
+				}
+				
 				
 				//결제수단별 승인 응답코드, 정상인지 check
 				if(getPaymentResultStatus(returnMap))
@@ -2296,7 +2327,7 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 		pgResult.setAuth_result_code(resultCd);		//인증 응답코드
 		pgResult.setAuth_result_msg(resultMsg);
 		pgResult.setNext_ap_url(apprReqUrl);
-		pgResult.setTransaction_id(returnMap.get("r_appNo"));	//kispg는 승인번호 apprNo로 대체
+		pgResult.setTransaction_id(returnMap.get("r_tid"));	//kispg는 승인번호 apprNo로 대체 -> tid로 대체
 		pgResult.setAuth_token("");
 		pgResult.setPay_method(returnMap.get("r_payMethod"));
 		pgResult.setMid(mid);
