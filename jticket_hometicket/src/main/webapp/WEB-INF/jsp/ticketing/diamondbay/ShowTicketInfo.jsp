@@ -325,11 +325,13 @@ $(function() {
 			alert("예매 당일은 취소가 불가능합니다.");
 			return false;
 		}
+		/* 
 		else if(todayDate >= before7day)
 		{//탑승일 기준으로부터 7주일 전까지만 취소 가능
 			alert("탑승일 기준 7일전까지만 취소 가능합니다.");
 			return false;
 		}
+		 */
 		else
 		{
 			var yesterday = new Date(playDate);
