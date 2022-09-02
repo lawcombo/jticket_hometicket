@@ -49,6 +49,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -2680,6 +2681,32 @@ public class TicketingController extends BaseController {
 		model = ticketingService.kisPgPayReult(request, response, model);
 		
 		return "/ticketing/payResult";
+	}
+	
+	
+	/**
+	 * 거래처 예매
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/diamondbay/payResultFromCust")	
+	public ModelAndView payResultFromCust(HttpServletRequest request, HttpServletResponse response, Model model, PaymentInfoDTO paymentInfo) throws Exception {
+		ModelAndView mv = new ModelAndView("jsonView");
+		
+		log.info("::payResultFromCust CALL");
+		
+		HashMap<String, String> resultMap = new HashMap<String, String>();
+		
+		//KIS 결제 모듈
+		resultMap = ticketingService.custPayReult(request, response, model, paymentInfo);
+		
+		mv.addObject("result", resultMap);
+		
+		return mv;
+		//return "/ticketing/payResult";
 	}
 	
 	
