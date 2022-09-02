@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.bluecom.common.controller.BaseController;
 import com.bluecom.common.util.ScriptUtils;
@@ -202,4 +203,25 @@ public class ReserverAuthenticationController extends BaseController {
 		
 		return "/reserverAuthentication/checkplus_fail";
 	}
+	
+	
+	/**
+	 * 다이아몬드베이 거래처 예매
+	 * @param reserverInfo
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value= "/checkCustReserve")
+	public ModelAndView checkCustReserve(ReserverInfoDTO reserverInfo, Model model) throws Exception {
+		ModelAndView mv = new ModelAndView("jsonView");
+		
+		int result = reserverAuthenticationService.checkCustReserve(reserverInfo);
+		
+		//int result = 0;
+    	mv.addObject("result", result);
+    	
+    	return mv;
+	}
+	
 }

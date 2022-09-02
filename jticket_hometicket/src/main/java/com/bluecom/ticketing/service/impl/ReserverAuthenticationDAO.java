@@ -1,5 +1,6 @@
 package com.bluecom.ticketing.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -49,6 +50,12 @@ public class ReserverAuthenticationDAO extends EgovAbstractMapper {
 		
 		return insert("reserverAuthenticationMapper.insertReserverInfo", reserverInfo);
 		
+	}
+	
+	
+	
+	public int checkCustReserve(HashMap<String, String> reserverInfo) throws Exception{
+		return selectOne("reserverAuthenticationMapper.checkCustReserve", reserverInfo);
 	}
 
 }

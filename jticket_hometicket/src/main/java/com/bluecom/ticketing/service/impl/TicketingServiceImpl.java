@@ -976,10 +976,16 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 		params.put("content_mst_cd", webPayment.getContent_mst_cd());
 		params.put("mb_id", mbId);
 		
+		//거래처에서 예매한 건이면 terminalCode = "WEBTICKETCUST" 셋팅
+		String terminalCode = "WEBTICKET";
+		if(webPayment.getPay_method().toString().equals("CUST"))
+		{
+			terminalCode = "WEBTICKETCUST";
+		}
 		
 		return ApiSocialSaleDTO.builder()
 				.CONTENT_MST_CD(webPayment.getContent_mst_cd())
-				.TERMINAL_CODE("WEBTICKET")
+				.TERMINAL_CODE(terminalCode)
 				.SALE_DATE(new SimpleDateFormat("yyyy-MM-dd").format(date))
 				.TERMINAL_DATETIME(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date))
 //					.USER_ID(null)				
@@ -1179,6 +1185,9 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 			cardInfo.setCARD_CODE(pgResult.getCardCode());
 			cardInfo.setCARD_NAME(pgResult.getCardName());
 			cardInfo.setCASH_TYPE(pgResult.getRcptType());
+		} else if(pgResult.getPay_method().equals("CUST") || pgResult.getPay_method().equals("cust")) {
+			cardInfo.setPURCHASE_CODE(pgResult.getCustCode());
+			cardInfo.setPURCHASE_NAME("거래처예매");
 		}
 		
 		list.add(cardInfo);
@@ -1674,8 +1683,6 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 				resultSuccess = 0;
 				resultMessage = "결제 승인 통신에 실패하였습니다.\n" + returnMap.get("r_resultMsg");;
 			}
-			
-			
 		}
 		else
 		{// 결제 인증이 실패시
@@ -1701,6 +1708,344 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 		model.addAttribute("message", resultMessage);
 		
 		return model;
+	}
+	
+	/**
+	 * 거래처 예매
+	 */
+	@Override
+	public HashMap<String, String> custPayReult(HttpServletRequest request, HttpServletResponse response, Model model, PaymentInfoDTO paymentInfo) throws Exception {
+
+		//String apprReqUrl  = "https://testapi.kispg.co.kr/v2/payment";  	//개발
+		//String apprReqUrl  = "https://api.kispg.co.kr/v2/payment";      	//운영
+		
+		String apprReqUrl 		= "https://iticket.nicetcm.co.kr"; 
+		String apprCancelReqUrl = propertyService.getString("kisPgPayCanelModule"); 
+		
+		
+		int resultSuccess 		= 0;
+		String resultOrderNum 	= "";
+		String resultMessage 	= "";
+		
+		/*------------ 인증 데이터 로깅 --------------*/
+		request.setCharacterEncoding("utf-8");
+		
+		Enumeration params = request.getParameterNames();
+		
+		
+		String charset     	= "utf-8";   							//	가맹점 charset
+
+		String resultCd    	= "0000";								//	인증 결과코드 (정상 : 0000)
+		String resultMsg   	= "거래처예매성공";							//	인증 결과메시지
+		String payMethod   	= paymentInfo.getPayMethodStr();		//	인증 결제수단 (ex. card)
+		String tid         	= paymentInfo.getOrdNo();				//	KISPG TID => 거래처 예매라 예매번호로 tid 셋팅
+		String goodsAmt    	= paymentInfo.getGoodsAmt(); 			//	결제금액
+		String mbsReserved 	= "";									//	가맹점 에코필드  
+		String ediDate     	= getyyyyMMddHHmmss();					//	결제요청시간 (yyyyMMddHHmmss)
+		
+		String goodsNm 		= paymentInfo.getGoodsNm();				//	상품명
+		String ordNo 		= paymentInfo.getOrdNo();				//	상품 주문번호
+		String ordNm		= paymentInfo.getOrdNm();				//	주문자명
+		String ordTel		= paymentInfo.getOrdTel();				//	주문자 핸드폰번화
+		
+		String custCode		= paymentInfo.getCustCode();			//거래처코드
+		
+		//아래는 필요 없을듯.
+		//VerificationKeyVO key = ticketingMapper.selectSitekeyInfo(ordNo);
+		String mid         	= "custpay00M";							// 상점아이디
+		String merchantKey 	= "";									// 상점키
+		String encData     	= encrypt(mid + ediDate + goodsAmt + merchantKey);	// 가맹점 검증 해쉬값
+		
+		//결제인증 정상
+		if(null != resultCd && resultCd.equals("0000"))
+		{
+			// 결제 인증 완료 기록 저장
+			WebPaymentStatusDTO authenticationFinishedStatus = WebPaymentStatusDTO.builder()
+				.status("거래처-예매-결제인증성공")
+				.message("AuthResultCode: " + resultCd)
+				.orderNo(ordNo)
+				.build();
+			addWebPaymentStatus(authenticationFinishedStatus);
+			
+			
+			// 결제 승인 요청 기록
+			WebPaymentStatusDTO approvalRequestStatus = WebPaymentStatusDTO.builder()
+				.status("거래처-예매-결제승인요청")
+				.message("")
+				.orderNo(ordNo)
+				.build();
+			addWebPaymentStatus(approvalRequestStatus);
+			
+			
+			//결제 승인 요청 및 상태 저장
+			//HashMap<String, String> returnMap = callKisPgModulePay(charset, tid, goodsAmt, ediDate, mid, encData, ordNo, apprReqUrl);
+			
+			//거래처 예매라 KIS PG 호출 하지 않고, returnMap에 값 셋팅.
+			HashMap<String, String> returnMap = new HashMap<String, String>();
+			
+			returnMap.put("payResultFlag"	, "success");
+		    returnMap.put("r_resultCode"	, "0000");		//승인 결과코드	
+		    returnMap.put("r_resultMsg"		, "success");	//승인 결과메시지
+		    returnMap.put("r_payMethod"		, payMethod);	//승인 결제수단
+		    returnMap.put("r_tid"			, tid);			//거래번호
+		    returnMap.put("r_appDtm"		, ediDate);		//거래일시
+		    returnMap.put("r_appNo"			, ordNo);		//승인번호
+		    returnMap.put("r_ordNo"			, ordNo);		//주문번호
+		    returnMap.put("r_goodsName"		, goodsNm);		//결제 상품명
+		    returnMap.put("r_amt"			, goodsAmt);	//결제 금액
+		    returnMap.put("r_ordNm"			, ordNm);		//주문자명 (결제자이름)
+		    returnMap.put("r_fnNm"			, payMethod);	//카드사명 => 거래처 예매라 "cust"
+		    returnMap.put("r_appCardCd"		, "000");		//발급사 코드
+		    returnMap.put("r_acqCardCd"		, "000");		//매입사 코드
+		    returnMap.put("r_quota"			, "");			//승인 할부개월 (카드할부기간)
+		    returnMap.put("r_usePointAmt"	, "");			//사용 포인트 양
+		    returnMap.put("r_cardType"		, "9");			//카드타입 (0 : 신용, 1 : 체크 )
+		    returnMap.put("r_authType"		, "09");		//인증타입 (01 : Keyin, 02 : ISP, 03 : VISA)
+		    returnMap.put("r_cashCrctFlg"	, "0");			//현금영수증 (0 : 사용안함, 1 : 사용 )
+		    returnMap.put("r_vacntNo"		, "");			//가상계좌번호
+		    returnMap.put("r_lmtDay"		, "");			//입금기한
+		    returnMap.put("r_socHpNo"		, ordTel);		//휴대폰번호
+		    returnMap.put("r_cardNo"		, "");			//카드번호 (마스킹 카드번호)
+		    returnMap.put("r_mbsReserved"	, "");			//가맹점 예약 필드
+		    returnMap.put("r_crctType"		, "0");			//현금영수증타입 (0:미발행 1:소득공제 2:지출증빙)
+		    returnMap.put("r_crctNo"		, "");			//현금영수증번호 (휴대폰번호 | 사업자번호)
+			
+			
+		    // 결제 승인 결과 기록
+			WebPaymentStatusDTO approvalResultStatus = WebPaymentStatusDTO.builder()
+				.status("거래처-예매-승인-성공")
+				.message(payMethod + ":" + resultCd )
+				.orderNo(ordNo)
+				.build();
+			addWebPaymentStatus(approvalResultStatus);
+			
+			
+			if(resultCd.equals("0000"))
+			{//결제 승인 요청 성공 시
+				
+				//PG사 결제승인 결과 정보 저장 
+				WebPaymentPgResultDTO pgResult = new WebPaymentPgResultDTO();
+				
+				try 
+				{
+					pgResult = insertPgResultTable(resultCd, resultMsg, apprReqUrl, mid, returnMap );
+				}
+				catch (Exception e) 
+				{
+					e.printStackTrace();
+					
+					// 결제 승인 요청 기록
+					WebPaymentStatusDTO approvalCancelRequestStatus = WebPaymentStatusDTO.builder()
+						.status("거래처-예매-결제승인취소요청")
+						.message("")
+						.orderNo(ordNo)
+						.build();
+					addWebPaymentStatus(approvalCancelRequestStatus);
+					
+					
+					HashMap<String, String> returnCancelMap = new HashMap<String, String>();
+					
+					returnCancelMap.put("payResultFlag"	, "success");
+			    	
+				    returnCancelMap.put("r_resultCode"	, "0000");		//승인취소 결과코드	
+				    returnCancelMap.put("r_resultMsg"	, "거래처취소");	//승인취소 결과메시지
+				    returnCancelMap.put("r_payMethod"	, payMethod);	//승인취소 결제수단
+				    returnCancelMap.put("r_tid"			, tid);			//거래번호
+				    returnCancelMap.put("r_appDtm"		, ediDate);		//거래일시
+				    returnCancelMap.put("r_appNo"		, ordNo);		//승인번호
+				    returnCancelMap.put("r_ordNo"		, ordNo);		//주문번호
+				    returnCancelMap.put("r_amt"			, goodsAmt);	//결제 금액
+				    returnCancelMap.put("r_cancelYN"	, "Y");			//취소여부
+				    
+				    
+				    // 결제 승인취소 결과 기록
+					WebPaymentStatusDTO approvalCancelResultStatus = WebPaymentStatusDTO.builder()
+						.status("거래처-예매-승인취소-성공")
+						.message(returnCancelMap.get("r_payMethod") + ": " + returnCancelMap.get("r_resultCode"))
+						.orderNo(ordNo)
+						.build();
+					addWebPaymentStatus(approvalCancelResultStatus);
+					
+					
+					
+					
+					//결제 승인 취소 요청 및 상태 저장
+					//String cancelMsg = "niceFail";
+					//HashMap<String, String> returnCancelMap = callKisPgModulePayCancel(charset, tid, goodsAmt, ediDate, mid, encData, ordNo, apprCancelReqUrl, payMethod, cancelMsg);
+					
+					if(returnCancelMap.get("payResultFlag").equals("success"))
+					{
+						resultSuccess = 0;
+						resultMessage = "PG-REULST-INSERT-실패.\n결제취소 되었습니다." + e.getMessage();
+					}
+					else
+					{
+						resultSuccess = 0;
+						resultMessage = "PG-REULST-INSERT-실패.\n결제취소실패!\n관리자에게 문의하세요." + e.getMessage();
+					}
+					
+					WebPaymentStatusDTO apiCallStatus = WebPaymentStatusDTO.builder()
+							.status("PG-REULST-INSERT-실패")
+							.message("ERROR MSG: " + e.getMessage())
+							.orderNo(ordNo)
+							.build();
+					addWebPaymentStatus(apiCallStatus);
+				}
+				
+				//결제수단별 승인 응답코드, 정상인지 check
+				if(getPaymentResultStatus(returnMap))
+				{
+					//결제 승인 응답코드 정상이면 발권솔루션(ISMS) 예매API 호출
+					
+					pgResult.setCustCode(custCode);
+					ApiResultVO apiResultVO = callTicketApi(pgResult); //pg결제 성공 후 api 호출
+					
+					
+					if(apiResultVO.getSuccess() == 1) 
+					{// API 호출 성공 
+						
+						WebPaymentStatusDTO apiCallStatus = WebPaymentStatusDTO.builder()
+								.status("고객-예매-Api호출-성공")
+								.message("ApiCallResult: " + apiResultVO.toString())
+								.orderNo(ordNo)
+								.build();
+						addWebPaymentStatus(apiCallStatus);
+						
+						ShopDetailVO shopDetail = getShopDetail(apiResultVO.getWebPayment().getShop_code());
+						
+						try {
+							//알림톡 저장
+							messageService.send(request, response, apiResultVO, pgResult, shopDetail);
+							
+						} catch(Exception ex) {
+							ex.printStackTrace();
+						}
+						
+						if(null != apiResultVO.getWebPayment().getReserverEmail() && !"".equals(apiResultVO.getWebPayment().getReserverEmail()))
+						
+						//메일
+						//if(StringUtils.hasText(apiResultVO.getWebPayment().getReserverEmail()))
+						if(null != apiResultVO.getWebPayment().getReserverEmail() && !"".equals(apiResultVO.getWebPayment().getReserverEmail()))
+						{
+							try {
+								
+								CompanyVO company = getCompany(apiResultVO.getWebPayment().getShop_code());
+								mailService.sendReserve(request, apiResultVO, pgResult);
+								
+							} catch(Exception ex) {
+								ex.printStackTrace();
+							}
+						}
+						
+						resultSuccess 	= 1;
+						resultOrderNum 	= ordNo;
+						resultMessage 	= "결제에 성공하였습니다.";
+					}
+					else
+					{// API호출 실패
+						
+						WebPaymentStatusDTO apiCallStatus = WebPaymentStatusDTO.builder()
+								.status("고객-예매-Api호출-실패")
+								.message("ApiCallResult: " + apiResultVO.toString())
+								.orderNo(ordNo)
+								.build();
+						addWebPaymentStatus(apiCallStatus);
+						
+						WebPaymentDTO webPayment = getWebPayment(ordNo);
+						SaleVO searchSale = new SaleVO();
+						searchSale.setShop_code(webPayment.getShop_code());
+						searchSale.setOrder_num(ordNo);
+						
+						SaleVO saleVO = getSaleSsByOrderNum(searchSale);
+						
+						if(saleVO != null) {
+							SaleDTO sale = new SaleDTO();
+							sale.setSale_code(saleVO.getSale_code());
+							
+							List<SaleProductDTO> bookNoList = getBookNoBySaleCode(sale);
+							
+							//발권솔루션 API 호출 실패시, 통합권시스템 예매내역 삭제 api 호출.
+							callReserveCancelApi(pgResult, bookNoList, apiResultVO.getWebPayment().getContent_mst_cd());
+							
+						}
+						
+						
+						//결제 승인 취소 요청 및 상태 저장
+						String cancelMsg = "niceFail";
+						HashMap<String, String> returnCancelMap = callKisPgModulePayCancel(charset, tid, goodsAmt, ediDate, mid, encData, ordNo, apprCancelReqUrl, payMethod, cancelMsg);
+						
+						if(returnCancelMap.get("payResultFlag").equals("success"))
+						{
+							resultSuccess = 0;
+							resultMessage = "결제 API 호출에 실패하였습니다.\n결제취소 되었습니다." + apiResultVO.getErrMsg();
+						}
+						else
+						{
+							resultSuccess = 0;
+							resultMessage = "결제 API 호출에 실패하였습니다.\n결제취소실패!\n관리자에게 문의하세요." + apiResultVO.getErrMsg();
+						}
+					}
+				}
+				else
+				{// 성공 응답코드 아닐 경우 
+					
+					// 결제승인에러 기록
+					WebPaymentStatusDTO approvalFailStatus = WebPaymentStatusDTO.builder()
+						.status("고객-예매-결제승인-에러")
+						.message(CommUtil.convertMapToJsonString(returnMap))
+						.orderNo(ordNo)
+						.build();
+					addWebPaymentStatus(approvalFailStatus);
+					
+					resultSuccess = 0;
+					resultMessage = "결제에 실패 하였습니다.\n" + returnMap.get("r_resultMsg");;
+				}
+				
+				
+				//iticket 일일예약에 insert ( 다이아몬드베이 홈티켓 거래처 예매시 )
+				//pgResult.
+				
+			}
+			else
+			{
+				//결제승인 요청 실패, 통신에러 ( return : 9999 )
+				
+				resultSuccess = 0;
+				resultMessage = "결제 승인 통신에 실패하였습니다.\n" + returnMap.get("r_resultMsg");;
+			}
+		}
+		else
+		{// 결제 인증이 실패시
+			
+			// 결제인증실패 기록
+			WebPaymentStatusDTO authenticationFinishedStatus = WebPaymentStatusDTO.builder()
+					.status("고객-예매-결제인증실패")
+					.message("AuthResultCode: " + resultCd + " | AuthResultMsg" + resultMsg)
+					.orderNo(ordNo)
+					.build();
+			
+			addWebPaymentStatus(authenticationFinishedStatus);
+			
+			resultSuccess = 0;
+			resultMessage = "결제인증에 실패하였습니다.";
+		}
+		
+		resultOrderNum = CommUtil.rmQuatations(resultOrderNum);
+		resultMessage = CommUtil.rmQuatations(resultMessage);
+		
+		HashMap<String, String> resultMap = new HashMap<String, String>();
+		
+		/*
+		model.addAttribute("success", resultSuccess);
+		model.addAttribute("orderNo", resultOrderNum);
+		model.addAttribute("message", resultMessage);
+		*/
+		
+		resultMap.put("success", Integer.toString(resultSuccess));
+		resultMap.put("orderNo", resultOrderNum);
+		resultMap.put("message", resultMessage);
+		
+		return resultMap;
 	}
 	
 	
@@ -1797,8 +2142,19 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 		else
 		{//ISMS 예매 취소 성공
 			
-			//KIS PG 결제 취소를 위해 호출
-			HashMap<String, String> returnCancelMap = callKisPgCancelModule(pgResult, cancelAmount, webPayment);
+			HashMap<String, String> returnCancelMap = new HashMap<String, String>();
+			
+			if(!pgResult.getPay_method().toString().equals("cust"))
+			{
+				//KIS PG 결제 취소를 위해 호출
+				returnCancelMap =  callKisPgCancelModule(pgResult, cancelAmount, webPayment);
+			}
+			else
+			{
+				returnCancelMap.put("payResultFlag", "success");
+				returnCancelMap.put("r_resultCode", "2001");
+			}
+			
 			
 			if(returnCancelMap.get("payResultFlag").equals("success"))
 			{//취소성공
@@ -2118,13 +2474,22 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 					.build());
 		}
 		
+		//거래처에서 예매한 건이면 terminalCode = "WEBTICKETCUST" 셋팅
+		String terminalCode = "WEBCANCEL";
+		String userId		= "WEBTICKET";
+		if(pgResult.getPay_method().toString().equals("CUST") || pgResult.getPay_method().toString().equals("cust"))
+		{
+			terminalCode 	= "WEBCANCELCUST";
+			userId			= "WEBTICKETCUST";
+		}
+		
 		// api 취소 요청
 		ApiSocialCancelDTO apiSocialCancel = ApiSocialCancelDTO.builder()
 				.CONTENT_MST_CD(contentMstCd)
 				.ONLINE_CHANNEL("1001")
 				.ORDER_NUM(pgResult.getMoid())
-				.USER_ID("WEBTICKET")
-				.TERMINAL_CODE("WEBCANCEL")
+				.USER_ID(userId)
+				.TERMINAL_CODE(terminalCode)
 				.TERMINAL_DATETIME(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()))
 				.CANCEL_TYPE("A") 
 				.SALE_PRODUCT_LIST(productRefund)
@@ -2354,6 +2719,15 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 			pgResult.setCardName(returnMap.get("fnNm"));	//은행명
 			pgResult.setRcptType("");
 		}
+		else if(returnMap.get("r_payMethod").equals("cust"))
+		{
+			pgResult.setCardNo(returnMap.get(""));
+			pgResult.setCardQuota(returnMap.get(""));
+			pgResult.setCardCode(returnMap.get(""));
+			pgResult.setAcquCardCode(returnMap.get(""));
+			pgResult.setAcquCardName(returnMap.get(""));
+			pgResult.setRcptType("");	//뭔지모름;; 블루컴아놔
+		}
 		
 		pgResult.setAuth_code(returnMap.get("r_appNo"));
 		pgResult.setAuth_date(returnMap.get("r_appDtm"));
@@ -2569,6 +2943,13 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 			}
 		}
 		else if(returnMap.get("r_payMethod").equals("CMS_BANK"))
+		{
+			if(returnMap.get("r_resultCode").equals("0000"))
+			{
+				resultBool = true;
+			}
+		}
+		else if(returnMap.get("r_payMethod").equals("cust"))
 		{
 			if(returnMap.get("r_resultCode").equals("0000"))
 			{

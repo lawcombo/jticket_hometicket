@@ -15,5 +15,9 @@ public class ReserverInfoDTO implements Serializable {
 	String authNo = "";
 	String returnCode = "";
 	String responseSEQ = "";
-
+	
+	//거래처 예매를 위한 변수
+	String contentMstCd = "";
+	String custCode 	= "";
+	String custRegNo 	= "";
 }

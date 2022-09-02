@@ -8,4 +8,16 @@
 		)VALUES (
 			NOW(), #{name}, #{phone}, #{code})
 	</insert>
+	
+	
+	<select id="checkCustReserve" parameterType="hashMap" resultType="int">
+		SELECT 
+			count(*)
+		FROM cust_list
+		WHERE 1=1
+		AND COMPANY_CD 		= #{contentMstCd}
+		AND CUST_LINK_CD 	= #{custCode}
+		AND COMPANY_REG_NUM LIKE CONCAT('%', #{custRegNo}) 
+	</select>
+	
 </mapper>
