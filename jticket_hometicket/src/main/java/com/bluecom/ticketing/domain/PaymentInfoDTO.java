@@ -51,4 +51,21 @@ public class PaymentInfoDTO implements Serializable{
 	
 	String couponFee;
 	String fee;
+	
+	
+	//==============거래처 예매를 위한 변수==================
+	
+	String contentMstCd;
+	String custCode;
+	String custRegNo;
+	
+	String payMethodStr;
+	String trxCd;
+	String goodsNm;
+	String ordNo;
+	String goodsAmt;
+	String ordNm;
+	String ordTel;
+	String ordEmail;
+	
 }

@@ -59,4 +59,7 @@ public class WebPaymentPgResultDTO implements Serializable {
 	
 	//쿠폰
 	String coupon="0";
+	
+	//거래처코드
+	String custCode;
 }

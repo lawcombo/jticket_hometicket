@@ -10,6 +10,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.security.MessageDigest" %>
 <%@ page import="org.apache.commons.codec.binary.Hex" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%
 /*
@@ -69,6 +70,9 @@ System.out.println("해쉬 값 : "+encData);
 %>
 <%@ include file="../../include/diamondbay/header-single.jsp" %>
 
+<meta name="_csrf_header" content="${_csrf.headerName}">
+<meta name="_csrf" content="${_csrf.token}">
+
 <style>
 a.disabled {
   pointer-events: none;
@@ -82,6 +86,196 @@ a.disabled {
 </style>
 
 
+<section class="dmzbt_sec bookingsec">
+	<div class="dmz_list ddid_list jw_list edt_ex">
+		<div class="did_list_wrap ot_dlw ewp_ot">
+			<div class="bookingbt_bx">
+				<div class="bookingbt_bx_in pro2 payR">
+					<div class="main-sec_wrap">
+
+						<div class="paytop">
+							<!-- <p class="square_tit mt0" style="text-align:left;"><strong>결제정보</strong></p> -->
+							<h1 id="container_title" class="pay_ch_tit">결제정보 확인!</h1>
+							<form name="payInit" method="post" target="pay_frame">
+								<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> 
+								<div class="tbl_frm01 tbl_wrap bookinfo">
+									<table class="table table-bordered flexible-table bys_tabst bys_tabst2 etble_cus pay_rtb">
+										<colgroup>
+									        <col width='40%'/>
+									        <col width='60%'/>
+								    	</colgroup>
+								    	<tbody>
+											<tr style="display:none;">
+												<td><span style="font-weight:bolder;">결제수단</span></td>
+												<td><input type="text" id="payMethod" name="payMethod" value="<%=payMethod%>"></td>
+											</tr>
+											<tr style="display:none;">
+												<td><span style="font-weight:bolder;">결제타입</span></td>
+												<td><input type="text" id="trxCd" name="trxCd" value="0"></td><!-- 일반(0)/에스크로(1) --> 
+											</tr>
+											<%-- 
+											<tr>
+												<td><span style="font-weight:bolder;">가맹점ID</span></td>
+												<td><input type="text" name="mid" value="<%=merchantID%>"></td>
+											</tr>
+											 --%>
+											<tr>
+												<td><span style="font-weight:bolder;">상품명</span></td>
+												<td><input type="text" id="goodsNm" name="goodsNm" value="<%=goodsNm%>"></td>
+											</tr>
+											<tr>
+												<td><span style="font-weight:bolder;">주문번호</span></td>
+												<td><input type="text" id="ordNo" name="ordNo" value="<%=ordNo%>"></td>
+											</tr>
+											<tr>
+												<td><span style="font-weight:bolder;">결제금액</span></td>
+												<td><input type="text" id="goodsAmt" name="goodsAmt" value="<%=goodsAmt%>"></td>
+											</tr>
+											<tr>
+												<td><span style="font-weight:bolder;">구매자명</span></td>
+												<td><input type="text" id="ordNm" name="ordNm" value="<%=ordNm%>"></td>
+											</tr>
+											<tr>
+												<td><span style="font-weight:bolder;">구매자연락처</span></td>
+												<td><input type="text" id="ordTel" name="ordTel" value="<%=ordTel%>"></td>
+											</tr>
+											<tr>
+												<td><span style="font-weight:bolder;">구매자이메일</span></td>
+												<td><input type="text" id="ordEmail" name="ordEmail" value="<%=ordEmail%>"></td>
+											</tr>
+											<%-- 
+											<tr style="display:none;">
+												<td><span>returnUrl</span></td>
+												<td><input type="text" name="returnUrl" value="<%=returnURL%>"></td>
+											</tr>		
+											 --%>
+										</tbody>
+									</table>
+									<!-- 옵션 --> 
+									<!-- 
+									<input type="hidden" name="userIp"	value="0:0:0:0:0:0:0:1">
+									<input type="hidden" name="mbsUsrId" value="user1234">
+									<input type="hidden" name="ordGuardEmail" value="">
+									<input type="hidden" name="rcvrAddr" value="서울특별시">
+									<input type="hidden" name="rcvrPost" value="00100">
+									<input type="hidden" name="mbsIp" value="127.0.0.1">
+									<input type="hidden" name="mbsReserved" value="MallReserved">
+									<input type="hidden" name="rcvrMsg" value="rcvrMsg">
+									<input type="hidden" name="goodsSplAmt" value="0">
+									<input type="hidden" name="goodsVat" value="0">
+									<input type="hidden" name="goodsSvsAmt" value="0">
+									 -->
+									
+									
+									<input type="hidden" name="model" value="WEB">
+									<input type="hidden" name="payReqType" value="1">
+									<input type="hidden" name="charSet" value="UTF-8">
+									
+									<!-- <input type="hidden" name="period" value="별도 제공기간없음"> -->
+									<!-- <input type="hidden" name="billHpFlg" value="0"> -->
+									<!-- <input type="hidden" name="model" value="MOB"> -->
+									<!-- <input type="hidden" name="channel" value="0001"> -->
+									
+									<input type="hidden" name="mid" 			value = "<%=merchantID%>" readonly>	<!-- 가맹점 ID -->
+									<input type="hidden" name="returnUrl" 		value = "<%=returnURL%>"> 			<!-- 인증완료 결과처리 URL -->
+									<input type="hidden" name="currencyType" 	value = "KRW">						<!-- 통화구분 -->
+									
+									<!-- 변경 불가능 -->
+									<input type="hidden" name="ediDate" 		value = "<%=ediDate%>">				<!-- 전문 생성일시 -->
+									<input type="hidden" name="encData" 		value = "<%=encData%>">				<!-- 해쉬값 -->
+									
+								</div>
+								<div class="identitybt req payR eidt_cus qu_box">
+									<p class="qu_txt">해당 내용으로 결제를 진행하시겠습니까?</p>
+									<a href="#" id="payBtn" class="btn_blue">결제</a>
+									<!-- <a href="#;" id="payBtn" class="btn_sty01 bg01" style="margin:15px;">결제하기</a> -->
+								</div>
+							</form>	
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>	
+
+
+<div class="rad_modal" style="display: none;">
+	<div class="rad_modal_content">
+		<div class="rad_modal_x">
+			<div id="agreementTermsOfUse-modal-section" class="md_cont">
+				<c:out value="${reserveInfo.info_c }" escapeXml="false"/>
+				<div class="modal_tb">
+					<div class="mt_top">
+						<h2>
+							<strong>거래처 인증!</strong>
+						</h2>
+						<p class="mt_top_text">현장에서 전달 받은 <br/>거래처 코드와 사업자번호 입력하세요.</p>
+					</div>
+					<div class="mt_bot">
+						<h3>
+							거래처코드
+						</h3>
+							<dd class="reserve reserveDd" style="padding-top:0">
+								<input type="text" name="reserver.name" class="jejuInputBox" id="custCode" minlength="3" maxlength="3" placeholder="거래처코드 3자리">
+							</dd>
+						<h3>
+							사업자번호
+						</h3>
+							<dd class="reserve reserveDd" style="padding-top:0">
+								<input type="text" name="reserver.name" class="jejuInputBox" id="custRegNo" minlength="5" maxlength="5" placeholder="사업자번호 맨뒤 5자리">
+							</dd>
+					</div>
+				</div>
+
+				<button class="md_bts" style="cursor:pointer;" onclick="checkCustId.selectCustIdCheck();">확인</button>
+			</div>
+		</div>
+	</div>
+	<div class="rad_modal_bk"></div>
+</div>
+
+
+<div id="mask"></div>
+<div class="window">
+	<div class="cont">
+		<iframe id="pay_frame" name="pay_frame" style="width:100%; height:100%;" src="" marginwidth="0" marginheight="0" frameborder="no" scrolling="no"></iframe>
+	</div>
+</div>
+
+
+<%-- 
+<script>
+//숫자를 3자리마다 콤마 찍기
+function numberWithCommas(x) {
+    x = x.toString();
+    var pattern = /(-?\d+)(\d{3})/;
+    while (pattern.test(x))
+        x = x.replace(pattern, "$1,$2");
+    return x;
+}
+
+	$(function() {
+		$("input[name='ShowAmt']").val(numberWithCommas('<%=price %>'));
+		$("#productFee").val(numberWithCommas('<%=fee %>'));
+		$("#coupon").val("- "+numberWithCommas('<%=coupon %>'));
+		
+		$('#payButton').on('click', function(e) {
+			$(this).addClass('disabled');
+		});
+		
+		$("#memberTel").val(addHyphenToPhoneNumber($("#memberTel").val()));
+	});
+</script>
+ --%>
+ 
+</body>
+</html>
+
+
+<% pageContext.setAttribute("newLineChar", "\n"); %>	
+
 <!-- 아래 script 는 PC 결제창 전용 js입니다. kis 결제 모듈 script -->
 <script type="text/javascript">
 
@@ -94,20 +288,188 @@ $(document).ready(function() {
 
 	//결제창 요청시 실행됩니다.
 	$("#payBtn").click(function (){
-			
-		//Calculate mask size
-		var maskHeight 	= $(document).height();
-		var maskWidth 	= $(document).width();
-			
-		$("#mask").fadeIn(0);
-		$("#mask").fadeTo("slow", 0.6);        
 		
-		document.payInit.action = url + "/v2/auth";
-		document.payInit.submit();
-		$(".window").show();
+		if($('input[name=payMethod]').val() == 'cust')
+		{//거래처 예매 결제
+			$(".rad_modal").fadeIn();
+			
+			return false;
+		}
+		else
+		{
+			//Calculate mask size
+			var maskHeight 	= $(document).height();
+			var maskWidth 	= $(document).width();
+				
+			$("#mask").fadeIn(0);
+			$("#mask").fadeTo("slow", 0.6);        
+			
+			document.payInit.action = url + "/v2/auth";
+			document.payInit.submit();
+			$(".window").show();
+		}
+		
 	});
 	
 });
+
+$(function(){
+	$(".rad_modal_bk").click(function(){
+		$("#custRegNo").val('');
+		$("#custCode").val('');
+		
+		$(".rad_modal").fadeOut();
+	});
+});
+// 결제수단 - 거래처일경우 ID / PWD 검증
+
+
+var header = $("meta[name='_csrf_header']").attr('content');
+var token = $("meta[name='_csrf']").attr('content');
+var checkCustId = {
+		selectCustIdCheck : function(){
+			
+			
+			const searchParams = new URLSearchParams(location.search);
+			//alert(searchParams.get('contentMst_cd'));
+			
+			if($("#custCode").val() == "")
+			{
+				alert("거래처코드를 입력하세요");
+				$("#custCode").focus();
+				return false;
+			}
+			
+			if($("#custRegNo").val() == "")
+			{
+				alert("사업자 번호 5자리를 입력하세요.");
+				$("#custRegNo").focus();
+				return false;
+			}
+			
+			if($("#custRegNo").val().length < 5)
+			{
+				alert("사업자 번호 맨뒤 5자리를 입력하세요.");
+				$("#custRegNo").focus();
+				return false;
+			}
+			
+			$.ajax({
+				url : '${pageContext.request.contextPath}${pathPart}/reserverAuthentication/checkCustReserve',
+				type : 'post', 
+				dataType : 'json',
+				data : {
+					contentMstCd 	: searchParams.get('contentMst_cd'),
+					custCode		: $("#custCode").val(),
+					custRegNo		: $("#custRegNo").val()
+				},
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(header, token);
+				},
+				
+				success: function(data) {
+					console.log(data);
+					console.log(data.result);
+					
+					if(data.result > 0)
+					{// ID, PASSWORD 검증 성공
+						checkCustId.insertReserveForCust(searchParams);
+					}
+					else
+					{// ID, PASSWORD 검증 실패
+						alert("거래처코드/사업자번호가 유효하지 않습니다.");
+						return false;
+					}
+				},
+				error: function (jqXhr, textStatus, errorMessage) { // error callback 
+			        alert("인증 데이터를 저장 할 수 없습니다. 반복시 관리자를 호출해 주세요.");
+			      	
+					//window.close();
+			    }
+			});
+			
+		},
+		
+		
+		insertReserveForCust : function(searchParams){
+			
+			console.log("payMethod : " + $("#payMethod").val());
+			console.log("trxCd : " + $("#trxCd").val());
+			console.log("goodsNm : " + $("#goodsNm").val());
+			console.log("ordNo : " + $("#ordNo").val());
+			console.log("goodsAmt : " + $("#goodsAmt").val());
+			console.log("ordNm : " + $("#ordNm").val());
+			console.log("ordTel : " + $("#ordTel").val());
+			console.log("ordEmail : " + $("#ordEmail").val());
+			
+			$.ajax({
+				url : '${pageContext.request.contextPath}${pathPart}/ticketing/diamondbay/payResultFromCust',
+				type : 'post', 
+				dataType : 'json',
+				data : {
+					contentMstCd 	: searchParams.get('contentMst_cd'),
+					custCode		: $("#custCode").val(),
+					custRegNo		: $("#custRegNo").val(),
+					
+					payMethodStr	: $("#payMethod").val(),
+					trxCd			: $("#trxCd").val(),
+					goodsNm			: $("#goodsNm").val(),
+					ordNo			: $("#ordNo").val(),
+					goodsAmt		: $("#goodsAmt").val(),
+					ordNm			: $("#ordNm").val(),
+					ordTel			: $("#ordTel").val(),
+					ordEmail		: $("#ordEmail").val()
+						
+				},
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(header, token);
+					showShadow(true);
+				},
+				
+				success: function(data) {
+					
+					console.log(data.result.success);
+					
+					if(data.result.success == '0')
+					{
+						alert(data.result.message);
+					}
+					else
+					{
+						alert("예매 성공!");
+					}
+					
+					returnValuesToParentWindow(data.result);
+					
+				},
+				complete: function(){
+					showShadow(false);
+					hideShadow();
+				},
+				error: function (jqXhr, textStatus, errorMessage) { // error callback 
+			        alert("인증 데이터를 저장 할 수 없습니다. 반복시 관리자를 호출해 주세요.");
+			      	
+					//window.close();
+			    }
+			});
+		}
+}
+
+//팝업창에서 부모창으로 값을 돌려줌
+function returnValuesToParentWindow(result) {
+	
+	if(!window.opener != null && !window.opener.closed) {
+		window.opener.setReturnedPayValuesFromChildWindow(result);
+	}
+	window.close();
+}
+
+var result = {
+		success: '<c:out value="${success}" />',
+		message: '<c:out value="${fn:replace(message, newLineChar, ' ')}" escapeXml="false" />',
+		orderNo: '<c:out value="${orderNo}" />',
+	}
+
 
 const ajax = getXMLHTTPRequest();
 
@@ -185,159 +547,6 @@ function receive_result(data, url, charSet){
 	form.submit();
 }
 </script>
-
-
-
-
-<section class="dmzbt_sec bookingsec">
-	<div class="dmz_list ddid_list jw_list edt_ex">
-		<div class="did_list_wrap ot_dlw ewp_ot">
-			<div class="bookingbt_bx">
-				<div class="bookingbt_bx_in pro2 payR">
-					<div class="main-sec_wrap">
-
-						<div class="paytop">
-							<!-- <p class="square_tit mt0" style="text-align:left;"><strong>결제정보</strong></p> -->
-							<h1 id="container_title" class="pay_ch_tit">결제정보 확인!</h1>
-							<form name="payInit" method="post" target="pay_frame">
-								<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> 
-								<div class="tbl_frm01 tbl_wrap bookinfo">
-									<table class="table table-bordered flexible-table bys_tabst bys_tabst2 etble_cus pay_rtb">
-										<colgroup>
-									        <col width='40%'/>
-									        <col width='60%'/>
-								    	</colgroup>
-								    	<tbody>
-											<tr style="display:none;">
-												<td><span style="font-weight:bolder;">결제수단</span></td>
-												<td><input type="text" name="payMethod" value="<%=payMethod%>"></td>
-											</tr>
-											<tr style="display:none;">
-												<td><span style="font-weight:bolder;">결제타입</span></td>
-												<td><input type="text" name="trxCd" value="0"></td><!-- 일반(0)/에스크로(1) --> 
-											</tr>
-											<%-- 
-											<tr>
-												<td><span style="font-weight:bolder;">가맹점ID</span></td>
-												<td><input type="text" name="mid" value="<%=merchantID%>"></td>
-											</tr>
-											 --%>
-											<tr>
-												<td><span style="font-weight:bolder;">상품명</span></td>
-												<td><input type="text" name="goodsNm" value="<%=goodsNm%>"></td>
-											</tr>
-											<tr>
-												<td><span style="font-weight:bolder;">주문번호</span></td>
-												<td><input type="text" name="ordNo" value="<%=ordNo%>"></td>
-											</tr>
-											<tr>
-												<td><span style="font-weight:bolder;">결제금액</span></td>
-												<td><input type="text" name="goodsAmt" value="<%=goodsAmt%>"></td>
-											</tr>
-											<tr>
-												<td><span style="font-weight:bolder;">구매자명</span></td>
-												<td><input type="text" name="ordNm" value="<%=ordNm%>"></td>
-											</tr>
-											<tr>
-												<td><span style="font-weight:bolder;">구매자연락처</span></td>
-												<td><input type="text" name="ordTel" value="<%=ordTel%>"></td>
-											</tr>
-											<tr>
-												<td><span style="font-weight:bolder;">구매자이메일</span></td>
-												<td><input type="text" name="ordEmail" value="<%=ordEmail%>"></td>
-											</tr>
-											<%-- 
-											<tr style="display:none;">
-												<td><span>returnUrl</span></td>
-												<td><input type="text" name="returnUrl" value="<%=returnURL%>"></td>
-											</tr>		
-											 --%>
-										</tbody>
-									</table>
-									<!-- 옵션 --> 
-									<!-- 
-									<input type="hidden" name="userIp"	value="0:0:0:0:0:0:0:1">
-									<input type="hidden" name="mbsUsrId" value="user1234">
-									<input type="hidden" name="ordGuardEmail" value="">
-									<input type="hidden" name="rcvrAddr" value="서울특별시">
-									<input type="hidden" name="rcvrPost" value="00100">
-									<input type="hidden" name="mbsIp" value="127.0.0.1">
-									<input type="hidden" name="mbsReserved" value="MallReserved">
-									<input type="hidden" name="rcvrMsg" value="rcvrMsg">
-									<input type="hidden" name="goodsSplAmt" value="0">
-									<input type="hidden" name="goodsVat" value="0">
-									<input type="hidden" name="goodsSvsAmt" value="0">
-									 -->
-									
-									
-									<input type="hidden" name="model" value="WEB">
-									<input type="hidden" name="payReqType" value="1">
-									<input type="hidden" name="charSet" value="UTF-8">
-									
-									<!-- <input type="hidden" name="period" value="별도 제공기간없음"> -->
-									<!-- <input type="hidden" name="billHpFlg" value="0"> -->
-									<!-- <input type="hidden" name="model" value="MOB"> -->
-									<!-- <input type="hidden" name="channel" value="0001"> -->
-									
-									<input type="hidden" name="mid" 			value = "<%=merchantID%>" readonly>	<!-- 가맹점 ID -->
-									<input type="hidden" name="returnUrl" 		value = "<%=returnURL%>"> 			<!-- 인증완료 결과처리 URL -->
-									<input type="hidden" name="currencyType" 	value = "KRW">						<!-- 통화구분 -->
-									
-									<!-- 변경 불가능 -->
-									<input type="hidden" name="ediDate" 		value = "<%=ediDate%>">				<!-- 전문 생성일시 -->
-									<input type="hidden" name="encData" 		value = "<%=encData%>">				<!-- 해쉬값 -->
-									
-								</div>
-								<div class="identitybt req payR eidt_cus qu_box">
-									<p class="qu_txt">해당 내용으로 결제를 진행하시겠습니까?</p>
-									<a href="#" id="payBtn" class="btn_blue">결제</a>
-									<!-- <a href="#;" id="payBtn" class="btn_sty01 bg01" style="margin:15px;">결제하기</a> -->
-								</div>
-							</form>	
-						</div>
-						
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>	
-
-<div id="mask"></div>
-<div class="window">
-	<div class="cont">
-		<iframe id="pay_frame" name="pay_frame" style="width:100%; height:100%;" src="" marginwidth="0" marginheight="0" frameborder="no" scrolling="no"></iframe>
-	</div>
-</div>
-
-
-<%-- 
-<script>
-//숫자를 3자리마다 콤마 찍기
-function numberWithCommas(x) {
-    x = x.toString();
-    var pattern = /(-?\d+)(\d{3})/;
-    while (pattern.test(x))
-        x = x.replace(pattern, "$1,$2");
-    return x;
-}
-
-	$(function() {
-		$("input[name='ShowAmt']").val(numberWithCommas('<%=price %>'));
-		$("#productFee").val(numberWithCommas('<%=fee %>'));
-		$("#coupon").val("- "+numberWithCommas('<%=coupon %>'));
-		
-		$('#payButton').on('click', function(e) {
-			$(this).addClass('disabled');
-		});
-		
-		$("#memberTel").val(addHyphenToPhoneNumber($("#memberTel").val()));
-	});
-</script>
- --%>
- 
-</body>
-</html>
 
 
 <%!

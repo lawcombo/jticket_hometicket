@@ -361,7 +361,14 @@
 							<div class="payment reservationRenewPage txtright">
 								<label for="paymentTypeBank" class="jejuRadioButton"> 
 								<input type="radio" name="payMethod" id="paymentTypeBank" value="BANK">
-									<span class="radio"></span> <span>실시간 계좌이체</span>
+									<span class="radio"></span> <span>계좌이체</span>
+								</label>
+							</div>
+							
+							<div class="payment reservationRenewPage txtright">
+								<label for="paymentTypeCust" class="jejuRadioButton"> 
+								<input type="radio" name="payMethod" id="paymentTypeCust" value="CUST">
+									<span class="radio"></span> <span>거래처</span>
 								</label>
 							</div>
 							<!-- <div class="payment reservationRenewPage">
@@ -487,7 +494,7 @@ $(function() {
 	
 	/***** 결제버튼클릭 *****/
 	$("#settlementButton").on('click', function(e) {
-
+		
 		var authenticationIdx = $("input[name='reserver.idx']").val();
 		if(!authenticationIdx){
 			e.preventDefault();
@@ -530,7 +537,8 @@ $(function() {
 		
 		form.attr('target', popupTitle);
 		form.attr('method', 'POST');
-		form.attr('action', '<c:url value="/ticketing/payRequest" />');
+		form.attr('action', '<c:url value="/ticketing/payRequest?contentMst_cd=${essential.content_mst_cd }" />');
+		
 		form.submit();
 	});
     

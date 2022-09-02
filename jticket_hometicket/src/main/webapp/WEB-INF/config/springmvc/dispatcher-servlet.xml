@@ -57,6 +57,13 @@
 	    p:viewClass="org.springframework.web.servlet.view.JstlView"
 	    p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
 
+	<!-- jsonview resolver bean 등록 추가-->
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver" id="viewResolver" p:order="0"/>
+	
+	<bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" id="jsonView">
+	    <property name="contentType" value="application/json;charset=UTF-8"/>
+	</bean>
+
     <!-- For Pagination Tag -->
     <bean id="imageRenderer" class="com.bluecom.common.controller.EgovImgPaginationRenderer"/>
 

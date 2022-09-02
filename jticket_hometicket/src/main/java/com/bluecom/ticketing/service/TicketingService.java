@@ -1,5 +1,6 @@
 package com.bluecom.ticketing.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -133,6 +134,7 @@ public interface TicketingService{
 	
 	
 	public Model kisPgPayReult(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception;
+	public HashMap<String, String> custPayReult(HttpServletRequest request, HttpServletResponse response, Model model, PaymentInfoDTO paymentInfo) throws Exception;
 	public String kisPgPayCancelReult(SaleDTO sale,  HttpServletRequest request, HttpServletResponse response, RedirectAttributes rttr, String redirectPage) throws Exception;
 	
 }
