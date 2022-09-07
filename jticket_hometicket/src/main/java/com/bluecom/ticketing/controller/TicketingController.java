@@ -74,6 +74,7 @@ import com.bluecom.ticketing.domain.ProductGroupDTO;
 import com.bluecom.ticketing.domain.RefundHistoryVO;
 import com.bluecom.ticketing.domain.RefundVO;
 import com.bluecom.ticketing.domain.ReserverDTO;
+import com.bluecom.ticketing.domain.ReserverInfoDTO;
 import com.bluecom.ticketing.domain.SaleDTO;
 import com.bluecom.ticketing.domain.SaleProductDTO;
 import com.bluecom.ticketing.domain.SaleVO;
@@ -2771,5 +2772,24 @@ public class TicketingController extends BaseController {
 		return redirectPage;
 	}
 	
+	
+	/**
+	 * 다이아몬드베이 해당 날짜, 해당 회차에 공지 내용 있는지 select
+	 * @param reserverInfo
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value= "/diamondbay/selectNoticeInfo")
+	public ModelAndView selectNoticeInfo(SaleProductDTO vo, Model model) throws Exception {
+		ModelAndView mv = new ModelAndView("jsonView");
+		
+		HashMap<String, String> result = ticketingService.selectNoticeInfo(vo);
+		
+		//int result = 0;
+    	mv.addObject("result", result);
+    	
+    	return mv;
+	}
 	
 }

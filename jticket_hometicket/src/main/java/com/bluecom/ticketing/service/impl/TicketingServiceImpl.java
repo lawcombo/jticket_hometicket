@@ -2959,5 +2959,15 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 		
 		return resultBool;
 	}
+	
+	
+	public HashMap<String, String> selectNoticeInfo(SaleProductDTO vo) throws Exception {
+		
+		HashMap<String, String> resultMap = new HashMap<String, String>();
+		
+		resultMap = ticketingMapper.selectNoticeInfo(vo);
+		
+		return resultMap;
+	}
 }
 
