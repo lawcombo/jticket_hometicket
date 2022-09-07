@@ -137,4 +137,7 @@ public interface TicketingService{
 	public HashMap<String, String> custPayReult(HttpServletRequest request, HttpServletResponse response, Model model, PaymentInfoDTO paymentInfo) throws Exception;
 	public String kisPgPayCancelReult(SaleDTO sale,  HttpServletRequest request, HttpServletResponse response, RedirectAttributes rttr, String redirectPage) throws Exception;
 	
+	//다이아몬드베이 특정날짜, 특정 회차에 공지 있는지 select
+	public HashMap<String, String> selectNoticeInfo(SaleProductDTO vo) throws Exception;
+	
 }

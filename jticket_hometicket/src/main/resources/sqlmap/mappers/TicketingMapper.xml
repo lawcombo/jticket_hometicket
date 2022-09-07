@@ -1082,4 +1082,31 @@
 			and bwp.ORDER_NO = #{ordNo}
 		]]>
 	</select>
+	
+	<select id="selectNoticeInfo" parameterType="com.bluecom.ticketing.domain.SaleProductDTO" resultType="hashMap">
+		SELECT 
+			bn.SHOP_CODE,
+        	bn.PRODUCT_GROUP_CODE,
+        	bn.PLAY_DATE,
+        	bn.SCHEDULE_CODE,
+        	bn.NOTI_MEMO,
+        	bn.USE_YN,
+        	bn.INS_DATE,
+        	bn.INS_USER,
+        	bn.UPS_DATE,
+        	bn.UPS_USER,
+        	bs.PRODUCT_GROUP_NAME ,
+        	bs.START_TIME,
+        	bs.PLAY_SEQUENCE 
+		FROM bc_notice bn
+		left outer join bc_schedule bs on bn.SHOP_CODE = bs.SHOP_CODE 
+        							and bn.SCHEDULE_CODE = bs.SCHEDULE_CODE 
+        							and bn.PRODUCT_GROUP_CODE = bs.PRODUCT_GROUP_CODE 
+        							and (DATE_FORMAT(bn.PLAY_DATE, '%m%d') BETWEEN bs.PLAY_DATE_FROM and bs.PLAY_DATE_TO )
+		WHERE 1=1
+		AND bn.SHOP_CODE = #{sale_shop_code}
+		AND bn.PLAY_DATE = #{play_date}
+		AND bn.SCHEDULE_CODE = #{schedule_code}
+		AND bn.USE_YN = 'Y'
+	</select>
 </mapper>

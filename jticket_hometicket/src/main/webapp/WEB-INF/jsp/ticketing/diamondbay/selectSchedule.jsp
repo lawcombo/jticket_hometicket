@@ -87,6 +87,10 @@
 				
 				</div>
 				
+				<!-- ==공지사항== -->
+				<!-- ========== -->
+				
+				
 				<div class="ewp_date_info">
 <!-- 					<h3>· 예약 인원 관련 안내 </h3> -->
 <!-- 					<p> -->
@@ -123,6 +127,31 @@
 		</form:form>
 	</div><!-- mx1200 end -->
 	
+	
+	
+<div class="rad_modal" style="display: none;">
+	<div class="rad_modal_content">
+		<div class="rad_modal_x">
+			<div id="agreementTermsOfUse-modal-section" class="md_cont">
+				<c:out value="${reserveInfo.info_c }" escapeXml="false"/>
+				<div class="modal_tb">
+					<div class="mt_top">
+						<h2>
+							<strong>잠깐!</strong>
+						</h2>
+						<p class="mt_top_text"></p>
+					</div>
+					<div class="mt_bot">
+						<textarea id="notiText" style="color:red; height:100px;width:100%;border-style: hidden;" readonly></textarea>
+					</div>
+				</div>
+
+				<button class="md_bts" style="cursor:pointer;" onclick="nitiConfirm.confirmBtn();">확인</button>
+			</div>
+		</div>
+	</div>
+	<div class="rad_modal_bk"></div>
+</div>
 
 <script type="text/x-mustache" id="list-template">
 	<ul>
@@ -171,6 +200,7 @@
 					{{/reserv}}
 				</div>
 			</div>
+			
 		</li>
 	{{/data}}
 	</ul>
@@ -217,8 +247,8 @@
 				dataType : 'json',
 				data : data,
 				success: function(json){
-					console.log(json.schedule);
-					console.log(json.products);
+					//console.log(json.schedule);
+					//console.log(json.products);
 					var schedule = json.schedule;
 					products = json.products;
 					
@@ -273,6 +303,10 @@
 			$("#schedule_code").val(e.currentTarget.value);
 			$("#totalCount").val(0);
 			$("#totalFee").val(fee);
+			
+			
+			//해당날짜, 회차에 notice(공지) 있는지 select _ 다이아몬드베이 요청사항 _ 2022_09_06
+			checkNotice.selectNoticeInfo(e.currentTarget.value);
 		});
 
 		// seat 제거
@@ -411,6 +445,9 @@
 					maxDate:max,
 					onSelect: function(dateText, inst) {
 						getDateReserve(dateText); 
+						
+						//공지 hide
+						$("#notiArea").hide();
 					},
 					beforeShowDay: function(date) {
 						var thismonth = date.getMonth()+1;
@@ -445,6 +482,77 @@
 	// 오늘 일정불러오기
 	getDateReserve(min);
 });
+	
+var header = $("meta[name='_csrf_header']").attr('content');
+var token = $("meta[name='_csrf']").attr('content');
+var checkNotice = {
+		selectNoticeInfo : function(scheduleCode){
+			
+			var shopCode	= $("#shop_code").val();
+			var playDate 	= $("#play_date").val();
+			var scheduleCd 	= scheduleCode;
+			var companyCd	= $("#content_mst_cd").val();
+			companyCd = companyCd.substring(0, companyCd.indexOf("_"));
+			
+			
+			$.ajax({
+				url : '${pageContext.request.contextPath}${pathPart}/ticketing/diamondbay/selectNoticeInfo',
+				type : 'post', 
+				dataType : 'json',
+				data : {
+					sale_shop_code 	: shopCode,
+					play_date		: playDate,
+					schedule_code	: scheduleCd
+				},
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(header, token);
+					showShadow(true);
+				},
+				
+				success: function(data) {
+					
+					if(data.result == null)
+					{
+						//pass
+						$("#notiArea").hide();
+						$(".rad_modal").fadeOut();
+					}
+					else
+					{
+						console.log(data.result);
+						//$("#notiArea").show();
+						
+						$("#notiText").val(data.result.NOTI_MEMO);
+						$(".mt_top_text").text(data.result.PLAY_DATE +" ("+data.result.START_TIME +") 공지확인!");
+						
+						$(".rad_modal").fadeIn();
+					}
+				},
+				complete: function(){
+					showShadow(false);
+					hideShadow();
+				},
+				error: function (jqXhr, textStatus, errorMessage) { // error callback 
+			        alert("에러 발생. 관리자에게 문의주세요.");
+			      	
+					//window.close();
+			    }
+			});
+		}
+}
+
+
+$(function(){
+	$(".rad_modal_bk").click(function(){
+		$(".rad_modal").fadeOut();
+	});
+});
+
+var nitiConfirm = {
+		confirmBtn : function(){
+			$(".rad_modal").fadeOut();
+		}
+}
 </script></div>
 
 </div>

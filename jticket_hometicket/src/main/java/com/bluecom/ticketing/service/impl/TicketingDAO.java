@@ -308,4 +308,8 @@ public class TicketingDAO extends EgovAbstractMapper {
 	public VerificationKeyVO selectSitekeyInfo(String ordNo) throws Exception{
 		return selectOne("ticketingMapper.selectSitekeyInfo", ordNo);
 	}
+	
+	public HashMap<String, String> selectNoticeInfo(SaleProductDTO vo) throws Exception{
+		return selectOne("ticketingMapper.selectNoticeInfo", vo);
+	}
 }
