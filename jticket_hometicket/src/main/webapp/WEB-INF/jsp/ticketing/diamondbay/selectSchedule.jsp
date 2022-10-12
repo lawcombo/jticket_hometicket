@@ -260,6 +260,8 @@
 						})
 					}
 					
+					console.log(productAry);
+					
 					let dataAry = {data: []};
 					var reserv = false;
 					for(var i=0; i<schedule.length; i++){
@@ -387,9 +389,12 @@
 			
 			const Tg = $('[data-input-id="input'+Id+'"]');
 			var totalFee = 0;
-			for(var i=0; i<products.length; i++){
+			for(var i=0; i<products.length; i++)
+			{
+				
 				var Id = dataID+products[i].product_code;
 				const Tg = $('[data-input-id="input'+Id+'"]');
+				
 				totalFee += Number(Tg.text())*Number(products[i].product_fee);
 				
 				var productCount = $(".productCount[data-productcode=" + products[i].product_code + "]");

@@ -2155,6 +2155,23 @@ public class TicketingController extends BaseController {
 	@PostMapping("/selectScheduleAjax")
 	@ResponseBody
 	public Map<String, List<?>> process2SelectScheduleAjax(HttpServletRequest request, ScheduleDTO scheduleDTO, Errors errors, HttpServletResponse response, Model model) throws Exception {
+		
+		/*
+		if(scheduleDTO.getContentMstCd().contains("DIAMONDBAY"))
+		{
+			if(scheduleDTO.getPlay_date().equals("2022-10-07"))
+			{
+				if(scheduleDTO.getProduct_group_code().equals("102"))
+				{
+					System.out.println("[DIAMONDBAY 특정일자, 특정상품(불꽃놀이) 로직]");
+					
+					scheduleDTO.setProduct_group_code("104");
+				}
+				
+			}
+		}
+		*/
+		
 		List<ScheduleDTO> scheduleDTOList = ticketingService.getSchedule(scheduleDTO);
 		Map<String, List<?>> map = new HashMap<>();
 		map.put("schedule", scheduleDTOList);
@@ -2166,6 +2183,80 @@ public class TicketingController extends BaseController {
 		
 		// 사용 기간을 분리
 		products = selectValidPeriod(scheduleDTO, products);
+		
+		//================================================================ 다이아몬드베이 불꽃상품 온라인 판매, 특정일자에만, 하드코딩 ======================================================
+		if(scheduleDTO.getContentMstCd().contains("DIAMONDBAY"))
+		{
+			
+			if(scheduleDTO.getPlay_date().equals("2022-11-05"))
+			{
+				if(scheduleDTO.getProduct_group_code().equals("102"))
+				{
+					for(int i=0; i<products.size(); i++)
+					{
+						if(products.get(i).getProduct_code().equals("201"))
+						{//해운대코스_대인
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("202"))
+						{//해운대코스_청소년
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("203"))
+						{//해운대코스_소인
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("204"))
+						{//해운대코스_영유아
+							products.remove(i);
+							--i;
+							continue;
+						}
+					}
+				}
+			}
+			else
+			{
+				if(scheduleDTO.getProduct_group_code().equals("102"))
+				{
+					for(int i=0; i<products.size(); i++)
+					{
+						if(products.get(i).getProduct_code().equals("901"))
+						{//해운대_불꽃놀이_대인
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("902"))
+						{//해운대_불꽃놀이_청소년
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("903"))
+						{//해운대_불꽃놀이_소인
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("904"))
+						{//해운대_불꽃놀이_영유아
+							products.remove(i);
+							--i;
+							continue;
+						}
+					}
+				}
+			}
+			
+		}
+		//=====================================================================================================================================================================
 		
 		map.put("products", products);
 		
@@ -2526,6 +2617,21 @@ public class TicketingController extends BaseController {
 			@ModelAttribute("paymentInfo") PaymentInfoDTO paymentInfo, Errors errors, 
 			HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirect, Model model) throws Exception {
 		
+		/*
+		if(essential.getContent_mst_cd().contains("DIAMONDBAY"))
+		{
+			if(essential.getProduct_group_code().equals("102"))
+			{
+				if(paymentInfo.getPlay_date().equals("2022-10-07"))
+				{
+					essential.setProduct_group_code("104");
+					
+					paymentInfo.getProductGroup().setProduct_group_code("104");
+				}
+			}
+		}
+		*/
+		
 		// 상품 그룹 확인
 		ProductGroupDTO dbProductGroup = ticketingService.getProductGroups(essential);
 		
@@ -2538,6 +2644,10 @@ public class TicketingController extends BaseController {
 		// 상품 가져오기
 		// 현재는 상품이 하나뿐이기 때문에 맨 위에꺼 하나만 사용
 		List<ProductDTO> dbProducts = ticketingService.getProducts(paymentInfo.getProductGroup());
+		
+		
+		//특정날짜 상품가격 수정시 여기서 작업하면 될듯, dbProducts ===============================================================================================
+		
 /*		List<ProductDTO> products = new ArrayList<>();
 		ProductDTO product = dbProducts.get(0);
 		product.setCount(paymentInfo.getProducts().get(0).getCount()); // 수량만 받은거 사용
