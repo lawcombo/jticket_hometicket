@@ -113,6 +113,8 @@
 							예매 내역을 확인하실 수 있습니다.
 							<br><br>
 							예매 정보 확인 후<span class="ewp_block_m"></span> 예매 취소를 하실 수 있습니다.
+							<br>
+							<span style="color:red; font-size:smaller">(거래처로 예매하셨을 경우에는 예매취소가 불가능하니다.)</span>
 						</p>
 					</dt>
 				</dl>
