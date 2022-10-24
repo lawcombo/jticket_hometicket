@@ -307,6 +307,7 @@
 		SELECT
 			salepro.shop_code,
 			salepro.sale_code,
+			salepro.terminal_code,
 			salepro.order_num,
 			salepro.member_name,
 			salepro.member_tel,
@@ -324,6 +325,7 @@
 		(SELECT
 				sale.shop_code,
 				sale.sale_code,
+				sale.terminal_code,
 				sale.order_num,
 				sale.member_name,
 				sale.member_tel,
@@ -352,6 +354,7 @@
 			AND CONCAT(salepro.play_date, ' ', sch.start_time, ':00') >= now()
 			AND salepro.refund_yn=0
 			AND salepro.online_channel='1001'
+			AND salepro.terminal_code != 'WEBTICKETCUST'
 			GROUP BY salepro.sale_code
 			ORDER BY salepro.sale_date DESC
 		]]>
@@ -363,6 +366,7 @@
 			T.sale_shop_code
 			, T.sale_code
 			, F.order_num 
+			, F.terminal_code
 			, F.member_name AS person_name
 			, F.member_tel AS person_mobile_no
 			, F.sale_date
@@ -411,6 +415,7 @@
 			        T.play_date > DATE_FORMAT(NOW(), '%Y-%m-%d')
 		        )  
 			AND F.online_channel='1001'
+			AND F.terminal_code != 'WEBTICKETCUST' <!-- 다이아몬드베이 거래처로 예매했을경우는 취소 제외_2022-10-21_HOON -->
 		ORDER BY T.sale_code DESC
 	</select>
 	
