@@ -40,7 +40,7 @@
 	
 		</div><!-- mx1200 end -->
 		<section class="beerwalk-desc reservationRenewPage ewp_section color_ch">
-			 <div class="ewp_resBtn prog">
+			 <div class="ewp_resBtn prog" style="z-index:1;">
 				<button class="reserveButton">예약</button>
 <!-- 				<p class="reservbt_ps"><strong>10월 8일 이전 일자 예약</strong>을 원하시면 페이지를 이동해주세요.<a href="https://brewery.jejubeer.co.kr/brewery-program/CreateBeerGlass" target="_blank"> 링크</a></p> -->
 			</div>
@@ -414,6 +414,25 @@ $(function() {
 	$(".reserveButton").on('click', function() {
 		window.location.href="/ticketing/selectSchedule?content_mst_cd=${essential.content_mst_cd}&product_group_code=${essential.product_group_code}"
 	});
+	
+	var lastScroll = 0;
+    $(window).scroll(function(){
+         var scroll = $(this).scrollTop();
+         console.log(scroll);
+         
+         if (scroll > 50){
+         //이벤트를 적용시킬 스크롤 높이
+         $(".ewp_resBtn.prog").addClass("fixed_a");
+         if($(".ewp_resBtn.prog").hasClass("fixed_a"))
+        	 {
+        		 $(".footer").addClass("mt")
+        	 }
+         }
+         else {
+              $(".ewp_resBtn.prog").removeClass("fixed_a");
+         }
+         lastScroll = scroll;
+    });
 }); 
 
 </script>
