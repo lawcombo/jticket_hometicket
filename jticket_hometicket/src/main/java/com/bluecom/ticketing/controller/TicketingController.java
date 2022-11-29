@@ -2187,8 +2187,7 @@ public class TicketingController extends BaseController {
 		//================================================================ 다이아몬드베이 불꽃상품 온라인 판매, 특정일자에만, 하드코딩 ======================================================
 		if(scheduleDTO.getContentMstCd().contains("DIAMONDBAY"))
 		{
-			
-			if(scheduleDTO.getPlay_date().equals("2022-11-05"))
+			if(scheduleDTO.getPlay_date().equals("2022-12-17"))
 			{
 				if(scheduleDTO.getProduct_group_code().equals("102"))
 				{
@@ -2251,6 +2250,16 @@ public class TicketingController extends BaseController {
 							--i;
 							continue;
 						}
+						//개발서버
+						/*
+						else if(products.get(i).getProduct_code().equals("208"))
+						{
+							products.remove(i);
+							--i;
+							continue;
+						}
+						*/
+						
 					}
 				}
 			}
