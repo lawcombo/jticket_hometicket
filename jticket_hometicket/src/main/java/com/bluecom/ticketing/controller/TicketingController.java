@@ -2564,6 +2564,7 @@ public class TicketingController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
+	
 	@GetMapping("/diamondbay")
 	public String diamondbay(@ModelAttribute("essential") @Valid EssentialDTO essential, Errors errors, HttpServletResponse response, Model model) throws Exception {
 		
