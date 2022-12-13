@@ -97,6 +97,11 @@ public class TicketingDAO extends EgovAbstractMapper {
 
 		return selectList("ticketingMapper.selectProducts", productGroup);
 	}
+	
+	public List<ProductDTO> selectProductsForGanghwa(ProductGroupDTO productGroup) throws Exception {
+		
+		return selectList("ticketingMapper.selectProductsForGanghwa", productGroup);
+	}
 
 	public List<BookOpenVO> selectBookOpen(BookOpenVO bookOpenVO) throws Exception {
 
@@ -153,6 +158,10 @@ public class TicketingDAO extends EgovAbstractMapper {
 
 	public List<ProductDTO> selectProcess2Products(ProductGroupDTO productGroup) throws Exception {
 		return selectList("ticketingMapper.selectProcess2Product", productGroup);
+	}
+	
+	public List<ProductDTO> selectProcess2ProductForGanghwa(ProductGroupDTO productGroup) throws Exception {
+		return selectList("ticketingMapper.selectProcess2ProductForGanghwa", productGroup);
 	}
 
 	public List<SaleDTO> selectCheckTicket(SaleDTO saleDTO) throws Exception {

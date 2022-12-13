@@ -241,6 +241,13 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 		return ticketingMapper.selectProducts(productGroup);
 	}
 		
+	
+	@Override
+	public List<ProductDTO> selectProductsForGanghwa(ProductGroupDTO productGroup) throws Exception {
+		
+		return ticketingMapper.selectProductsForGanghwa(productGroup);
+	}
+	
 	@Override
 	public String getVisitorType(String shopCode) throws Exception {
 
@@ -251,6 +258,7 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 	public List<ScheduleDTO> getSchedule(ScheduleDTO scheduleDTO) throws Exception {
 		return ticketingMapper.selectSchedule(scheduleDTO);
 	}
+	
 	
 	@Override
 	public List<ProductDTO> getSelectedProducts(List<ProductDTO> products) throws Exception {
@@ -423,6 +431,11 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 	@Override
 	public List<ProductDTO> getProcess2Products(ProductGroupDTO productGroup) throws Exception {
 		return ticketingMapper.selectProcess2Products(productGroup);
+	}
+	
+	@Override
+	public List<ProductDTO> getProcess2ProductsForGanghwa(ProductGroupDTO productGroup) throws Exception {
+		return ticketingMapper.selectProcess2ProductForGanghwa(productGroup);
 	}
 
 	@Override
