@@ -57,6 +57,7 @@ public interface TicketingService{
 	ProductGroupDTO getProductGroups(EssentialDTO essential) throws Exception;
 	
 	List<ProductDTO> getProducts(ProductGroupDTO productGroup) throws Exception;
+	List<ProductDTO> selectProductsForGanghwa(ProductGroupDTO productGroup) throws Exception;
 	
 	List<BookOpenVO> getBookOpenMonth(BookOpenVO bookOpenVO) throws Exception;
 	
@@ -74,6 +75,7 @@ public interface TicketingService{
 	void addWebPaymentStatus(WebPaymentStatusDTO authenticationFinishedStatus) throws Exception;
 		
 	List<ProductDTO> getProcess2Products(ProductGroupDTO productGroup) throws Exception;
+	List<ProductDTO> getProcess2ProductsForGanghwa(ProductGroupDTO productGroup) throws Exception;
 	
 	List<SaleDTO> getCheckTicket(SaleDTO saleDTO) throws Exception;
 	

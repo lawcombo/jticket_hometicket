@@ -53,6 +53,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.bluecom.api.utills.ShopDateHelper;
 import com.bluecom.common.controller.BaseController;
 import com.bluecom.common.service.CommonService;
 import com.bluecom.common.service.MailService;
@@ -152,12 +153,16 @@ public class TicketingController extends BaseController {
 		String returnUrl = "";
 		
 		if(essential.getContent_mst_cd().toString().contains("JEJUBEER"))
-		{
+		{//제주맥주
 			returnUrl = "/ticketing/checkTicket";
 		}
 		else if(essential.getContent_mst_cd().toString().contains("DIAMONDBAY"))
-		{
+		{//다이아몬드베이
 			returnUrl = "/ticketing/diamondbay/checkTicket";
+		}
+		else if(essential.getContent_mst_cd().toString().contains("GANGHWAKIDS"))
+		{//강화키즈카페
+			returnUrl = "/ticketing/ganghwakidscafe/checkTicket";
 		}
 		
 		
@@ -269,6 +274,10 @@ public class TicketingController extends BaseController {
 		{
 			info.getProductGroup().setProduct_group_kind("2");
 		}
+		else if(info.getProductGroup().getContent_mst_cd().toString().contains("GANGHWAKIDS"))
+		{
+			info.getProductGroup().setProduct_group_kind("1");
+		}
 		else
 		{
 			//..
@@ -292,6 +301,10 @@ public class TicketingController extends BaseController {
 		{
 			//callBackJsp = "/ticketing/diamondbay/payRequest";
 			callBackJsp = "/ticketing/diamondbay/payRequestToKisPG";
+		}
+		else if(info.getProductGroup().getContent_mst_cd().toString().contains("GANGHWAKIDS"))
+		{
+			callBackJsp = "/ticketing/ganghwakidscafe/payRequest";
 		}
 		else
 		{
@@ -1015,6 +1028,7 @@ public class TicketingController extends BaseController {
 		return "/ticketing/diamondbay/finish";
 	}
 	
+	
 	/**
 	 * 예매내역 존재 여부 확인 
 	 * @param request
@@ -1378,6 +1392,14 @@ public class TicketingController extends BaseController {
 				redirectPage = "redirect:/ticketing/diamondbay/showTicketInfo?content_mst_cd=" + essential.getContent_mst_cd();
 			}else {
 				redirectPage = "redirect:/ticketing/diamondbay/showTicketInfoList?content_mst_cd=" + essential.getContent_mst_cd();
+			}
+		}
+		else if(essential.getContent_mst_cd().toString().contains("GANGHWAKIDS"))
+		{
+			if(saleDTO.getType().equals("0")) {
+				redirectPage = "redirect:/ticketing/ganghwakidscafe/showTicketInfo?content_mst_cd=" + essential.getContent_mst_cd();
+			}else {
+				redirectPage = "redirect:/ticketing/ganghwakidscafe/showTicketInfoList?content_mst_cd=" + essential.getContent_mst_cd();
 			}
 		}
 		
@@ -2179,7 +2201,18 @@ public class TicketingController extends BaseController {
 		ProductGroupDTO productGroup = new ProductGroupDTO();
 		productGroup.setContent_mst_cd(scheduleDTO.getContentMstCd());
 		productGroup.setProduct_group_code(scheduleDTO.getProduct_group_code());
-		List<ProductDTO> products = ticketingService.getProcess2Products(productGroup);
+		
+		//List<ProductDTO> products = ticketingService.getProcess2Products(productGroup);
+		List<ProductDTO> products = new ArrayList<ProductDTO>();
+		
+		if(scheduleDTO.getContentMstCd().contains("GANGHWAKIDS"))
+		{
+			products = ticketingService.getProcess2ProductsForGanghwa(productGroup);
+		}
+		else
+		{
+			products = ticketingService.getProcess2Products(productGroup);
+		}
 		
 		// 사용 기간을 분리
 		products = selectValidPeriod(scheduleDTO, products);
@@ -2263,9 +2296,43 @@ public class TicketingController extends BaseController {
 					}
 				}
 			}
-			
 		}
 		//=====================================================================================================================================================================
+		
+		
+		if(scheduleDTO.getContentMstCd().contains("GANGHWAKIDS"))
+		{//강화 키즈카페, 상품 평일 / 주말권 분리
+			String dayFlag = ShopDateHelper.getDateDayCode(scheduleDTO.getPlay_date().toString());
+			
+			if(dayFlag.equals("1"))
+			{
+				//평일
+				for(int i=0; i<products.size(); i++)
+				{
+					if(products.get(i).getProduct_name().contains("주말"))
+					{// 주말권 상품 제거
+						products.remove(i);
+						--i;
+						continue;
+					}
+				}
+			}
+			else if(dayFlag.equals("2"))
+			{
+				//주말
+				for(int i=0; i<products.size(); i++)
+				{
+					if(products.get(i).getProduct_name().contains("평일"))
+					{// 평일권 상품 제거
+						products.remove(i);
+						--i;
+						continue;
+					}
+				}
+			}
+		}
+		
+		
 		
 		map.put("products", products);
 		
@@ -2553,6 +2620,308 @@ public class TicketingController extends BaseController {
 	
 	
 	
+	//============================================================= 강화 키즈 카페 START ====================================================================
+	
+	@GetMapping("/ghkidscafe")
+	public String ghkidscafe(@ModelAttribute("essential") @Valid EssentialDTO essential, Errors errors, HttpServletResponse response, Model model) throws Exception {
+		
+		return "/ticketing/ganghwakidscafe/selectTicketItem2";
+	}
+	
+	@GetMapping("/ghkidscafe/schedule")
+	public String ghkidscafeSchedule(@ModelAttribute("essential") @Valid EssentialDTO essential, Errors errors, HttpServletResponse response, Model model) throws Exception {
+		
+		log.info("::: Ticketing GANG HWA KIDS CAFE SelectSchedule START");
+		
+		if(errors.hasErrors()) {
+			validationLog(errors);
+			
+			ScriptUtils.alertAndBackPage(response, "상품그룹정보가 올바르지 않습니다. 결제페이지에 진입 할 수 없습니다.");
+			return null;
+			
+		}
+		
+		// content_mst_cd, product_group_code 기준으로 기본 정보 가져오기
+		ProductGroupDTO productGroup = ticketingService.getProductGroups(essential);
+		//bc_product 에서 fee & web_yn & schedule_yn 값 가져와서 뿌리기
+		
+		model.addAttribute("productGroup", productGroup);
+		
+		//List<ProductDTO> products = ticketingService.getProducts(productGroup);
+		List<ProductDTO> products = ticketingService.selectProductsForGanghwa(productGroup);
+		model.addAttribute("products", products);
+		
+		ScheduleDTO scheduleDTO = new ScheduleDTO();
+		scheduleDTO.setContentMstCd(essential.getContent_mst_cd());
+		scheduleDTO.setProduct_group_code(essential.getProduct_group_code());
+		scheduleDTO.setShop_code(productGroup.getShop_code());
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		scheduleDTO.setPlay_date(dateFormat.format(cal.getTime()));
+		
+		List<ScheduleDTO> scheduleDTOList = ticketingService.getSchedule(scheduleDTO);
+		model.addAttribute("scheduleDTOList", scheduleDTOList);
+		
+		return "/ticketing/ganghwakidscafe/selectSchedule";
+		
+	}
+	
+	@GetMapping("/ganghwakidscafe/finish")
+	public String finishForGanghwakidscafe(@ModelAttribute("essential") @Valid EssentialDTO essential, @RequestParam("orderNo") String orderNo, Model model) throws Exception {
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("orderNo", orderNo);
+		params.put("contentMstCd", essential.getContent_mst_cd());
+		List<FinishTradeVO> trade = ticketingService.getFinishTrade(params);
+		model.addAttribute("trade", trade);
+		
+		ShopDetailVO shopDetail = ticketingService.getShopDetailByContentMstCd(essential.getContent_mst_cd());
+		model.addAttribute("shopDetail", shopDetail);
+		
+		return "/ticketing/ganghwakidscafe/finish";
+	}
+	
+	// 결제 정보 입력 페이지
+	@PostMapping("/ganghwakidscafe/insertReserver")
+	public String insertReserverOfGangWhaKidsCafe(@ModelAttribute("essential")EssentialDTO essential, 
+			@ModelAttribute("paymentInfo") PaymentInfoDTO paymentInfo, Errors errors, 
+			HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirect, Model model) throws Exception {
+		
+		// 상품 그룹 확인
+		ProductGroupDTO dbProductGroup = ticketingService.getProductGroups(essential);
+		
+		if (dbProductGroup == null || !checkProductGroup(paymentInfo.getProductGroup(), dbProductGroup)) {
+			ScriptUtils.alertAndBackPage(response, "상품그룹정보가 올바르지 않습니다. 결제를 진행할 수 없습니다.");
+			return null;
+		}
+		paymentInfo.setProductGroup(dbProductGroup);
+
+		// 상품 가져오기
+		// 현재는 상품이 하나뿐이기 때문에 맨 위에꺼 하나만 사용
+		//List<ProductDTO> dbProducts = ticketingService.getProducts(paymentInfo.getProductGroup());
+		List<ProductDTO> dbProducts = ticketingService.selectProductsForGanghwa(paymentInfo.getProductGroup());
+		
+/*		List<ProductDTO> products = new ArrayList<>();
+		ProductDTO product = dbProducts.get(0);
+		product.setCount(paymentInfo.getProducts().get(0).getCount()); // 수량만 받은거 사용
+		products.add(product);
+		paymentInfo.setProducts(products); 
+		
+		paymentInfo.setTotalCount(products.stream().mapToInt(ProductDTO::getCount).sum());
+		paymentInfo.setTotalFee(products.stream()
+			.map(p -> p.getProduct_fee()
+			.multiply(BigDecimal.valueOf(p.getCount())))
+			.reduce(BigDecimal.ZERO, BigDecimal::add));*/
+		
+		// 0명인 상품리스트 삭제
+		paymentInfo.getProducts().removeIf(p -> p.getCount() <= 0);
+		
+		List<ProductDTO> selectedProducts = new ArrayList<>();		
+		// 상품코드로 상품 정보 다 불러오기, 인원수만 불러온 상품에 넣기
+		for (int i = 0; i < paymentInfo.getProducts().size(); i++) {
+			ProductDTO product = paymentInfo.getProducts().get(i);
+			for (int j = 0; j < dbProducts.size(); j++) {
+				ProductDTO dbProduct = dbProducts.get(j);
+				if (product.getShop_code().equals(dbProduct.getShop_code())
+						&& product.getProduct_group_code().equals(dbProduct.getProduct_group_code())
+						&& product.getProduct_code().equals(dbProduct.getProduct_code())) {
+					dbProduct.setCount(product.getCount());
+					selectedProducts.add(dbProduct);
+				}
+			}
+		}
+		paymentInfo.setProducts(selectedProducts);
+
+		
+		List<ProductDTO> productsOrderedByPrice = new ArrayList<>();
+		for(ProductDTO product : selectedProducts) {
+			productsOrderedByPrice.add(product);
+		}
+		Collections.sort(productsOrderedByPrice, Collections.reverseOrder()); // 내림차순
+		paymentInfo.setProductsOrderedByPrice(productsOrderedByPrice);
+			
+		// 총액, 총인원수
+		paymentInfo.setTotalCount(selectedProducts.stream().mapToInt(ProductDTO::getCount).sum());
+		paymentInfo
+				.setTotalFee(selectedProducts.stream().map(p -> p.getProduct_fee().multiply(BigDecimal.valueOf(p.getCount())))
+						.reduce(BigDecimal.ZERO, BigDecimal::add));
+		
+		// 회차
+		if(StringUtils.hasText(paymentInfo.getSchedule_code())) {
+			ScheduleDTO schedule =  new ScheduleDTO();
+			schedule.setShop_code(paymentInfo.getProductGroup().getShop_code());
+			schedule.setSchedule_code(paymentInfo.getSchedule_code());
+			schedule.setPlay_date_from(paymentInfo.getPlay_date());
+			schedule = ticketingService.getScheduleByScheduleCode(schedule);
+			
+			if(schedule == null) {
+				ScriptUtils.alertAndClose(response, "해당 상품의 회차정보가 존재하지 않습니다. 결제를 진행할 수 없습니다.");
+				return null;
+			}
+			paymentInfo.setSchedule(schedule);
+		}
+		
+		// 방문자 정보 가져오기
+		ShopDetailVO shopDetail = ticketingService.getShopDetail(paymentInfo.getProductGroup().getShop_code());
+		paymentInfo.setVisitorType(shopDetail.getPerson_type());
+		// model.addAttribute("shopDetail", shopDetail);
+		
+		String content_mst_cd = essential.getContent_mst_cd(); 
+		String product_group_code = essential.getProduct_group_code();
+		
+		// 이용약관 가져오기
+		WebReservationKeyDTO reserveInfo = ticketingService.selectReserveInfo(dbProductGroup.getShop_code());
+		
+		if(reserveInfo == null || 
+				!StringUtils.hasText(reserveInfo.getInfo_a()) ||
+				!StringUtils.hasText(reserveInfo.getInfo_b()) ||
+				!StringUtils.hasText(reserveInfo.getInfo_c()) ||
+				!StringUtils.hasText(reserveInfo.getInfo_d()) 
+				//!StringUtils.hasText(reserveInfo.getInfo_e())
+				) {			
+			redirect.addFlashAttribute("msg", "약관정보가 없습니다. 관리자에게 연락 바랍니다.");
+			
+			ScriptUtils.alertAndClose(response, "약관정보가 없습니다. 관리자에게 연락 바랍니다.");
+			
+			log.error("[ERROR]약관정보가 없습니다. 관리자에게 연락 바랍니다.");
+			if(StringUtils.hasText(content_mst_cd) && StringUtils.hasText(product_group_code)) {
+				return "redirect:/ticketing/ghkidscafe/selectSchedule?content_mst_cd=" + content_mst_cd + "&product_group_code=" + product_group_code;
+			} else {
+				return "redirect:/error";
+			}
+		}
+		
+		String content = reserveInfo.getInfo_a();
+		reserveInfo.setInfo_a(StringEscapeUtils.unescapeXml(content));
+		
+		content = reserveInfo.getInfo_b();
+		reserveInfo.setInfo_b(StringEscapeUtils.unescapeXml(content));
+		
+		content = reserveInfo.getInfo_c();
+		reserveInfo.setInfo_c(StringEscapeUtils.unescapeXml(content));
+
+		content = reserveInfo.getInfo_d();
+		reserveInfo.setInfo_d(StringEscapeUtils.unescapeXml(content));
+
+		//프로모션 수신 동의 추가 _ 2022.07.28
+		content = reserveInfo.getInfo_e();
+		reserveInfo.setInfo_e(StringEscapeUtils.unescapeXml(content));
+		
+		model.addAttribute("reserveInfo", reserveInfo);
+		
+		// 본인인증키 가져오기
+		VerificationKeyVO keys = ticketingService.getKeys(paymentInfo.getProductGroup().getShop_code());
+		
+		if(keys == null 
+				|| !StringUtils.hasText(keys.getIdentification_site_code()) 
+				|| !StringUtils.hasText(keys.getIdentification_site_password())
+				|| !StringUtils.hasText(keys.getPay_merchant_id())
+				|| !StringUtils.hasText(keys.getPay_merchant_key())) {
+			redirect.addFlashAttribute("msg", "인증를 위한 정보가 없습니다. 관리자에게 연락 바랍니다.");
+			
+			log.info("[ERROR]인증를 위한 정보가 없습니다. 관리자에게 연락 바랍니다.");
+			
+			if(StringUtils.hasText(content_mst_cd) && StringUtils.hasText(product_group_code)) {
+				return "redirect:/ticketing/ghkidscafe/selectSchedule?content_mst_cd=" + content_mst_cd + "&product_group_code=" + product_group_code;
+			} else {
+				return "redirect:/error";
+			}
+		}
+		
+		model.addAttribute("siteCode", keys.getIdentification_site_code());
+		model.addAttribute("sitePassword", keys.getIdentification_site_password());
+		
+		return "/ticketing/ganghwakidscafe/insertReserverOfGangHwa";
+	}
+	
+	
+	/**
+	 * 강화키즈카페 예매내역 조회 여러건
+	 * @param essential
+	 * @param saleDTO
+	 * @param request
+	 * @param message
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/ganghwakidscafe/showTicketInfoList")
+	public String ShowTicketInfoListOfGanghwa(@ModelAttribute("essential")EssentialDTO essential, 
+			SaleDTO saleDTO, HttpServletRequest request,
+			@ModelAttribute("message") String message, Model model) throws Exception {
+		HttpSession session = request.getSession();
+		saleDTO = (SaleDTO) session.getAttribute("saleDTO");
+		saleDTO.setType("1");
+		List<SaleProductDTO> saleProductDTOList = ticketingService.getSaleProductDTOList(saleDTO);
+		
+		model.addAttribute("dataList", saleProductDTOList);
+		model.addAttribute("buyerInfo", saleDTO);
+		return "/ticketing/ganghwakidscafe/ShowTicketInfoList";
+	}
+	
+	/**
+	 * 강화 키즈카페 예매조회 1건
+	 * @param essential
+	 * @param request
+	 * @param saleDTO
+	 * @param message
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/ganghwakidscafe/showTicketInfo")
+	public String ShowTicketInfoOfGanghwa(@ModelAttribute("essential")EssentialDTO essential, 
+								HttpServletRequest request, SaleDTO saleDTO,
+								/*SaleDTO2 changedSaleDTO,*/
+								@ModelAttribute("message") String message, Model model) throws Exception {
+		
+		HttpSession session = request.getSession();
+		saleDTO = (SaleDTO) session.getAttribute("saleDTO");
+		
+		List<SaleProductDTO> saleProductDTOList = ticketingService.getSaleProductDTOList(saleDTO);
+		
+		/*if(saleProductDTOList.isEmpty())
+			return "redirect:/ticketing/checkTicket?content_mst_cd="+essential.getContent_mst_cd();*/
+
+		// content_mst_cd, product_group_code 기준으로 기본 정보 가져오기
+		essential.setProduct_group_code(saleProductDTOList.get(0).getProduct_group_code());
+		ProductGroupDTO productGroup = ticketingService.getProductGroups(essential);
+		//bc_product 에서 fee & web_yn & schedule_yn 값 가져와서 뿌리기
+		List<ProductDTO> products = ticketingService.getProducts(productGroup);
+		
+		// 방문자 정보 가져오기
+		PaymentInfoDTO paymentInfo = new PaymentInfoDTO();
+		ShopDetailVO shopDetail = ticketingService.getShopDetail(productGroup.getShop_code());
+		paymentInfo.setVisitorType(shopDetail.getPerson_type());
+		
+		// 0번상품이 금액 상품
+		WebPaymentDTO orgWebPayment =  ticketingService.getWebPayment(saleProductDTOList.get(0).getOrder_num());
+		paymentInfo.setPayMethod(orgWebPayment.getPay_method());
+		
+		saleDTO.setShop_code(productGroup.getShop_code());
+		
+		// web_payment_idx 로 bc_web_payment_coupon 조회 후 금액 가져오기
+		List<CouponVO> coupon = ticketingService.getCouponByWebPaymetIdx(saleProductDTOList.get(0).getOrder_num());
+		
+		//구매한 상품정보 가져오기
+		saleDTO.setSale_code(saleProductDTOList.get(0).getSale_code());
+		List<SaleProductDTO> purchase = ticketingService.selectPurchaseProduct(saleDTO);
+		
+		model.addAttribute("products", products);
+		model.addAttribute("productGroup", productGroup);
+		model.addAttribute("paymentInfo", paymentInfo);
+		model.addAttribute("dataList", saleProductDTOList);
+		model.addAttribute("buyerInfo", saleDTO);
+		model.addAttribute("coupon", coupon);
+		model.addAttribute("purchase", purchase);
+		
+		//model.addAttribute("companyTel", ticketingService.getCompany(saleDTO.getShopCode()).getComp_tel());
+		return "/ticketing/ganghwakidscafe/ShowTicketInfo";
+	}
+	
+	
+	
 	//=============================================================다이아몬드 베이 START======================================================================
 	
 	/**
@@ -2564,6 +2933,7 @@ public class TicketingController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
+	
 	@GetMapping("/diamondbay")
 	public String diamondbay(@ModelAttribute("essential") @Valid EssentialDTO essential, Errors errors, HttpServletResponse response, Model model) throws Exception {
 		

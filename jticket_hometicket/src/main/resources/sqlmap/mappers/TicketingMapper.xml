@@ -191,7 +191,33 @@
 			ORDER BY 
 				bp.order_no, bp.product_code
 		]]>
-
+	</select>
+	
+	<select id="selectProductsForGanghwa" parameterType="productGroup" resultType="product">
+		<![CDATA[
+			SELECT 
+				bp.*, btv.valid_period, IFNULL(bc.common_name, '-') AS product_kind_name, bp.common_yn
+			FROM 
+				bc_product bp 
+				LEFT JOIN bc_ticketvalid btv on bp.shop_code = btv.shop_code
+				LEFT JOIN (
+					SELECT * FROM bc_common WHERE common_group_code = 'T020'
+				) bc ON bp.product_kind = bc.common_code
+			WHERE
+				bp.shop_code = (SELECT shop_code FROM bc_shop WHERE CONTENT_MST_CD = #{content_mst_cd})
+				AND bp.product_group_code in (
+													select 
+														PRODUCT_GROUP_CODE 
+													from bc_productgroup 
+													where 1=1
+													and shop_code = (SELECT shop_code FROM bc_shop WHERE CONTENT_MST_CD = #{content_mst_cd})
+												)
+				AND bp.web_yn = 1
+				AND bp.delete_yn = 0
+				AND bp.schedule_yn=1
+			ORDER BY 
+				bp.order_no, bp.product_code
+		]]>
 	</select>
 	
 	<select id="selectVisitorType" parameterType="String" resultType="String">
@@ -281,6 +307,7 @@
 		<!-- CONCAT(PLAY_SEQUENCE, '회차 (', START_TIME, '~', END_TIME, ')') AS subject_text, -->
 	</select>
 	
+	
 	<!-- 권종선택 출력 / 수정: 2021-09-02 / 조미근 -->
 	<select id="selectProcess2Product" parameterType="productGroup" resultType="product">
 		<![CDATA[
@@ -294,6 +321,31 @@
 			WHERE
 				bp.shop_code = (SELECT shop_code FROM bc_shop WHERE CONTENT_MST_CD = #{content_mst_cd}) 
 				AND bp.product_group_code = #{product_group_code}
+				AND bp.web_yn = 1
+				AND bp.delete_yn = 0
+				AND bp.schedule_yn=1
+				ORDER BY bp.order_no
+		]]>
+	</select>
+	
+	<select id="selectProcess2ProductForGanghwa" parameterType="productGroup" resultType="product">
+		<![CDATA[
+			SELECT 
+				bp.*, IFNULL(bc.common_name, '-') AS product_kind_name
+			FROM 
+				bc_product bp 
+				LEFT JOIN (
+					SELECT * FROM bc_common WHERE common_group_code = 'T020'
+				) bc ON bp.product_kind = bc.common_code
+			WHERE
+				bp.shop_code = (SELECT shop_code FROM bc_shop WHERE CONTENT_MST_CD = #{content_mst_cd}) 
+				AND bp.product_group_code in (
+													select 
+														PRODUCT_GROUP_CODE 
+													from bc_productgroup 
+													where 1=1
+													and shop_code = (SELECT shop_code FROM bc_shop WHERE CONTENT_MST_CD = #{content_mst_cd})
+												)
 				AND bp.web_yn = 1
 				AND bp.delete_yn = 0
 				AND bp.schedule_yn=1
