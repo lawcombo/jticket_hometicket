@@ -60,6 +60,14 @@
 						<p>*옵션 변경을 희망하실 경우 예약 취소 후 재예약 하셔야 합니다.</p>
 					</div>
 				</c:if>
+				<c:if test="${productGroup.product_group_code eq '103' }">
+					<div class="datepick_txt">
+						<!-- <p>5월 1일 부터</p> -->
+						<p>양조장투어+맥주 : 19,000원  (제주맥주 샘플러 330ml*1잔) <span>*신분증 필참</span></p>
+						<p>양조장투어+음료 : 19,000원  (제주 음료 제공)</p>
+						<p>*옵션 변경을 희망하실 경우 예약 취소 후 재예약 하셔야 합니다.</p>
+					</div>
+				</c:if>
 				<c:if test="${productGroup.product_group_code eq '106' }">
 					<div class="datepick_txt">
 						<p>7월12일 ~ 8월16일</p>
