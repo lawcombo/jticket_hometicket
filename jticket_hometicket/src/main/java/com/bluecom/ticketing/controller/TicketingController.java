@@ -2050,7 +2050,9 @@ public class TicketingController extends BaseController {
 		} else if(essential.getProduct_group_code().equals("102")) {
 			return "/ticketing/programInfos102";
 		} else if(essential.getProduct_group_code().equals("103")) {
-			return "/ticketing/programInfos103";
+			
+			//return "/ticketing/programInfos103";
+			return "/ticketing/programInfos103_v2";
 		} else if(essential.getProduct_group_code().equals("104")) {
 			return "/ticketing/programInfos104";
 		} else if(essential.getProduct_group_code().equals("105")) { // 2022-02-07 체험추가
