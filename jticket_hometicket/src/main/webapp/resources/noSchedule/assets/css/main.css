@@ -1,0 +1,211 @@
+.bg-main{
+    /* background-color: #509dbd; */
+	background-color: #fff;
+	border-radius:3px;
+}
+
+/* body{
+    width: 100%;
+    background: url("../images/main_bg.png") no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+} */
+
+
+/* #home-section .dark-overlay{    
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+} */
+
+#left-section{
+    min-height: 280px;
+}
+#login-section{
+    min-height: 315px;
+    padding: 30px 20px;
+}
+#login-image-section{
+    background: #032460 url("../images/people.png") no-repeat;
+    background-position: bottom;
+    min-height: 315px;
+    padding: 30px 20px;
+}
+
+#login-image-section h5{
+    word-break: break-word;
+}
+
+.notice-header a{
+    font-size: 0.75rem;
+}
+
+.notice-body > div{
+    height: 100%;
+}
+
+.notice-title div:first-child,
+.notice-content{
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.notice-title{
+    height: 74px;
+}
+
+.notice-title div:first-child{
+    height: 54px;
+}
+
+.notice-title div:last-child{
+    height: 20px;
+}
+
+.notice-content{
+    height: 53px;
+}
+/* login_page_0506 */
+
+body{
+background: linear-gradient(-45deg, #23a6d5, #23d5b4) !important; 
+background-size: 800% 800% !important; 
+-webkit-animation: AnimationName 16s ease infinite; 
+-moz-animation: AnimationName 16s ease infinite; 
+-o-animation: AnimationName 16s ease infinite; 
+animation: AnimationName 16s ease infinite; 
+
+}
+@-webkit-keyframes AnimationName { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} } 
+@-moz-keyframes AnimationName { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} } 
+@-o-keyframes AnimationName { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} } 
+@keyframes AnimationName { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} } 
+
+.container_gra { color: #fff; background: linear-gradient(-45deg, #0276c0, #23d5ab); background-size: 400% 400%; animation: AnimationName 15s ease infinite; width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; top: 35%; text-align: center; }
+.container_gra:after{display:block; content:""; background-image:url('/resources/images/background_01.png'); width:100%; height:100%; position:absolute; z-index:1; opacity:0.05; top:0; left:0;}
+.main-zindex{z-index:10;}
+
+.nice_logobx{margin-bottom:30px;}
+#loginVO{color:#000;}
+#loginBtn{color:#fff; border:none; background:#23a6d5; height:45px; font-weight:bold;}
+.form-control-sm::placeholder{color:#9e9e9e !important; font-size:13px !important;}
+.form-control-sm.loginid{height:45px important;}
+.form-check.mb-2.ml-1{text-align:left; padding-top:10px;}
+.container.con_pad .row{max-width:360px; margin:0 auto;}
+#login-section{width:100%; max-width:unset; flex:unset; margin-left:unset; flex:100%; max-width:100%;}
+#left-section{margin:0 auto;}
+.dark-overlay.py-5.container_gra .nice_logobx img{width:100%;}
+.dark-overlay.py-5.container_gra .container.con_pad{padding:unset;}
+#home-section{position:relative;}
+.tell_txt{word-break:keep-all; padding-top:5px; width:100%;}
+.tell_txt_bx{margin:0 auto; width:100%; position:relative; text-align:left;}
+.tell_txt p{margin-bottom:0px;}
+.teltit{font-size:12px; text-align:left; color:#23a6d5;}
+.login_tit{color:#000; padding-bottom:10px;}
+.teltit strong{font-size:24px;}
+.copy_txt{width:100%;}
+.copyrightbx{font-size:14px; text-align:center; margin-top:30px;}
+#saveCheck{margin-top:7px;}
+.alert-danger{color:#e91e63 !important; background-color:#fef6fb !important; border-color:#f7dded !important;}
+/*  */
+
+
+@media(max-width: 992px){
+   
+    .notice-title div:first-child{
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .notice-body > div{
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}
+
+@media(min-width: 992px){
+
+    .notice-title{
+        font-size: 0.815rem;
+        height: 78px;
+    }
+
+    .notice-title div:first-child{
+        height: 58px;
+    }
+
+    .notice-title div:last-child{
+        height: 20px;
+    }
+
+    .notice-content{
+        font-size: 0.815rem;
+        height: 56px;
+    }
+
+    .notice-body{
+        height: 190px;
+    }
+}
+
+
+@media(max-width: 1200px){
+    #login-image-section{
+        padding-right: 3rem;
+    }
+}
+
+@media(min-width: 1200px){
+
+    .notice-title{
+        height: 100px;
+    }
+
+    .notice-title div:first-child{
+        height: 78px;
+    }
+
+    .notice-title div:last-child{
+        height: 22px;
+    }
+
+    .notice-content{
+        height: 118px;
+    }
+    .notice-body{
+        height: 280px;
+    }
+}
+
+
+/*---------------------------------------------------------------------------*/
+
+/* .con_pad {padding-top: 200px;} */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

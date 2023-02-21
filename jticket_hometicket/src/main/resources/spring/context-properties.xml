@@ -17,6 +17,9 @@
 	        	<entry key="senderEmail" value="jejubeer@jejubeer.co.kr"/>
 	        	<entry key="senderEmailOfDiamondbay" value="diamondbay@diamondbay.co.kr"/>
 
+				<entry key="senderEmail_noSchedule" value="niceAdmin@nicetcm.co.kr"/>
+
+
 				<!-- 알림톡 -->
 	        	<entry key="templateCodeA" value="1"/>
 	        	<entry key="templateCodeS" value="2"/>
@@ -43,6 +46,9 @@
 				<!-- 에러시 리다이렉트할 제주맥주 페이지 -->
 				<entry key="jejubeer" value="https://jejubeer.co.kr/brewery-program"/>
 				<entry key="diamondbay" value="http://www.diamondbay.co.kr/"/>
+				
+				
+				<entry key="type" value="1"/>
 	        </map>
 		</property>
 	</bean>

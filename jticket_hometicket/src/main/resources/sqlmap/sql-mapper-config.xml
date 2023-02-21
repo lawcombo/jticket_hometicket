@@ -10,6 +10,7 @@
 		
 		<!-- TicketingMapper -->
 		<typeAlias alias="productGroup" type="com.bluecom.ticketing.domain.ProductGroupDTO" />
+		<typeAlias alias="productGroup_noSchedule" type="com.bluecom.ticketing.domain.ProductGroupDTO_noSchedule" />
 		<typeAlias alias="product" type="com.bluecom.ticketing.domain.ProductDTO" />
 		<typeAlias alias="bookopen" type="com.bluecom.ticketing.domain.BookOpenVO" />
 		<typeAlias alias="schedule" type="com.bluecom.ticketing.domain.ScheduleDTO" />
@@ -41,5 +42,10 @@
 		<typeAlias alias="paymentSaleVO" type="com.bluecom.ticketing.domain.ShopPaymentsaleVO"/>
 		
 		<typeAlias alias="BookOpen" type="com.bluecom.ticketing.domain.BookOpenVO"/>
+		
+		
+		<typeAlias alias="ticketValidVO" type="com.bluecom.ticketing.domain.TicketValidVO"/>
+		
+		
 	</typeAliases>
 </configuration>

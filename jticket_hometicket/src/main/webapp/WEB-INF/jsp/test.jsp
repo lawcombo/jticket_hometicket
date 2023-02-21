@@ -76,6 +76,12 @@
 		</div>
 	</div>
 	
+	<div style="clear:both;display:flex;justify-content:space-evenly;width:100%;padding:30px;">
+		<div>
+			<a onclick="pop.openSogeumSan();" style="cursor:pointer;">원주 소금산 그랜드 밸리 예매<span style="color:red">(가상결제!)</span></a>
+		</div>
+	</div>
+	
 </div>
 
 <script>
@@ -95,6 +101,7 @@ var pop = {
 			window.open('/ticketing/diamondbay', 'window_name', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
 		},
 		
+		//===============================================강화 키즈카페========================================================================
 		openGanghwa : function(){
 			var popupWidth = 1250;
 			var popupHeight = 900;
@@ -143,7 +150,23 @@ var pop = {
 			//window.open('/ticketing/ghkidscafe', 'window_name', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
 			window.open('/ticketing/rimopass/hjcruise/schedule?content_mst_cd=RIMOPASS_0_1&product_group_code=101', 'window_name', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
 		},
+		
+		//==========================================원주 소금산 그랜드 벨리==========================================
+		openSogeumSan : function(){
+			var popupWidth = 1250;
+			var popupHeight = 900;
+			
+			//팍업 가운데 정렬을 위한 화면 해상도 계산
+			var popupX = (window.screen.width / 2) - (popupWidth / 2);
+			var popupY= (window.screen.height / 2) - (popupHeight / 2);
+			
+			//window.open('/ticketing/ghkidscafe', 'window_name', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+			//window.open('/ticketing/sogeumsan/schedule?content_mst_cd=SOGEUMSAN_0_1&product_group_code=101&userId=testUserId&userName=testUserName', 'window_name', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+			window.open('/ticketing/sogeumsan/selectTicket?content_mst_cd=SOGEUMSAN_0_1&product_group_code=101&userId=testUserId&userName=testUserName', 'window_name', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+		},
 }
+
+
 
 </script>
 

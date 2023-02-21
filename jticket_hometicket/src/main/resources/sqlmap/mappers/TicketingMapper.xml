@@ -143,6 +143,41 @@
 
 	</select>
 	
+	
+	
+	
+	<select id="getProductGroups_noSchedule" parameterType="String" resultType="productGroup">
+		<![CDATA[
+			select 
+				bpg.*, bp.product_min, bs.content_mst_cd, bs.piece_ticket_yn, btv.valid_period
+			from 
+				bc_productgroup bpg
+    			join bc_shop bs on bpg.shop_code = bs.shop_code
+			    join (
+					select 
+						bp_s.product_group_code, count(bp_s.product_code) as product_count, min(product_fee) as product_min
+					from 
+						bc_product bp_s
+					where 
+						bp_s.shop_code = (SELECT shop_code FROM bc_shop where CONTENT_MST_CD = #{contentMstCd}) 				
+                        and delete_yn = 0                        
+                        and common_yn = '1'
+					group by 
+						bp_s.product_group_code
+			    ) bp on bpg.product_group_code = bp.product_group_code and bp.product_count > 0
+                left join bc_ticketvalid btv on bs.shop_code = btv.shop_code
+			where 
+				bpg.shop_code = (SELECT shop_code FROM bc_shop where CONTENT_MST_CD = #{contentMstCd}) 
+			    and bpg.delete_yn = 0 
+			    and bpg.web_book_yn = 1 
+			order by bpg.order_no
+		]]>
+
+	</select>
+	
+	
+	
+	
 	<select id="selectProductGroup" parameterType="productGroup" resultType="productGroup">
 		<![CDATA[
 			select 
@@ -171,6 +206,49 @@
 		]]>
 
 	</select>
+	
+	
+	
+	<select id="selectProductGroup_noSchedule" parameterType="productGroup_noSchedule" resultType="productGroup_noSchedule">
+		<![CDATA[
+			select 
+				bpg.*, bp.product_min, bs.content_mst_cd, bs.piece_ticket_yn, btv.valid_period
+			from 
+				bc_productgroup bpg
+    			join bc_shop bs on bpg.shop_code = bs.shop_code
+			    join (
+					select 
+						bp_s.product_group_code, count(bp_s.product_code) as product_count, min(product_fee) as product_min
+					from 
+						bc_product bp_s
+					where 
+						bp_s.shop_code = #{shop_code}						
+                        and delete_yn = 0
+        ]]>
+					<if test='type == 1'>
+						and bp_s.common_yn = '1'
+					</if>
+					<if test='type == 2'>
+						and bp_s.schedule_yn = '1'
+					</if>
+		<![CDATA[
+                        
+					group by 
+						bp_s.product_group_code
+			    ) bp on bpg.product_group_code = bp.product_group_code and bp.product_count > 0			    
+                left join bc_ticketvalid btv on bs.shop_code = btv.shop_code
+			where 
+				bpg.shop_code = #{shop_code}
+				and bpg.product_group_code = #{product_group_code}
+			    and bpg.delete_yn = 0 
+			    and bpg.web_book_yn = 1 
+			    
+		]]>
+
+	</select>
+	
+	
+	
 
 	<select id="selectProducts" parameterType="productGroup" resultType="product">
 		<![CDATA[
@@ -192,6 +270,37 @@
 				bp.order_no, bp.product_code
 		]]>
 	</select>
+	
+	
+	<select id="selectProducts_NoSchedule" parameterType="productGroup_noSchedule" resultType="product">
+		<![CDATA[
+			select 
+				bp.*, btv.valid_period, IFNULL(bc.common_name, '-') as product_kind_name
+			from 
+				bc_product bp 
+				left join bc_ticketvalid btv on bp.shop_code = btv.shop_code
+			    left join (
+					select * from bc_common where common_group_code = 'T020'
+			    ) bc on bp.product_kind = bc.common_code
+			where
+				bp.shop_code = (SELECT shop_code FROM bc_shop where CONTENT_MST_CD = #{content_mst_cd}) 
+			    and bp.product_group_code = #{product_group_code}
+			    and bp.web_yn = 1
+			    and bp.delete_yn = 0
+		]]>
+			<if test='type == 1'>
+				and bp.common_yn = '1'
+			</if>
+			<if test='type == 2'>
+				and bp.schedule_yn = '1'
+			</if>
+		<![CDATA[
+			order by 
+				bp.order_no, bp.product_code
+		]]>
+
+	</select>
+	
 	
 	<select id="selectProductsForGanghwa" parameterType="productGroup" resultType="product">
 		<![CDATA[
@@ -215,6 +324,33 @@
 				AND bp.web_yn = 1
 				AND bp.delete_yn = 0
 				AND bp.schedule_yn=1
+			ORDER BY 
+				bp.order_no, bp.product_code
+		]]>
+	</select>
+	
+	<select id="selectProductsForSogeumsan" parameterType="productGroup" resultType="product">
+		<![CDATA[
+			SELECT 
+				bp.*, btv.valid_period, IFNULL(bc.common_name, '-') AS product_kind_name, bp.common_yn
+			FROM 
+				bc_product bp 
+				LEFT JOIN bc_ticketvalid btv on bp.shop_code = btv.shop_code
+				LEFT JOIN (
+					SELECT * FROM bc_common WHERE common_group_code = 'T020'
+				) bc ON bp.product_kind = bc.common_code
+			WHERE
+				bp.shop_code = (SELECT shop_code FROM bc_shop WHERE CONTENT_MST_CD = #{content_mst_cd})
+				AND bp.product_group_code in (
+													select 
+														PRODUCT_GROUP_CODE 
+													from bc_productgroup 
+													where 1=1
+													and shop_code = (SELECT shop_code FROM bc_shop WHERE CONTENT_MST_CD = #{content_mst_cd})
+												)
+				AND bp.web_yn = 1
+				AND bp.delete_yn = 0
+				AND bp.COMMON_YN =1
 			ORDER BY 
 				bp.order_no, bp.product_code
 		]]>
@@ -1165,5 +1301,15 @@
 		AND bn.PLAY_DATE = #{play_date}
 		AND bn.SCHEDULE_CODE = #{schedule_code}
 		AND bn.USE_YN = 'Y'
+	</select>
+	
+	
+	<select id="selectTicketValid" resultType="ticketValidVO">
+		SELECT 
+			*
+		FROM 
+			bc_ticketvalid
+		WHERE 
+			shop_code=#{shop_code}
 	</select>
 </mapper>

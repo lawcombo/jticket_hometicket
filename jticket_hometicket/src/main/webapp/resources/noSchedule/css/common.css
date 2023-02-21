@@ -1,0 +1,290 @@
+.disabled {
+    pointer-events: none;
+    background-color: #eee;
+    color: #555;
+    opacity: 1;
+}
+
+.bg-bcgreen{
+	background: #1ab394;
+}
+
+.bg-nice{
+	background: #4680ff;
+}
+
+.bg-content{
+	background: #f3f3f3;
+}
+
+.w-5p{ width: 5%;}
+.w-10p{ width: 10%;}
+.w-15p{ width: 15%;}
+.w-20p{ width: 20%;}
+.w-25p{ width: 25%;}
+.w-30p{	width: 30%;}
+.w-35p{	width: 35%;}
+.w-40p{	width: 40%;}
+.w-70p{	width: 70%;}
+
+.h-20{height: 20%;}
+.h-30{height: 30%;}
+.h-40{height: 40%;}
+.h-60{height: 60%;}
+.h-80{height: 80%;}
+.h-85{height: 85%;}
+.h-90{height: 90%;}
+
+
+.pt-p20r{
+	padding-top: 0.2rem;
+}
+
+.ch-50{height: 50px;}
+
+.formValidationError{
+	color: red;
+}
+
+.board-line:hover{
+	background-color: #f0f0f0;
+}
+.board-line:out{
+	background-color: inherit;
+}
+
+.word-break-word{
+	word-break: break-word;
+}
+
+.word-break-all{
+	word-break: break-all;
+}
+
+.font-size-25r{
+	font-size: 0.25rem;
+}
+
+.font-size-50r{
+	font-size: 0.5rem;
+}
+
+.font-size-75r{
+	font-size: 0.75rem;
+}
+
+.text-chief{
+	color: #ffca3a;
+}
+
+.text-company{
+	color: #8ac926;
+}
+
+.text-shop{
+	color: #1982c4;
+}
+
+.bg-chief{
+	background: #fcf6bd;
+}
+
+.bg-company{
+	background: #d0f4de;
+}
+
+.bg-shop{
+	background: #a9def9;
+}
+
+.bg-delete{
+	background: #aaa;
+}
+
+.alert-box{
+	position: absolute; 
+	top: 67px; 
+	opacity: 0.9; 
+	border-radius: 10px; 
+	z-index: 999;
+}
+
+
+.tabBody{
+	display: none;
+}
+
+.tabBody.show{
+	display: block;
+}
+
+
+/*******************************************************/
+
+.bg-thead-sky{	background-color: rgba( 128, 210, 247, 0.5 ); }
+.bg-thead-gray,
+.bg-tbody-gray
+{	background-color: rgba( 204, 204, 204, 0.5 ); }
+.bg-lightgreen { background-color: rgba( 250, 255, 243, 0.5 ); }
+.bg-thead-lightgreen{	background-color: rgba( 222, 252, 176, 0.5 ); }
+.bg-tabhead-lightgreen-selected{
+	background-color: rgba( 176, 215, 116, 0.5 );
+}
+
+
+.bd-0 {border: none;}
+.bd-1 {border: 1px outset;}
+
+.selected{	background-color: rgba( 102, 204, 102, 0.5 ) !important; font-weight: bold; }
+.nav-item {	padding: 0; margin: 0; }
+
+.tab {padding: 0 !important; height: 3em;}
+.tabcon {width: 100%; height: 100%; text-align: center; border: 1px solid #333; line-height: 2.8em;}
+/* .tab_controll { margin: 0; } */
+
+.choosen,
+.display-block 
+{display: block;} /* choosent를 썼다 지웠다 하는 방식으로 처리 */
+.choosent,
+.display-none
+ {display: none;}
+
+.tbp-0 {padding: 0 !important;}
+.table2 { overflow: auto; }
+
+
+/* PC (해상도 1024px)*/
+@media all and (min-width:1024px) {
+	/*스타일입력*/
+	.mobile {display: none !important;}
+}
+
+/* 테블릿 가로, 테블릿 세로 (해상도 768px ~ 1023px)*/
+@media all and (min-width:768px) and (max-width:1023px) {
+	/*스타일입력*/
+	.pc {display: none !important;}
+	.mobile {display: block !important;}
+}
+
+/* 모바일 가로, 모바일 세로 (해상도 480px ~ 767px)*/
+@media all and (max-width:767px) {
+	/*스타일입력*/
+	.pc {display: none !important;}
+	.mobile {display: block !important;}
+}
+
+
+/************************** 시설, 사업정보 관리 *************/
+
+.discolor {background-color: #e9ecef; opacity: 1;}
+.tab-h1 {border: 1px solid #333; background-color: rgba(0, 0, 0, 0.03); height: 47px; line-height: 47px; text-align: center;}
+.sep_bar {border-bottom: 1px solid rgba(0, 0, 0, 0.125);}
+
+.form-table {text-align: center !important; background: #f3f3f3; border: 1px solid #333; border-collapse: separate;}
+.form-table th, .form-table td {vertical-align: middle !important;}
+
+.hidden {display: none !important;}
+.search_box {position: absolute; margin-top: 2rem; width: 25%; background-color: white;}
+.search_box>ul{padding-left: 0;}
+.search_box>ul>li{list-style: none; text-align: left; padding-left: 5%;}
+.search_box>ul>li:hover{background-color: rgba(204, 204, 204, 0.5);}
+
+.w_comp_list {height: 300px;}
+
+.list-group {overflow: auto;}
+.list-group	::-webkit-scrollbar { width: 5.2px;} /* 스크롤 바 */
+.list-group ::-webkit-scrollbar-track { background-color:#c0c0c0; } /* 스크롤 바 밑의 배경 */
+.list-group	::-webkit-scrollbar-thumb { background: #8080ff; } /* 실질적 스크롤 바 */
+.list-group	::-webkit-scrollbar-thumb:hover { background: #004080; } /* 실질적 스크롤 바 위에 마우스를 올려다 둘 때 */
+.list-group	::-webkit-scrollbar-thumb:active { background: #004080; } /* 실질적 스크롤 바를 클릭할 때 */
+.list-group	::-webkit-scrollbar-button { display: none; } /* 스크롤 바 상 하단 버튼 */
+
+
+.list-item {padding-left: 2rem; padding-top: 0.5rem; padding-bottom: 0.5rem;}
+.list-item:hover {background-color: rgba(204, 204, 204, 0.5);}
+.list-item-sel {background-color: rgba(204, 204, 204, 0.5);}
+/* -webkit-animation: fadeIn 0s forwards;*/
+
+
+/* 테이블 x축 내용이 길어질 때 가로 스크롤 부여 및 가로스크롤 스타일*/
+.scrollX-auto {overflow-x: auto; min-width: 100%;}
+.scrollX-auto ::-webkit-scrollbar { height: 5.2px;} /* 스크롤 바 */
+.scrollX-auto ::-webkit-scrollbar-track { background-color:#c0c0c0; } /* 스크롤 바 밑의 배경 */
+.scrollX-auto ::-webkit-scrollbar-thumb { background: #8080ff; } /* 실질적 스크롤 바 */
+.scrollX-auto ::-webkit-scrollbar-thumb:hover { background: #004080; } /* 실질적 스크롤 바 위에 마우스를 올려다 둘 때 */
+.scrollX-auto ::-webkit-scrollbar-thumb:active { background: #004080; } /* 실질적 스크롤 바를 클릭할 때 */
+.scrollX-auto ::-webkit-scrollbar-button { display: none; } /* 스크롤 바 상 하단 버튼 */
+    /* 테이블 최소길이 100% 컨텐츠 양이 늘어서 테이블 길이 늘어날때는 컨텐츠에 맞게 길이가 늘어남 */
+    .flexible-table {min-width: 100%; width: max-content;}
+
+.sample {display: none;}    
+
+.dupBorder {border-color: rgba(100, 100, 100, 0.5);}
+.okBorder {border-color: rgba(194, 234, 177, 0.5)}
+
+
+/************************** 최고관리자 계정 관리 *********************/
+.ckBox{margin-right: 5px;}
+
+
+/************************** 시설 대시보드 **************************/
+.money-box{
+  height: 300px;
+}
+
+#myPieChart{
+  box-sizing: border-box;
+  margin: 0 auto;
+  width: auto !important;
+  height: 300px !important;
+}
+
+
+#salesPerCompanyChart{
+/* 	min-height: 300px; */
+}
+
+/***** 커서 *****/
+.radioCursor:hover{
+	cursor: pointer;
+}
+.btn-bo {
+	border: 1px solid #dde2e6;
+}
+/********************************* 사업관리, 시설관리 목록 페이지 **********************/
+.hoverView:hover {
+	background-color: rgba(194, 234, 177, 0.5);
+}
+
+
+
+
+
+
+
+/************************** 사업관리자 - 통합판매현황 **************************/
+.cursorOn:hover {cursor: pointer;}
+
+
+
+/*** 링크 아이콘 ***/
+#linkIcons{height:100%;display:flex;justify-content:start;width:50%;overflow-x:auto;}
+.single-link{height:40px;width:52px;margin-right:4px; border: 1px solid white;border-top-left-radius:5px;cursor:pointer}
+.single-link .single-link-icon{height:23px;width:50px;background-color:white;}
+.single-link .single-link-text{height:15px;width:50px;font-size: 4px;margin-top:0;padding-top:0;color: white;overflow:hidden;}
+
+/*** 링크 페이지 ***/
+#link-section{height: 100%;}
+#link-section .link-table-wrapper{overflow-x: auto;}
+#link-section .link-table{min-width: 400px;}
+#link-section .link-table td{cursor:pointer;}
+
+
+@media all and (max-width: 375px) {
+	#linkIcons{display: none;}
+}
+
+
+.datepicker{
+	z-index: 9999 !important;
+}

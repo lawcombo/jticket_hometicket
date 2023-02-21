@@ -17,4 +17,5 @@ public class BaseDTO implements Serializable{
 	public List<?> getDTOList() {
 		return DTOList;
 	}
+	
 }

@@ -15,6 +15,7 @@ import com.bluecom.ticketing.domain.FinishTradeVO;
 import com.bluecom.ticketing.domain.MemberSalesVO;
 import com.bluecom.ticketing.domain.ProductDTO;
 import com.bluecom.ticketing.domain.ProductGroupDTO;
+import com.bluecom.ticketing.domain.ProductGroupDTO_noSchedule;
 import com.bluecom.ticketing.domain.RefundHistoryVO;
 import com.bluecom.ticketing.domain.RefundVO;
 import com.bluecom.ticketing.domain.ReserverInfoDTO;
@@ -24,6 +25,7 @@ import com.bluecom.ticketing.domain.SaleVO;
 import com.bluecom.ticketing.domain.ScheduleDTO;
 import com.bluecom.ticketing.domain.ShopDetailVO;
 import com.bluecom.ticketing.domain.ShopPaymentsaleVO;
+import com.bluecom.ticketing.domain.TicketValidVO;
 import com.bluecom.ticketing.domain.VerificationKeyVO;
 import com.bluecom.ticketing.domain.WebPaymentDTO;
 import com.bluecom.ticketing.domain.WebPaymentPgResultDTO;
@@ -93,14 +95,35 @@ public class TicketingDAO extends EgovAbstractMapper {
 		return selectOne("ticketingMapper.selectProductGroups", essential);
 	}
 
+	
+	
+	public List<ProductGroupDTO> getProductGroups_noSchedule(String contentMstCd) throws Exception {
+
+		return selectList("ticketingMapper.getProductGroups_noSchedule", contentMstCd);
+	}
+	
+	
+	
+	
 	public List<ProductDTO> selectProducts(ProductGroupDTO productGroup) throws Exception {
 
 		return selectList("ticketingMapper.selectProducts", productGroup);
 	}
 	
+	
+	public List<ProductDTO> selectProducts_NoSchedule(ProductGroupDTO_noSchedule productGroup) throws Exception {
+		
+		return selectList("ticketingMapper.selectProducts_NoSchedule", productGroup);
+	}
+	
 	public List<ProductDTO> selectProductsForGanghwa(ProductGroupDTO productGroup) throws Exception {
 		
 		return selectList("ticketingMapper.selectProductsForGanghwa", productGroup);
+	}
+	
+	public List<ProductDTO> selectProductsForSogeumsan(ProductGroupDTO productGroup) throws Exception {
+		
+		return selectList("ticketingMapper.selectProductsForSogeumsan", productGroup);
 	}
 
 	public List<BookOpenVO> selectBookOpen(BookOpenVO bookOpenVO) throws Exception {
@@ -120,6 +143,11 @@ public class TicketingDAO extends EgovAbstractMapper {
 	public ProductGroupDTO selectProductGroup(ProductGroupDTO productGroup) throws Exception {
 
 		return selectOne("ticketingMapper.selectProductGroup", productGroup);
+	}
+	
+	public ProductGroupDTO_noSchedule getProductGroup_noSchedule(ProductGroupDTO_noSchedule productGroup) throws Exception {
+		
+		return selectOne("ticketingMapper.selectProductGroup_noSchedule", productGroup);
 	}
 
 	public void insertWebPaymentProducts(List<WebPaymentProductDTO> webPaymentProducts) throws Exception {
@@ -321,4 +349,12 @@ public class TicketingDAO extends EgovAbstractMapper {
 	public HashMap<String, String> selectNoticeInfo(SaleProductDTO vo) throws Exception{
 		return selectOne("ticketingMapper.selectNoticeInfo", vo);
 	}
+	
+	
+	
+	public TicketValidVO selectTicketValid(TicketValidVO ticketValid) throws Exception{
+
+		return selectOne("ticketingMapper.selectTicketValid", ticketValid);
+	}
+	
 }

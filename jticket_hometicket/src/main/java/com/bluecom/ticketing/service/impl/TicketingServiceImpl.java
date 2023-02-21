@@ -8,7 +8,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
@@ -63,7 +62,6 @@ import com.bluecom.common.service.MessageService;
 import com.bluecom.common.util.CommUtil;
 import com.bluecom.common.util.DateHelper;
 import com.bluecom.common.util.ScriptUtils;
-import com.bluecom.ticketing.controller.TicketingController.DataEncrypt;
 import com.bluecom.ticketing.domain.ApiCardInfoDTO;
 import com.bluecom.ticketing.domain.ApiParamDTO;
 import com.bluecom.ticketing.domain.ApiPaymentsInfoDTO;
@@ -79,8 +77,10 @@ import com.bluecom.ticketing.domain.EssentialDTO;
 import com.bluecom.ticketing.domain.FinishTradeVO;
 import com.bluecom.ticketing.domain.MemberSalesVO;
 import com.bluecom.ticketing.domain.PaymentInfoDTO;
+import com.bluecom.ticketing.domain.PaymentInfoDTO_noSchedule;
 import com.bluecom.ticketing.domain.ProductDTO;
 import com.bluecom.ticketing.domain.ProductGroupDTO;
+import com.bluecom.ticketing.domain.ProductGroupDTO_noSchedule;
 import com.bluecom.ticketing.domain.RefundHistoryVO;
 import com.bluecom.ticketing.domain.RefundVO;
 import com.bluecom.ticketing.domain.SaleDTO;
@@ -89,11 +89,14 @@ import com.bluecom.ticketing.domain.SaleVO;
 import com.bluecom.ticketing.domain.ScheduleDTO;
 import com.bluecom.ticketing.domain.ShopDetailVO;
 import com.bluecom.ticketing.domain.ShopPaymentsaleVO;
+import com.bluecom.ticketing.domain.TicketValidVO;
 import com.bluecom.ticketing.domain.VerificationKeyVO;
+import com.bluecom.ticketing.domain.VisitorDTO;
 import com.bluecom.ticketing.domain.WebPaymentDTO;
 import com.bluecom.ticketing.domain.WebPaymentPgResultDTO;
 import com.bluecom.ticketing.domain.WebPaymentProductDTO;
 import com.bluecom.ticketing.domain.WebPaymentStatusDTO;
+import com.bluecom.ticketing.domain.WebPaymentVisitorDTO;
 import com.bluecom.ticketing.domain.WebReservationKeyDTO;
 import com.bluecom.ticketing.service.TicketingService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -224,6 +227,18 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 		return ticketingMapper.selectProductGroups(essential);
 	}
 	
+	
+	
+	@Override
+	public List<ProductGroupDTO> getProductGroups_noSchedule(String contentMstCd) throws Exception {
+	
+		return ticketingMapper.getProductGroups_noSchedule(contentMstCd);
+	}
+	
+	
+	
+	
+	
 	@Override
 	public List<BookOpenVO> getBookOpenMonth(BookOpenVO bookOpenVO) throws Exception {
 		return ticketingMapper.selectBookOpen(bookOpenVO);
@@ -236,16 +251,36 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 	}
 		
 	@Override
+	public ProductGroupDTO_noSchedule getProductGroup_noSchedule(ProductGroupDTO_noSchedule productGroup) throws Exception {
+		
+		return ticketingMapper.getProductGroup_noSchedule(productGroup);
+	}
+	
+	@Override
 	public List<ProductDTO> getProducts(ProductGroupDTO productGroup) throws Exception {
 
 		return ticketingMapper.selectProducts(productGroup);
 	}
 		
 	
+	
+	public List<ProductDTO> getProducts_NoSchedule(ProductGroupDTO_noSchedule productGroup) throws Exception {
+		
+		return ticketingMapper.selectProducts_NoSchedule(productGroup);
+	}
+	
+	
 	@Override
 	public List<ProductDTO> selectProductsForGanghwa(ProductGroupDTO productGroup) throws Exception {
 		
 		return ticketingMapper.selectProductsForGanghwa(productGroup);
+	}
+	
+	
+	@Override
+	public List<ProductDTO> selectProductsForSogeumsan(ProductGroupDTO productGroup) throws Exception {
+		
+		return ticketingMapper.selectProductsForSogeumsan(productGroup);
 	}
 	
 	@Override
@@ -419,6 +454,105 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 		return paymentInfo;
 		
 	}
+	
+	
+	@Transactional
+	@Override
+	public WebPaymentDTO addWebPaymentInfo_noSchedule(PaymentInfoDTO_noSchedule paymentInfo) throws Exception {
+		
+		// 예매자 이메일 기록
+		ticketingMapper.updateReserverEmail(paymentInfo.getReserver());
+		
+		
+		// 웹 예매 정보
+		WebPaymentDTO webPayment = new WebPaymentDTO();
+		webPayment.setReserver_authentication_idx(paymentInfo.getReserver().getIdx());
+		webPayment.setProduct_group(paymentInfo.getProductGroup().getProduct_group_code());
+		webPayment.setTotal_count(paymentInfo.getTotalCount());
+		webPayment.setTotal_fee(paymentInfo.getTotalFee());
+		webPayment.setPay_method(paymentInfo.getPayMethod());
+		webPayment.setVisitor_type(paymentInfo.getVisitorType());
+		webPayment.setContent_mst_cd(paymentInfo.getProductGroup().getContent_mst_cd());
+		webPayment.setPiece_ticket_yn(paymentInfo.getProductGroup().getPiece_ticket_yn());
+		webPayment.setShop_code(paymentInfo.getProductGroup().getShop_code());
+		webPayment.setProduct_group_kind(Integer.toString(paymentInfo.getType()));
+		webPayment.setSchedule_code(paymentInfo.getSchedule() == null ? "" : paymentInfo.getSchedule().getSchedule_code());
+		webPayment.setPlay_sequence(paymentInfo.getSchedule() == null ? "1" :paymentInfo.getSchedule().getPlay_sequence());
+		webPayment.setPlay_date(paymentInfo.getSchedule() == null ? "" :paymentInfo.getPlay_date());
+		webPayment.setProduct_group_name(paymentInfo.getProductGroup().getProduct_group_name());
+		webPayment.setStart_time(paymentInfo.getSchedule() == null ? "" : paymentInfo.getSchedule().getStart_time());
+		webPayment.setEnd_time(paymentInfo.getSchedule() == null ? "" : paymentInfo.getSchedule().getEnd_time());
+		webPayment.setAgree_1(paymentInfo.isAgree_1() ? "1" : "0");
+		webPayment.setAgree_2(paymentInfo.isAgree_2() ? "1" : "0");
+		webPayment.setValid_period(Integer.parseInt(paymentInfo.getValid_period()));
+		
+		int enteredCount = ticketingMapper.insertWebPayment(webPayment);
+		if(enteredCount <= 0) {
+			throw new Exception("예매 정보를 생성 할 수 없습니다.");
+		}
+		paymentInfo.setIdx(webPayment.getIdx());
+		
+		// 상품 기록
+		List<WebPaymentProductDTO> webPaymentProducts = new ArrayList<>();
+		for(ProductDTO product : paymentInfo.getProducts()) {
+			WebPaymentProductDTO webPaymentProduct = new WebPaymentProductDTO();
+			webPaymentProduct.setWeb_payment_idx(paymentInfo.getIdx());
+			webPaymentProduct.setProduct_code(product.getProduct_code());
+			webPaymentProduct.setProduct_name(product.getProduct_name());
+			webPaymentProduct.setProduct_fee(product.getProduct_fee());
+			webPaymentProduct.setCount(product.getCount());
+			
+			webPaymentProducts.add(webPaymentProduct);
+		}
+		ticketingMapper.insertWebPaymentProducts(webPaymentProducts);
+		
+		if(paymentInfo.getVisitorType().equals("P")) {
+
+			List<WebPaymentVisitorDTO> webPaymentVisitors = new ArrayList<>();
+			for(VisitorDTO visitor: paymentInfo.getVisitors()) {
+				WebPaymentVisitorDTO webPaymentVisitor = new WebPaymentVisitorDTO();
+				webPaymentVisitor.setWeb_payment_idx(paymentInfo.getIdx());
+				webPaymentVisitor.setName(visitor.getName());
+				webPaymentVisitor.setPhone(visitor.getPhone());
+				webPaymentVisitor.setJumin(visitor.getJumin());
+				webPaymentVisitor.setProduct_code(visitor.getProduct_code());
+				webPaymentVisitor.setAddr(visitor.getAddr());
+				
+				webPaymentVisitors.add(webPaymentVisitor);
+			}
+			// 방문자 정보 임시 기록
+			ticketingMapper.insertWebPaymentVisitors(webPaymentVisitors);
+		}
+		
+		// 웹 예매 상태 기록
+		WebPaymentStatusDTO status = WebPaymentStatusDTO.builder()
+				.web_payment_idx(paymentInfo.getIdx())
+				.status("결제시도")
+				.build();
+		ticketingMapper.insertWebPaymentStatusWithWebPaymentIdx(status);
+		
+		VerificationKeyVO keys = getKeys(webPayment.getShop_code());
+		
+		webPayment.setMerchantKey(keys.getPay_merchant_key());
+		webPayment.setMerchantID(keys.getPay_merchant_id());
+//		webPayment.setProduct_group_name(paymentInfo.getProductGroup().getProduct_group_name());
+		webPayment.setReserverName(paymentInfo.getReserver().getName());
+		webPayment.setReserverPhone(paymentInfo.getReserver().getPhone());
+		webPayment.setReserverEmail(paymentInfo.getReserver().getEmail());
+		
+		// 예매번호 가져오기
+		String orderNo = ticketingMapper.selectWebPaymentOrderNo(webPayment.getIdx());
+		webPayment.setOrder_no(orderNo);
+		
+		return webPayment;
+		
+	}
+	
+	
+	
+	
+	
+	
 	
 	@Override
 	public void addWebPaymentStatus(WebPaymentStatusDTO status) throws Exception {
@@ -2981,6 +3115,13 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 		resultMap = ticketingMapper.selectNoticeInfo(vo);
 		
 		return resultMap;
+	}
+	
+	
+	@Override
+	public TicketValidVO selectTicketValid(TicketValidVO ticketValid) throws Exception {
+
+		return ticketingMapper.selectTicketValid(ticketValid);
 	}
 }
 

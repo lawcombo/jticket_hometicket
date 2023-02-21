@@ -107,4 +107,17 @@ public class CommUtil {
 		text = text.replaceAll("\'", "");
 		return text;
 	}
+    
+    
+    /**
+	 * Error 코드 3개를 받아 앞에 0을 붙여줌
+	 * @param errorSiteCode
+	 * @param errorPathCode
+	 * @param errorTypeCode
+	 * @return
+	 */
+	public static String getErrorCode(int errorSiteCode, int errorPathCode, int errorTypeCode) {
+		
+		return NumUtil.lpad(errorSiteCode, 2, "0") + NumUtil.lpad(errorPathCode, 2, "0") + NumUtil.lpad(errorTypeCode, 2, "0");
+	}
 }

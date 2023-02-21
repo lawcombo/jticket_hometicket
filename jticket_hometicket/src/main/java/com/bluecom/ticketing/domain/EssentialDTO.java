@@ -15,4 +15,9 @@ public class EssentialDTO implements Serializable {
 	String content_mst_cd;
 	String product_group_code;
 
+	//원주 소금산벨리 예매버튼 클릭시 넘겨받는 회원정보
+	String userId 	= "";
+	String userName = "";
+	
+	
 }

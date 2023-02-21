@@ -1,0 +1,14 @@
+body{
+	font-size: 0.8125rem;
+}
+#single-canvas{
+	height: 100vh;
+}
+.bg-arrow-down{
+	background:url("/resources/images/arrow-down.png")no-repeat;
+	background-size:28px; 
+	background-position:98%;
+}
+/********************* 스크롤 탑 *********************/
+#tp{position:fixed;display:block;width:40px;height:40px;border-radius:50%;vertical-allign:middle;background:#fff;box-shadow:1px 0 5px rgba(0,0,0,0.5);bottom:30px;right:20px;z-index:9999;text-align:center;transition:all .03s;}
+#tp span.icon{font-size:20px;font-weight:bold;margin-top:10px;color:#666;transition:all 0.3s;line-height:40px;}

@@ -20,8 +20,10 @@ import com.bluecom.ticketing.domain.EssentialDTO;
 import com.bluecom.ticketing.domain.FinishTradeVO;
 import com.bluecom.ticketing.domain.MemberSalesVO;
 import com.bluecom.ticketing.domain.PaymentInfoDTO;
+import com.bluecom.ticketing.domain.PaymentInfoDTO_noSchedule;
 import com.bluecom.ticketing.domain.ProductDTO;
 import com.bluecom.ticketing.domain.ProductGroupDTO;
+import com.bluecom.ticketing.domain.ProductGroupDTO_noSchedule;
 import com.bluecom.ticketing.domain.RefundHistoryVO;
 import com.bluecom.ticketing.domain.RefundVO;
 import com.bluecom.ticketing.domain.SaleDTO;
@@ -30,6 +32,7 @@ import com.bluecom.ticketing.domain.SaleVO;
 import com.bluecom.ticketing.domain.ScheduleDTO;
 import com.bluecom.ticketing.domain.ShopDetailVO;
 import com.bluecom.ticketing.domain.ShopPaymentsaleVO;
+import com.bluecom.ticketing.domain.TicketValidVO;
 import com.bluecom.ticketing.domain.VerificationKeyVO;
 import com.bluecom.ticketing.domain.WebPaymentDTO;
 import com.bluecom.ticketing.domain.WebPaymentPgResultDTO;
@@ -56,8 +59,15 @@ public interface TicketingService{
 	// 수정 / 2021-09-07 / 조미근
 	ProductGroupDTO getProductGroups(EssentialDTO essential) throws Exception;
 	
+	
+	List<ProductGroupDTO> getProductGroups_noSchedule(String shopCode) throws Exception;
+	
 	List<ProductDTO> getProducts(ProductGroupDTO productGroup) throws Exception;
+	List<ProductDTO> getProducts_NoSchedule(ProductGroupDTO_noSchedule productGroup) throws Exception;
+	
+	
 	List<ProductDTO> selectProductsForGanghwa(ProductGroupDTO productGroup) throws Exception;
+	List<ProductDTO> selectProductsForSogeumsan(ProductGroupDTO productGroup) throws Exception;
 	
 	List<BookOpenVO> getBookOpenMonth(BookOpenVO bookOpenVO) throws Exception;
 	
@@ -66,10 +76,15 @@ public interface TicketingService{
 	String getVisitorType(String shopCode) throws Exception;
 
 	ProductGroupDTO getProductGroup(ProductGroupDTO productGroup) throws Exception;
+	ProductGroupDTO_noSchedule getProductGroup_noSchedule(ProductGroupDTO_noSchedule productGroup) throws Exception;
 
 	WebPaymentDTO addWebPaymentInfo(PaymentInfoDTO paymentInfo) throws Exception;
 	WebPaymentDTO newWebPaymentInfo(WebPaymentDTO paymentInfo) throws Exception; //변경예약건 / 2021-09-16 / 조미근
 
+	
+	WebPaymentDTO addWebPaymentInfo_noSchedule(PaymentInfoDTO_noSchedule paymentInfo) throws Exception;
+	
+	
 	List<ProductDTO> getSelectedProducts(List<ProductDTO> products) throws Exception;
 
 	void addWebPaymentStatus(WebPaymentStatusDTO authenticationFinishedStatus) throws Exception;
@@ -141,5 +156,9 @@ public interface TicketingService{
 	
 	//다이아몬드베이 특정날짜, 특정 회차에 공지 있는지 select
 	public HashMap<String, String> selectNoticeInfo(SaleProductDTO vo) throws Exception;
+	
+	
+	
+	TicketValidVO selectTicketValid(TicketValidVO ticketValid) throws Exception;
 	
 }

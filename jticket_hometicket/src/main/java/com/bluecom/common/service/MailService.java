@@ -23,4 +23,9 @@ public interface MailService {
 	
 	boolean sendChange(HttpServletRequest request, ApiResultVO apiResult, WebPaymentPgResultDTO pgResult) throws Exception;
 	
+	
+	
+	//noSchedule
+	boolean sendReserve(HttpServletRequest request, ApiResultVO apiResult, WebPaymentPgResultDTO pgResult, ShopDetailVO shopDetail) throws Exception;
+	
 }
