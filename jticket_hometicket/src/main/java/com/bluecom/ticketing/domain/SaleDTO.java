@@ -48,9 +48,9 @@ public class SaleDTO extends BaseDTO implements Serializable{
 	
 	List<CouponVO> coupon;
 	
-	private List<SaleDTO> saleDTOList;
+	private List<SaleDTO_noSchedule> saleDTOList;
 	
-	public List<SaleDTO> getSaleDTOList() {
+	public List<SaleDTO_noSchedule> getSaleDTOList() {
 		return saleDTOList;
 	}
 }

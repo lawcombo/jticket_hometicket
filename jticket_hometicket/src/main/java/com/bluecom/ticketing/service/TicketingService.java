@@ -18,6 +18,7 @@ import com.bluecom.ticketing.domain.CompanyVO;
 import com.bluecom.ticketing.domain.CouponVO;
 import com.bluecom.ticketing.domain.EssentialDTO;
 import com.bluecom.ticketing.domain.FinishTradeVO;
+import com.bluecom.ticketing.domain.FinishTradeVO_noSchedule;
 import com.bluecom.ticketing.domain.MemberSalesVO;
 import com.bluecom.ticketing.domain.PaymentInfoDTO;
 import com.bluecom.ticketing.domain.PaymentInfoDTO_noSchedule;
@@ -27,8 +28,11 @@ import com.bluecom.ticketing.domain.ProductGroupDTO_noSchedule;
 import com.bluecom.ticketing.domain.RefundHistoryVO;
 import com.bluecom.ticketing.domain.RefundVO;
 import com.bluecom.ticketing.domain.SaleDTO;
+import com.bluecom.ticketing.domain.SaleDTO_noSchedule;
 import com.bluecom.ticketing.domain.SaleProductDTO;
+import com.bluecom.ticketing.domain.SaleProductDTO_noSchedule;
 import com.bluecom.ticketing.domain.SaleVO;
+import com.bluecom.ticketing.domain.SaleVO_noSchedule;
 import com.bluecom.ticketing.domain.ScheduleDTO;
 import com.bluecom.ticketing.domain.ShopDetailVO;
 import com.bluecom.ticketing.domain.ShopPaymentsaleVO;
@@ -94,12 +98,28 @@ public interface TicketingService{
 	
 	List<SaleDTO> getCheckTicket(SaleDTO saleDTO) throws Exception;
 	
+	
+	
+	
+	List<SaleDTO_noSchedule> getCheckTicket_noSchedule(SaleDTO_noSchedule saleDTO) throws Exception;
+	
+	List<SaleVO_noSchedule> getSalesByMemberInfo(SaleDTO_noSchedule saleDTO) throws Exception;
+	
+	
+	
 	List<SaleProductDTO> getSaleProductDTO(SaleDTO saleDTO) throws Exception;
 	List<SaleProductDTO> getSaleProductDTOList(SaleDTO saleDTO) throws Exception; // 예매내역이 N건인 경우 리스트 (추가) / 2021-09-10 / 조미근
 
 	void addWebPaymentPgResult(WebPaymentPgResultDTO pgResult) throws Exception;
 
 	ApiResultVO callTicketApi(WebPaymentPgResultDTO pgResult) throws Exception;
+	
+	
+	
+	ApiResultVO callTicketApi_noSchedule(WebPaymentPgResultDTO pgResult) throws Exception;
+	
+	
+	
 	ApiResultVO callModifyTicketApi(WebPaymentPgResultDTO pgResult) throws Exception;
 
 	ApiResultVO callCancelApi(ApiSocialCancelDTO apiSocialCancel) throws Exception;
@@ -160,5 +180,25 @@ public interface TicketingService{
 	
 	
 	TicketValidVO selectTicketValid(TicketValidVO ticketValid) throws Exception;
+	
+	
+	String getOrderNumBySaleCode(SaleDTO_noSchedule saleDTO) throws Exception;
+	
+	SaleVO_noSchedule getSaleByOrderNum(SaleVO_noSchedule saleVO) throws Exception;
+	
+	SaleVO_noSchedule getSaleSsByOrderNum_noSchedule(SaleVO_noSchedule searchSale) throws Exception;
+	
+	List<SaleProductDTO_noSchedule> getSaleProduct(SaleDTO_noSchedule saleDTO) throws Exception;
+	
+	SaleProductDTO_noSchedule getTsSaleProductByBookNo(SaleProductDTO_noSchedule saleProduct) throws Exception;
+	
+	FinishTradeVO_noSchedule getFinishTrade_noSchedule(Map<String, Object> params) throws Exception;
+	
+	List<FinishTradeVO_noSchedule> selectResSaleInfoList(Map<String, Object> params) throws Exception;
+	
+	public List<FinishTradeVO_noSchedule> selectProductsForGA(Map<String, Object> params) throws Exception;
+	
+	
+	List<RefundVO> getRefund_noSchedule(SaleDTO_noSchedule sale) throws Exception;
 	
 }

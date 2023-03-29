@@ -84,8 +84,11 @@ public class ReserverIAuthenticationServiceImpl extends EgovAbstractServiceImpl 
 
 	    // CheckPlus(본인인증) 처리 후, 결과 데이타를 리턴 받기위해 다음예제와 같이 http부터 입력합니다.
 	  	//리턴url은 인증 전 인증페이지를 호출하기 전 url과 동일해야 합니다. ex) 인증 전 url : http://www.~ 리턴 url : http://www.~
-	    String sReturnUrl = "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/noSchedule" + selfAuthentication.getSuccess_url() + "?content_mst_cd=" + selfAuthentication.getContent_mst_cd();     // 성공시 이동될 URL
-	    String sErrorUrl = "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/noSchedule" + selfAuthentication.getFail_url() + "?content_mst_cd=" + selfAuthentication.getContent_mst_cd();         // 실패시 이동될 URL
+		
+		//개발 http
+		//운영 https
+	    String sReturnUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/noSchedule" + selfAuthentication.getSuccess_url() + "?content_mst_cd=" + selfAuthentication.getContent_mst_cd();     // 성공시 이동될 URL
+	    String sErrorUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/noSchedule" + selfAuthentication.getFail_url() + "?content_mst_cd=" + selfAuthentication.getContent_mst_cd();         // 실패시 이동될 URL
 
 	    
 	    

@@ -75,6 +75,7 @@ import com.bluecom.ticketing.domain.CompanyVO;
 import com.bluecom.ticketing.domain.CouponVO;
 import com.bluecom.ticketing.domain.EssentialDTO;
 import com.bluecom.ticketing.domain.FinishTradeVO;
+import com.bluecom.ticketing.domain.FinishTradeVO_noSchedule;
 import com.bluecom.ticketing.domain.MemberSalesVO;
 import com.bluecom.ticketing.domain.PaymentInfoDTO;
 import com.bluecom.ticketing.domain.PaymentInfoDTO_noSchedule;
@@ -84,8 +85,11 @@ import com.bluecom.ticketing.domain.ProductGroupDTO_noSchedule;
 import com.bluecom.ticketing.domain.RefundHistoryVO;
 import com.bluecom.ticketing.domain.RefundVO;
 import com.bluecom.ticketing.domain.SaleDTO;
+import com.bluecom.ticketing.domain.SaleDTO_noSchedule;
 import com.bluecom.ticketing.domain.SaleProductDTO;
+import com.bluecom.ticketing.domain.SaleProductDTO_noSchedule;
 import com.bluecom.ticketing.domain.SaleVO;
+import com.bluecom.ticketing.domain.SaleVO_noSchedule;
 import com.bluecom.ticketing.domain.ScheduleDTO;
 import com.bluecom.ticketing.domain.ShopDetailVO;
 import com.bluecom.ticketing.domain.ShopPaymentsaleVO;
@@ -585,7 +589,87 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 		}
 		return saleDtoList;
 	}
+	
+	
+	@Override
+	public List<SaleDTO_noSchedule> getCheckTicket_noSchedule(SaleDTO_noSchedule saleDTO) throws Exception {
+		return ticketingMapper.selectCheckTicket_noSchedule(saleDTO);
+	}
+	
+	
+	@Override
+	public List<SaleVO_noSchedule> getSalesByMemberInfo(SaleDTO_noSchedule saleDTO) throws Exception {
 
+		return ticketingMapper.selectSalesByMemberInfo(saleDTO);
+	}
+	
+	
+	
+	@Override
+	public String getOrderNumBySaleCode(SaleDTO_noSchedule saleDTO) throws Exception {
+
+		return ticketingMapper.selectOrderNumBySaleCode(saleDTO);
+	}
+
+	
+	
+	
+	@Override
+	public SaleVO_noSchedule getSaleByOrderNum(SaleVO_noSchedule saleVO) throws Exception {
+		
+		SaleVO_noSchedule sale = getSaleSsByOrderNum_noSchedule(saleVO);
+		sale.setContent_mst_cd(saleVO.getContent_mst_cd());
+		List<SaleProductDTO_noSchedule> tsSaleProdcuts = ticketingMapper.selectTsSaleProduct(sale);
+		
+		sale.setIssued_quantity(tsSaleProdcuts.size());
+		
+		return sale;
+	}
+	
+	
+	@Override
+	public SaleVO_noSchedule getSaleSsByOrderNum_noSchedule(SaleVO_noSchedule searchSale) throws Exception {
+
+		return ticketingMapper.selectSaleSsByOrderNum_noSchedule(searchSale);
+	}
+	
+	
+	
+	@Override
+	public List<SaleProductDTO_noSchedule> getSaleProduct(SaleDTO_noSchedule saleDTO) throws Exception {
+		return ticketingMapper.selectSaleProduct_noSchedule(saleDTO);
+	}
+	
+	
+	
+	
+	@Override
+	public SaleProductDTO_noSchedule getTsSaleProductByBookNo(SaleProductDTO_noSchedule saleProduct) throws Exception {
+
+		return ticketingMapper.selectTsSaleProductByBookNo(saleProduct);
+	}
+	
+	
+	@Override
+	public FinishTradeVO_noSchedule getFinishTrade_noSchedule(Map<String, Object> params) throws Exception {
+
+		return ticketingMapper.selectFinishTrade_noSchedule(params);
+	}
+	
+	
+	@Override
+	public List<FinishTradeVO_noSchedule> selectResSaleInfoList(Map<String, Object> params) throws Exception {
+		
+		return ticketingMapper.selectResSaleInfoList(params);
+	}
+	
+	@Override
+	public List<FinishTradeVO_noSchedule> selectProductsForGA(Map<String, Object> params) throws Exception{
+		return ticketingMapper.selectProductsForGA(params);
+	}
+	
+	
+	
 	@Override
 	public List<SaleProductDTO> getSaleProductDTO(SaleDTO saleDTO) throws Exception {
 		return ticketingMapper.selectSaleProduct(saleDTO);
@@ -885,6 +969,309 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 		}
 	}
 
+	
+	
+	
+	//회차없는 예매
+	@Transactional
+	@Override
+	public ApiResultVO callTicketApi_noSchedule(WebPaymentPgResultDTO pgResult) throws Exception {
+		
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			
+			List<ApiSocialSaleDTO> socialSales = new ArrayList<>();
+			WebPaymentDTO webPayment = ticketingMapper.selectWebPaymentByOrderNo(pgResult.getMoid());
+			Date now = new Date();
+			String ticketingDate = new SimpleDateFormat("yyyy-MM-dd").format(now);
+			String ticketingDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now);
+			
+			String paymentCode = getPaymentCode(pgResult.getPay_method());
+			if(webPayment.getVisitor_type().equals("A")) { // 일반입장
+				if(webPayment.getPiece_ticket_yn().equals("0")) { // 묶음 티켓
+					//ApiSocialSaleDTO socialSale = getApiSocialSale(pgResult, webPayment, now);
+					ApiSocialSaleDTO socialSale = getApiSocialSale_noSchedule(pgResult, webPayment, now);
+					
+					List<ApiSaleProductDTO> saleProducts = new ArrayList<>();
+					List<WebPaymentProductDTO> products = ticketingMapper.selectWebPaymentProductsByOrderNo(pgResult.getMoid());
+					String saleSequence = ticketingMapper.selectWebSaleSequences(products.size());
+					String saleSequenceLeft = saleSequence.substring(0, saleSequence.length() - 8);
+					int saleSequenceRight = Integer.parseInt(saleSequence.substring(saleSequence.length() - 8, saleSequence.length()));
+
+					String firstSaleSequence = saleSequenceLeft + (StringUtils.leftPad(Integer.toString(saleSequenceRight++), 8, '0'));
+					for(int i=0; i<products.size(); i++) {
+						WebPaymentProductDTO product = products.get(i);
+						
+						String ticketControlNo = pgResult.getMoid() + StringUtils.leftPad(Integer.toString(i), 3, '0');  // length: 18
+						saleProducts.add(ApiSaleProductDTO.builder()
+								.SALE_SEQUENCE(firstSaleSequence)
+								.TICKET_CONTROL_NO(ticketControlNo)
+								.PRODUCT_CONTENT_MST_CD(webPayment.getContent_mst_cd())
+								.PRODUCT_CODE(product.getProduct_code())
+								.PRODUCT_NAME(product.getProduct_name())
+								.PACKAGE_YN("0")
+								.BOOK_YN("1")
+								.BOOK_NO(pgResult.getMoid() + StringUtils.leftPad(Integer.toString(i), 5, '0'))
+								.UNIT_PRICE(product.getProduct_fee().intValue())
+								.QUANTITY(product.getCount())
+								.PLAY_DATE(org.springframework.util.StringUtils.hasText(webPayment.getSchedule_code()) ? webPayment.getPlay_date() : "")
+								.PLAY_SEQUENCE(org.springframework.util.StringUtils.hasText(webPayment.getSchedule_code()) ? webPayment.getPlay_sequence() : "1")
+								.PRODUCT_FEE(product.getProduct_fee().intValue() * product.getCount())
+								.REFUND_FEE(0)
+								.SEASON_CODE("0")
+								.MEMBER_DISCOUNT_YN("0")
+								.SEAT_CODE("")
+								.SCHEDULE_CODE(org.springframework.util.StringUtils.hasText(webPayment.getSchedule_code()) ? webPayment.getSchedule_code() : "")
+								.PERSON_NAME(product.getName())
+								.PERSON_MOBILE_NO(product.getPhone())
+								.PERSON_JUMIN(product.getJumin())
+								.PERSON_ADDR(product.getAddr())
+								.build());
+					}
+					List<ApiPaymentsInfoDTO> paymentInfos = getApiPaymentInfoWithQuantity_noSchedule(ticketingDate, ticketingDateTime, paymentCode, firstSaleSequence, webPayment.getReserverName(), pgResult, 1);
+					List<ApiCardInfoDTO> cardInfos = getApiCardInfoWithQuantity_noSchedule(pgResult, ticketingDateTime, paymentCode, firstSaleSequence, 1);
+					
+					socialSale.setSALE_PRODUCT_LIST(saleProducts);
+					socialSale.setCARD_INFO(cardInfos);
+					socialSale.setPAYMENTS_INFO(paymentInfos);
+					socialSales.add(socialSale);
+				} else { // 낱장티켓
+					//ApiSocialSaleDTO socialSale = getApiSocialSale(pgResult, webPayment, now);
+					ApiSocialSaleDTO socialSale = getApiSocialSale_noSchedule(pgResult, webPayment, now);
+					
+					List<WebPaymentProductDTO> products = ticketingMapper.selectWebPaymentProductsByOrderNo(pgResult.getMoid());
+					List<ApiSaleProductDTO> saleProducts = new ArrayList<>();
+					
+					String saleSequence = ticketingMapper.selectWebSaleSequences(webPayment.getTotal_count());
+
+					String saleSequenceLeft = saleSequence.substring(0, saleSequence.length() - 8);
+					int saleSequenceRight = Integer.parseInt(saleSequence.substring(saleSequence.length() - 8, saleSequence.length()));
+					
+					// 카드 1에 쿠폰최대 4매까지, bc_sale_product에서 sale_sequence는, bc_paymentsale에서 payment_no와 동일
+					// 카드(첫결제수단)는 bc_paymentsale에서 payment_idx = 1, 쿠폰은 payment_idx가 점차 증가함
+					String firstSaleSequence = saleSequenceLeft + (StringUtils.leftPad(Integer.toString(saleSequenceRight++), 8, '0'));
+					
+					int idx=0;
+					for(int i=0; i<products.size(); i++) {
+						WebPaymentProductDTO product = products.get(i);
+						for(int j=0; j<product.getCount(); j++) {
+							
+							String ticketControlNo = pgResult.getMoid() + StringUtils.leftPad(Integer.toString(idx+1), 3, '0');  // length: 18
+							
+							saleProducts.add(ApiSaleProductDTO.builder()
+									.SALE_SEQUENCE(firstSaleSequence)
+									.TICKET_CONTROL_NO(ticketControlNo)
+									.PRODUCT_CONTENT_MST_CD(webPayment.getContent_mst_cd())
+									.PRODUCT_CODE(product.getProduct_code())
+									.PRODUCT_NAME(product.getProduct_name())
+									.PACKAGE_YN("0")
+									.BOOK_YN("1")
+									.BOOK_NO(pgResult.getMoid() + StringUtils.leftPad(Integer.toString(idx+1), 5, '0'))
+									.UNIT_PRICE(product.getProduct_fee().intValue())
+									.QUANTITY(1)
+									.PLAY_DATE(org.springframework.util.StringUtils.hasText(webPayment.getSchedule_code()) ? webPayment.getPlay_date() : "")
+									.PLAY_SEQUENCE(org.springframework.util.StringUtils.hasText(webPayment.getSchedule_code()) ? webPayment.getPlay_sequence() : "1")
+									.PRODUCT_FEE(product.getProduct_fee().intValue())
+									.REFUND_FEE(0)
+									.SEASON_CODE("0")
+									.MEMBER_DISCOUNT_YN("0")
+									.SEAT_CODE("")
+									.SCHEDULE_CODE(org.springframework.util.StringUtils.hasText(webPayment.getSchedule_code()) ? webPayment.getSchedule_code() : "")
+									.PERSON_NAME(product.getName())
+									.PERSON_MOBILE_NO(product.getPhone())
+									.PERSON_JUMIN(product.getJumin())
+									.PERSON_ADDR(product.getAddr())
+									.build());	
+							
+							idx += 1;
+						}	
+					}
+
+					List<ApiPaymentsInfoDTO> paymentInfos = getApiPaymentInfoWithQuantity_noSchedule(ticketingDate, ticketingDateTime, paymentCode, firstSaleSequence, webPayment.getReserverName(), pgResult, 1);
+					List<ApiCardInfoDTO> cardInfos = getApiCardInfoWithQuantity_noSchedule(pgResult, ticketingDateTime, paymentCode, firstSaleSequence, 1);
+					
+					socialSale.setSALE_PRODUCT_LIST(saleProducts);
+					socialSale.setPAYMENTS_INFO(paymentInfos);
+					socialSale.setCARD_INFO(cardInfos);
+					
+					socialSales.add(socialSale);
+				}
+				
+			} else if(webPayment.getVisitor_type().equals("P")) { // 개인정보수집입장
+				
+				//ApiSocialSaleDTO socialSale = getApiSocialSale(pgResult, webPayment, now);
+				ApiSocialSaleDTO socialSale = getApiSocialSale_noSchedule(pgResult, webPayment, now);
+				
+				List<WebPaymentProductDTO> products = ticketingMapper.selectWebPaymentProductsByOrderNo(pgResult.getMoid());
+				List<ApiSaleProductDTO> saleProducts = new ArrayList<>();
+				
+				String saleSequence = ticketingMapper.selectWebSaleSequences(webPayment.getTotal_count());
+
+				String saleSequenceLeft = saleSequence.substring(0, saleSequence.length() - 8);
+				int saleSequenceRight = Integer.parseInt(saleSequence.substring(saleSequence.length() - 8, saleSequence.length()));
+				
+				// 카드 1에 쿠폰최대 4매까지, bc_sale_product에서 sale_sequence는, bc_paymentsale에서 payment_no와 동일
+				// 카드(첫결제수단)는 bc_paymentsale에서 payment_idx = 1, 쿠폰은 payment_idx가 점차 증가함
+				String firstSaleSequence = saleSequenceLeft + (StringUtils.leftPad(Integer.toString(saleSequenceRight++), 8, '0'));
+				
+				for(int i=0; i<products.size(); i++) {
+					WebPaymentProductDTO product = products.get(i);
+					String ticketControlNo = pgResult.getMoid() + StringUtils.leftPad(Integer.toString(i+1), 3, '0');  // length: 18
+					
+					saleProducts.add(ApiSaleProductDTO.builder()
+							.SALE_SEQUENCE(firstSaleSequence)
+							.TICKET_CONTROL_NO(ticketControlNo)
+							.PRODUCT_CONTENT_MST_CD(webPayment.getContent_mst_cd())
+							.PRODUCT_CODE(product.getProduct_code())
+							.PRODUCT_NAME(product.getProduct_name())
+							.PACKAGE_YN("0")
+							.BOOK_YN("1")
+							.BOOK_NO(pgResult.getMoid() + StringUtils.leftPad(Integer.toString(i+1), 5, '0'))
+							.UNIT_PRICE(product.getProduct_fee().intValue())
+							.QUANTITY(1)
+							.PLAY_DATE(org.springframework.util.StringUtils.hasText(webPayment.getSchedule_code()) ? webPayment.getPlay_date() : "")
+							.PLAY_SEQUENCE(org.springframework.util.StringUtils.hasText(webPayment.getSchedule_code()) ? webPayment.getPlay_sequence() : "1")
+							.PRODUCT_FEE(product.getProduct_fee().intValue())
+							.REFUND_FEE(0)
+							.SEASON_CODE("0")
+							.MEMBER_DISCOUNT_YN("0")
+							.SEAT_CODE("")
+							.SCHEDULE_CODE(org.springframework.util.StringUtils.hasText(webPayment.getSchedule_code()) ? webPayment.getSchedule_code() : "")
+							.PERSON_NAME(product.getName())
+							.PERSON_MOBILE_NO(product.getPhone())
+							.PERSON_JUMIN(product.getJumin())
+							.PERSON_ADDR(product.getAddr())
+							.build());
+				}
+				List<ApiPaymentsInfoDTO> paymentInfos = getApiPaymentInfoWithQuantity_noSchedule(ticketingDate, ticketingDateTime, paymentCode, firstSaleSequence, webPayment.getReserverName(), pgResult, 1);
+				List<ApiCardInfoDTO> cardInfos = getApiCardInfoWithQuantity_noSchedule(pgResult, ticketingDateTime, paymentCode, firstSaleSequence, 1);
+				
+				socialSale.setSALE_PRODUCT_LIST(saleProducts);
+				socialSale.setPAYMENTS_INFO(paymentInfos);
+				socialSale.setCARD_INFO(cardInfos);
+				
+				socialSales.add(socialSale);
+			}
+					
+			ApiResultVO result = null;
+			for(ApiSocialSaleDTO socialSale : socialSales) {
+				// api 호출
+				ApiParamDTO param = ApiParamDTO.builder()
+						.Param(socialSale)
+						.build();
+				String socialSalesJson = objectMapper.writeValueAsString(param);
+				log.debug(socialSalesJson);
+				result = callApi(socialSalesJson, "/item/socialsale", HttpMethod.POST);
+				if(result.getSuccess() != 1) {
+					break;
+				}
+			}
+			result.setWebPayment(webPayment);
+			result.setSocialSales(socialSales);
+			
+			return result;
+		}catch(Exception ex) {
+
+			ApiResultVO exceptionResult = new ApiResultVO();
+			exceptionResult.setSuccess(0);
+			//exceptionResult.setErroMsg("알 수 없는 오류로 인해 api호출에 실패하였습니다.");
+			exceptionResult.setErrMsg("알 수 없는 오류로 인해 api호출에 실패하였습니다.");
+			
+			return exceptionResult;
+		}
+		
+	}
+	
+	
+	
+	private List<ApiPaymentsInfoDTO> getApiPaymentInfoWithQuantity_noSchedule(String ticketingDate, String ticketingDateTime,
+			String paymentCode, String saleSequence, String reserverName, 
+			WebPaymentPgResultDTO pgResult, int paymentIdx) {
+				
+		List<ApiPaymentsInfoDTO> list = new ArrayList<ApiPaymentsInfoDTO>();
+		ApiPaymentsInfoDTO paymentInfo = ApiPaymentsInfoDTO.builder()
+				.PAYMENT_CODE(paymentCode)
+				.PAYMENT_NO(saleSequence)
+				.PAYMENT_IDX(paymentIdx)
+				.PAYMENT_FEE(Integer.parseInt(pgResult.getAmt()))
+				.PENALTY_FEE(0)
+				.PAYMENT_USER_ID(org.springframework.util.StringUtils.hasText(reserverName) 
+						? reserverName.length() > 16 ? reserverName.substring(0, 16) : reserverName
+						: "-")
+				.PAYMENT_DATE(ticketingDate)
+				.DECIDE_DATE(ticketingDate)
+				.DECIDE_ID(org.springframework.util.StringUtils.hasText(reserverName) 
+						? reserverName.length() > 16 ? reserverName.substring(0, 16) : reserverName
+						: "-")
+				.BILL_YN("1")
+				.BILL_DATETIME(ticketingDateTime)
+				.build();
+		list.add(paymentInfo);
+		
+		return list;
+	}
+	
+	
+	
+	private List<ApiCardInfoDTO> getApiCardInfoWithQuantity_noSchedule(WebPaymentPgResultDTO pgResult, String ticketingDateTime,
+			String paymentCode, String saleSequence, int paymentIdx) {
+		
+		List<ApiCardInfoDTO> list = new ArrayList<>();
+		
+		String approvalNo = pgResult.getAuth_code();
+		if(org.springframework.util.StringUtils.hasText(approvalNo)) {
+			if(approvalNo.length() > 20) { // TODO: 추후 원래대로 돌림
+				approvalNo.substring(0, 19);
+			}
+		} else {
+			approvalNo = "-";
+		}
+		
+		ApiCardInfoDTO cardInfo = ApiCardInfoDTO.builder()
+				.PAYMENT_CODE(paymentCode)
+				.PAYMENT_NO(saleSequence)
+				.PAYMENT_IDX(paymentIdx)
+				.TRANSACTION_DATETIME(ticketingDateTime)
+				.CARD_NO("")
+				.INSTALL_PERIOD("")
+				.APPROVAL_NO(approvalNo) 
+				.APPROVAL_AMOUNT(Integer.parseInt(pgResult.getAmt()))
+				.DISCOUNT_AMOUNT(0)
+				.SERVICE_AMOUNT(0)
+				.TAX_AMOUNT(0)
+				.FEE_AMOUNT(0)
+				.ORIGINAL_TRANSACTION_DATETIME(ticketingDateTime)
+				.CARD_CODE("")
+				.CARD_NAME("")
+				.PURCHASE_CODE("")
+				.PURCHASE_NAME("")
+				.STORE_ID("")
+				.PART_CANCEL_YN("0")
+				.CASH_TYPE("")
+				.build();
+		if(pgResult.getPay_method().equals("CARD")) {
+			cardInfo.setCARD_NO(pgResult.getCardNo());
+			cardInfo.setINSTALL_PERIOD(pgResult.getCardQuota());
+			cardInfo.setCARD_CODE(pgResult.getCardCode());
+			cardInfo.setCARD_NAME(pgResult.getCardName());
+			cardInfo.setPURCHASE_CODE(pgResult.getAcquCardCode());
+			cardInfo.setPURCHASE_NAME(pgResult.getAcquCardName());
+			cardInfo.setCASH_TYPE(pgResult.getRcptType());
+		} else if(pgResult.getPay_method().equals("BANK")) {
+			cardInfo.setCARD_CODE(pgResult.getCardCode());
+			cardInfo.setCARD_NAME(pgResult.getCardName());
+			cardInfo.setCASH_TYPE(pgResult.getRcptType());
+		}
+		
+		list.add(cardInfo);
+		
+		return list;
+	}
+	
+	
+	
+	
+	
 	@Transactional
 	@Override
 	public ApiResultVO callModifyTicketApi(WebPaymentPgResultDTO pgResult) throws Exception {
@@ -1157,6 +1544,54 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 				//.VALID_TO(new SimpleDateFormat("yyyy-MM-dd").format(date).toString())
 				//.build();
 	}
+	
+	
+	private ApiSocialSaleDTO getApiSocialSale_noSchedule(WebPaymentPgResultDTO pgResult, WebPaymentDTO webPayment, Date saleDate) throws Exception {
+		
+		Date validFrom = new Date(saleDate.getTime());
+		Date validTo = new Date(saleDate.getTime());
+		if(webPayment.getProduct_group_kind().equals("1")) {
+			Calendar calFrom = Calendar.getInstance(); 
+			calFrom.setTime(saleDate);
+//			calFrom.add(Calendar.DATE, 1); // 익일부터 사용일경우 주석 풀면 됨
+			validFrom = calFrom.getTime();
+			
+			Calendar calTo = Calendar.getInstance(); 
+			calTo.setTime(validFrom); // 10분 더하기 cal.add(Calendar.MINUTE, 10);
+			calTo.add(Calendar.DATE, webPayment.getValid_period());
+			validTo = calTo.getTime();
+		}
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String mbId = authentication.getName();
+		Map<String, Object> params = new HashMap<>();
+		params.put("content_mst_cd", webPayment.getContent_mst_cd());
+		params.put("mb_id", mbId);
+		
+		return ApiSocialSaleDTO.builder()
+				.CONTENT_MST_CD(webPayment.getContent_mst_cd())
+				.TERMINAL_CODE("WEBRESERVE")
+				.SALE_DATE(new SimpleDateFormat("yyyy-MM-dd").format(saleDate))
+				.TERMINAL_DATETIME(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(saleDate))
+//					.USER_ID(null)				
+				.MEMBER_YN("0")
+				.MEMBER_NO(null)
+//					.MEMBER_NO(null)
+				.SALE_KIND_CODE("0030")
+				.ONLINE_CHANNEL(propertyService.getString("online_channel"))
+				.WORK_DATETIME(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(saleDate))
+				.ORDER_NUM(pgResult.getMoid())
+				.MEMBER_NAME(webPayment.getReserverName())
+				.MEMBER_TEL(webPayment.getReserverPhone())
+				.MEMBER_EMAIL(webPayment.getReserverEmail())
+				.VALID_FROM(new SimpleDateFormat("yyyy-MM-dd").format(validFrom))
+				.VALID_TO(new SimpleDateFormat("yyyy-MM-dd").format(validTo))
+				.AGREE_1(webPayment.getAgree_1())
+				.AGREE_2(webPayment.getAgree_2())
+				.build();
+	}
+	
+	
 
 //	private ApiPaymentsInfoDTO getApiPaymentInfo(String ticketingDate, String ticketingDateTime,
 //			String paymentCode, WebPaymentProductDTO product, String saleSequence, String reserverName,
@@ -1383,17 +1818,19 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 			
 			RestTemplate restTemplate = new RestTemplate(factory);
 			
-			HttpHeaders header = new HttpHeaders();
+			HttpHeaders header 	= new HttpHeaders();
 			header.setContentType(MediaType.APPLICATION_JSON_UTF8);
-			String apiKey = propertyService.getString("apiKey");
-			String apiValue = propertyService.getString("apiValue");
+			String apiKey 		= propertyService.getString("apiKey");
+			String apiValue 	= propertyService.getString("apiValue");
 			header.add(apiKey, apiValue);
 			
 			HttpEntity<?> entity = new HttpEntity<>(socialSalesJson, header);
 			
 			String url = propertyService.getString("apiUrl") + target;
-			UriComponents uri = UriComponentsBuilder.fromHttpUrl(url).build();
-			ResponseEntity<Map> resultMap = null;
+			
+			UriComponents uri 				= UriComponentsBuilder.fromHttpUrl(url).build();
+			ResponseEntity<Map> resultMap 	= null;
+			
 			try {
 				
 				resultMap = restTemplate.exchange(uri.toString(), httpMethod, entity, Map.class);
@@ -3123,5 +3560,15 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 
 		return ticketingMapper.selectTicketValid(ticketValid);
 	}
+	
+	
+	@Override
+	public List<RefundVO> getRefund_noSchedule(SaleDTO_noSchedule sale) throws Exception {
+		
+		return ticketingMapper.selectRefund_noSchedule(sale);
+	}
+	
+	
 }
+
 

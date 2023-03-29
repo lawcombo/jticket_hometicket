@@ -12,6 +12,7 @@ import com.bluecom.ticketing.domain.CompanyVO;
 import com.bluecom.ticketing.domain.CouponVO;
 import com.bluecom.ticketing.domain.EssentialDTO;
 import com.bluecom.ticketing.domain.FinishTradeVO;
+import com.bluecom.ticketing.domain.FinishTradeVO_noSchedule;
 import com.bluecom.ticketing.domain.MemberSalesVO;
 import com.bluecom.ticketing.domain.ProductDTO;
 import com.bluecom.ticketing.domain.ProductGroupDTO;
@@ -20,8 +21,11 @@ import com.bluecom.ticketing.domain.RefundHistoryVO;
 import com.bluecom.ticketing.domain.RefundVO;
 import com.bluecom.ticketing.domain.ReserverInfoDTO;
 import com.bluecom.ticketing.domain.SaleDTO;
+import com.bluecom.ticketing.domain.SaleDTO_noSchedule;
 import com.bluecom.ticketing.domain.SaleProductDTO;
+import com.bluecom.ticketing.domain.SaleProductDTO_noSchedule;
 import com.bluecom.ticketing.domain.SaleVO;
+import com.bluecom.ticketing.domain.SaleVO_noSchedule;
 import com.bluecom.ticketing.domain.ScheduleDTO;
 import com.bluecom.ticketing.domain.ShopDetailVO;
 import com.bluecom.ticketing.domain.ShopPaymentsaleVO;
@@ -195,7 +199,75 @@ public class TicketingDAO extends EgovAbstractMapper {
 	public List<SaleDTO> selectCheckTicket(SaleDTO saleDTO) throws Exception {
 		return selectList("ticketingMapper.selectCheckTicket", saleDTO);
 	}
+	
+	
+	
+	
+	public List<SaleDTO_noSchedule> selectCheckTicket_noSchedule(SaleDTO_noSchedule saleDTO) throws Exception {
+		return selectList("ticketingMapper.selectCheckTicket_noSchedule", saleDTO);
+	}
+	
+	
+	public List<SaleVO_noSchedule> selectSalesByMemberInfo(SaleDTO_noSchedule saleDTO) throws Exception{
 
+		return selectList("ticketingMapper.selectSalesByMemberInfo", saleDTO);
+	}
+	
+	
+	
+	public String selectOrderNumBySaleCode(SaleDTO_noSchedule saleDTO) throws Exception{
+
+		return selectOne("ticketingMapper.selectOrderNumBySaleCode", saleDTO);
+	}
+	
+
+	
+	public List<SaleProductDTO_noSchedule> selectTsSaleProduct(SaleVO_noSchedule sale) {
+
+		return selectList("ticketingMapper.selectTsSaleProduct", sale);
+	}
+	
+	
+	public SaleVO_noSchedule selectSaleSsByOrderNum_noSchedule(SaleVO_noSchedule searchSale) throws Exception{
+
+		return selectOne("ticketingMapper.selectSaleSsByOrderNum_noSchedule", searchSale);
+	}
+
+	
+	
+	public List<SaleProductDTO_noSchedule> selectSaleProduct_noSchedule(SaleDTO_noSchedule saleDTO) throws Exception {
+		return selectList("ticketingMapper.selectSaleProduct_noSchedule", saleDTO);
+	}
+	
+	
+	
+	public SaleProductDTO_noSchedule selectTsSaleProductByBookNo(SaleProductDTO_noSchedule saleProduct) {
+
+		return selectOne("ticketingMapper.selectTsSaleProductByBookNo", saleProduct);
+	}
+	
+	
+	
+	
+	public FinishTradeVO_noSchedule selectFinishTrade_noSchedule(Map<String, Object> params) throws Exception{
+		
+		return selectOne("ticketingMapper.selectFinishTrade_noSchedule", params);
+	}
+	
+	
+	
+	public List<FinishTradeVO_noSchedule> selectResSaleInfoList(Map<String, Object> params) throws Exception{
+		
+		return selectList("ticketingMapper.selectResSaleInfoList", params);
+	}
+	
+	
+	
+	public List<FinishTradeVO_noSchedule> selectProductsForGA(Map<String, Object> params) throws Exception{
+		return selectList("ticketingMapper.selectProductsForGA", params);
+	}
+	
+	
 	public List<SaleProductDTO> selectSaleProduct(SaleDTO saleDTO) throws Exception {
 		return selectList("ticketingMapper.selectSaleProduct", saleDTO);
 	}
@@ -357,4 +429,8 @@ public class TicketingDAO extends EgovAbstractMapper {
 		return selectOne("ticketingMapper.selectTicketValid", ticketValid);
 	}
 	
+	public List<RefundVO> selectRefund_noSchedule(SaleDTO_noSchedule sale) throws Exception{
+
+		return selectList("ticketingMapper.selectRefund_noSchedule", sale);
+	}
 }

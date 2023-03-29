@@ -82,6 +82,15 @@
 		</div>
 	</div>
 	
+	
+	
+	<div style="clear:both;display:flex;justify-content:space-evenly;width:100%;padding:30px;">
+		<div>
+			<a onclick="pop.openMcyCamping();" style="cursor:pointer;">MCY캠핑파크 예매<span style="color:red">(가상결제!)</span></a>
+		</div>
+	</div>
+	
+	
 </div>
 
 <script>
@@ -160,9 +169,19 @@ var pop = {
 			var popupX = (window.screen.width / 2) - (popupWidth / 2);
 			var popupY= (window.screen.height / 2) - (popupHeight / 2);
 			
-			//window.open('/ticketing/ghkidscafe', 'window_name', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
-			//window.open('/ticketing/sogeumsan/schedule?content_mst_cd=SOGEUMSAN_0_1&product_group_code=101&userId=testUserId&userName=testUserName', 'window_name', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
-			window.open('/ticketing/sogeumsan/selectTicket?content_mst_cd=SOGEUMSAN_0_1&product_group_code=101&userId=testUserId&userName=testUserName', 'window_name', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+			window.open('/ticketing/sogeumsan/selectTicket?content_mst_cd=SOGEUMSAN_0_1&product_group_code=101&userId=hydra33&userName=테스트유저', 'window_name', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+		},
+		
+		//==========================================MCY캠핑파크==========================================
+		openMcyCamping : function(){
+			var popupWidth = 1250;
+			var popupHeight = 900;
+			
+			//팍업 가운데 정렬을 위한 화면 해상도 계산
+			var popupX = (window.screen.width / 2) - (popupWidth / 2);
+			var popupY= (window.screen.height / 2) - (popupHeight / 2);
+			
+			window.open('/ticketing/mcycamping/selectTicket?content_mst_cd=MCYCAMPING_0_1&product_group_code=101', 'window_name', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
 		},
 }
 

@@ -30,7 +30,7 @@ String buyerName 		= webPayment.getReserverName(); 						// 구매자명
 String buyerTel 		= webPayment.getReserverPhone(); 						// 구매자연락처
 String buyerEmail 		= webPayment.getReserverEmail(); 						// 구매자메일주소
 String moid 			= webPayment.getOrder_no(); 							// 상품주문번호	
-String returnURL 		= "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/sogeumsan/payResult"; // 결과페이지(절대경로) - 모바일 결제창 전용
+String returnURL 		= "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/mcycamping/payResult"; // 결과페이지(절대경로) - 모바일 결제창 전용
 
 /*
 *******************************************************
@@ -156,7 +156,7 @@ function checkPlatform(ua) {
 					<div class="main-sec_wrap">
 						<div id="pay-info-section" class="paytop bk_box">
 							<h2>결제정보 확인</h2>
-							<form name="payForm" method="post" action="<c:url value="${webPayment.total_fee gt 0 ? '/ticketing/sogeumsan/payResult' : '/ticketing/sogeumsan/pay0Result' }" />">
+							<form name="payForm" method="post" action="<c:url value="${webPayment.total_fee gt 0 ? '/ticketing/mcycamping/payResult' : '/ticketing/mcycamping/pay0Result' }" />">
 							
 								<input type="hidden" name="userId" value="${loginUserId}" />
 								<input type="hidden" name="userName" value="${loginUserNm}" />

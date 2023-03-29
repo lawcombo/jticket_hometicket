@@ -224,4 +224,45 @@ public class ReserverAuthenticationController extends BaseController {
     	return mv;
 	}
 	
+	
+	
+	
+	@RequestMapping(value="/noSchedule/checkReservationSuccess", method = { RequestMethod.GET, RequestMethod.POST } )	
+	public String checkReservationSuccess(@ModelAttribute("content_mst_cd") String content_mst_cd, HttpServletResponse response, Model model) throws Exception {
+		
+		String shopCode = ticketingService.getShopCode(content_mst_cd);
+		
+		VerificationKeyVO keys = ticketingService.getKeys(shopCode);
+		
+		if(keys == null 
+				|| !StringUtils.hasText(keys.getIdentification_site_code()) 
+				|| !StringUtils.hasText(keys.getIdentification_site_password())) {
+			ScriptUtils.alertAndClose(response, "인증모듈에 오류가 발생하였습니다.");
+		}
+		
+		model.addAttribute("siteCode", keys.getIdentification_site_code());
+		model.addAttribute("sitePassword", keys.getIdentification_site_password());
+		
+		return "/reserverAuthentication/noSchedule/checkReservationSuccess";
+	}
+	
+	@RequestMapping(value="/noSchedule/checkReservationFail", method = { RequestMethod.GET, RequestMethod.POST } )	
+	public String checkReservationFail(@ModelAttribute("content_mst_cd") String content_mst_cd, HttpServletResponse response,Model model) throws Exception {
+		
+		String shopCode = ticketingService.getShopCode(content_mst_cd);
+		
+		VerificationKeyVO keys = ticketingService.getKeys(shopCode);
+		
+		if(keys == null 
+				|| !StringUtils.hasText(keys.getIdentification_site_code()) 
+				|| !StringUtils.hasText(keys.getIdentification_site_password())) {
+			ScriptUtils.alertAndClose(response, "인증모듈에 오류가 발생하였습니다.");
+		}
+		
+		model.addAttribute("siteCode", keys.getIdentification_site_code());
+		model.addAttribute("sitePassword", keys.getIdentification_site_password());
+		
+		return "/reserverAuthentication/noSchedule/checkReservationFail";
+	}
+	
 }

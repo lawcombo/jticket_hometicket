@@ -49,6 +49,7 @@
 				
 				
 				<entry key="type" value="1"/>
+				<entry key="online_channel" value="1001"/>
 	        </map>
 		</property>
 	</bean>
