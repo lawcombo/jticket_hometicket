@@ -7,26 +7,14 @@
 	        <map>
 	        
 	        
-	        
-	        	<!-- 개발 설정 -->
-	        	<entry key="apiUrl" value="https://iticket-stg.nicetcm.co.kr/api"/>
-	        	<entry key="userApi" value="https://ticketstgsvc.nicetcm.co.kr:443/Apis/Services/SetReservationInfo.ashx"/>
-	        	<entry key="kisPgPayModule" 		value="https://testapi.kispg.co.kr/v2/payment"/>
-				<entry key="kisPgPayCanelModule" 	value="https://testapi.kispg.co.kr/v2/cancel"/>
-	        
-	        	<!-- 운영 설정 -->
-	        	<!-- 
-	        	<entry key="apiUrl" value="https://iticket.nicetcm.co.kr/api"/>
-	        	<entry key="userApi" value="https://ticketsvc.nicetcm.co.kr:443/Apis/Services/SetReservationInfo.ashx"/>
+	        	<!-- 소금산 운영 설정 -->
+	        	
+	        	<entry key="apiUrl" value="https://iticket.wfmc.kr/api"/>
+	        	<entry key="userApi" value="https://ticketsvc.wfmc.kr:443/Apis/Services/SetReservationInfo.ashx"/>
 	        	<entry key="kisPgPayModule" value="https://api.kispg.co.kr/v2/payment"/>
 				<entry key="kisPgPayCanelModule" value="https://api.kispg.co.kr/v2/cancel"/>
-	        	 -->
 	        	
-	        
-	        	<!-- 개발 -->
-	        	<!-- <entry key="apiUrl" value="https://iticket-stg.nicetcm.co.kr/api"/> -->
-	        	<!-- 실제 -->
-	        	<!-- <entry key="apiUrl" value="https://iticket.nicetcm.co.kr/api"/> -->
+	        	
 
 	        	<entry key="apiKey" value="BC-Auth-Token"/>
 	        	<entry key="apiValue">
@@ -43,23 +31,7 @@
 	        	<entry key="templateCodeS" value="2"/>
 	        	<entry key="alimTalkSenderKey" value="2"/>
 	        	
-	        	<!-- 탑승객유저 개발 -->
-	        	<!-- <entry key="userApi" value="https://ticketstgsvc.nicetcm.co.kr:443/Apis/Services/SetReservationInfo.ashx"/> -->
-	        	<!-- 실제 -->
-	        	<!-- <entry key="userApi" value="https://ticketsvc.nicetcm.co.kr:443/Apis/Services/SetReservationInfo.ashx"/> -->
 
-
-				<!-- kis pg 결제모듈 결제 승인 url -->
-				<!-- 개발 -->
-				<!-- 
-				<entry key="kisPgPayModule" 		value="https://testapi.kispg.co.kr/v2/payment"/>
-				<entry key="kisPgPayCanelModule" 	value="https://testapi.kispg.co.kr/v2/cancel"/>
-				 -->
-				<!-- 운영 -->
-				<!-- 
-				<entry key="kisPgPayModule" value="https://api.kispg.co.kr/v2/payment"/>
-				<entry key="kisPgPayCanelModule" value="https://api.kispg.co.kr/v2/cancel"/>
-				 -->
 
 				<!-- 에러시 리다이렉트할 제주맥주 페이지 -->
 				<entry key="jejubeer" value="https://jejubeer.co.kr/brewery-program"/>
