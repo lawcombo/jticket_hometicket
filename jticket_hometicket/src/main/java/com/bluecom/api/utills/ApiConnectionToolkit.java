@@ -54,7 +54,7 @@ public class ApiConnectionToolkit {
 	        String tokenJson = mapper.writeValueAsString(map);
 			*/
 	        
-			String urlAddr 	= "http://211.253.8.154:21001/v1/hpub/ticket/hist";
+			String urlAddr 	= "https://api.wfmc.kr:21001/v1/hpub/ticket/hist/insert";
 			String httpType = "";
 			
 			/*
