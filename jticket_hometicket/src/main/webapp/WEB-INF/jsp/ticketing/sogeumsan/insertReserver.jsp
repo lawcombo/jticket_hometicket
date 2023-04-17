@@ -28,8 +28,8 @@
   	//리턴url은 인증 전 인증페이지를 호출하기 전 url과 동일해야 합니다. ex) 인증 전 url : http://www.~ 리턴 url : http://www.~
     
 	//개발 http
-	String sReturnUrl = "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/success?content_mst_cd=" + ((com.bluecom.ticketing.domain.PaymentInfoDTO_noSchedule)request.getAttribute("paymentInfo")).getProductGroup().getContent_mst_cd();     // 성공시 이동될 URL
-    String sErrorUrl = "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/fail?content_mst_cd=" + ((com.bluecom.ticketing.domain.PaymentInfoDTO_noSchedule)request.getAttribute("paymentInfo")).getProductGroup().getContent_mst_cd();         // 실패시 이동될 URL
+	String sReturnUrl = "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + ":9443/reserverAuthentication/success?content_mst_cd=" + ((com.bluecom.ticketing.domain.PaymentInfoDTO_noSchedule)request.getAttribute("paymentInfo")).getProductGroup().getContent_mst_cd();     // 성공시 이동될 URL
+    String sErrorUrl = "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + ":9443/reserverAuthentication/fail?content_mst_cd=" + ((com.bluecom.ticketing.domain.PaymentInfoDTO_noSchedule)request.getAttribute("paymentInfo")).getProductGroup().getContent_mst_cd();         // 실패시 이동될 URL
 
 
 

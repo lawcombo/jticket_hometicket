@@ -30,7 +30,7 @@ String buyerName 		= webPayment.getReserverName(); 						// 구매자명
 String buyerTel 		= webPayment.getReserverPhone(); 						// 구매자연락처
 String buyerEmail 		= webPayment.getReserverEmail(); 						// 구매자메일주소
 String moid 			= webPayment.getOrder_no(); 							// 상품주문번호	
-String returnURL 		= "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/sogeumsan/payResult"; // 결과페이지(절대경로) - 모바일 결제창 전용
+String returnURL 		= "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + ":9443/ticketing/sogeumsan/payResult"; // 결과페이지(절대경로) - 모바일 결제창 전용
 
 /*
 *******************************************************
