@@ -126,7 +126,7 @@ a.disabled {
 							</li>
 							<li>
 								<span class="ewp_break_th">사용일</span>
-								<span class="ewp_break_td"><c:out value="${empty saleProduct.play_date ? '-' : saleProduct.play_date }" /></span>
+								<span class="ewp_break_td" style="color:blue;"><c:out value="${empty saleProduct.play_date ? '-' : saleProduct.play_date }" /></span>
 							</li>
 							<li>
 								<span class="ewp_break_th">권종별 총금액</span>
@@ -136,10 +136,12 @@ a.disabled {
 								<span class="ewp_break_th">매수</span>
 								<span class="ewp_break_td"><c:out value="${saleProduct.quantity }" /></span>
 							</li>
+							<%-- 
 							<li>
 								<span class="ewp_break_th">상태</span>
 								<span class="ewp_break_td"><c:out value="${saleProduct.refund_yn eq '1' ? '환불' : not empty saleProduct.used_date ? '사용' : '미사용' }" /></span>
 							</li>
+							 --%>
 						</ul>
 					</c:forEach>
 				</div>

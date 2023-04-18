@@ -986,6 +986,11 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 			String ticketingDate = new SimpleDateFormat("yyyy-MM-dd").format(now);
 			String ticketingDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now);
 			
+			
+			
+			log.info("VISITOR_TYPE ==> " + webPayment.getVisitor_type());
+			
+			
 			String paymentCode = getPaymentCode(pgResult.getPay_method());
 			if(webPayment.getVisitor_type().equals("A")) { // 일반입장
 				if(webPayment.getPiece_ticket_yn().equals("0")) { // 묶음 티켓
@@ -1828,6 +1833,9 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 			
 			String url = propertyService.getString("apiUrl") + target;
 			
+			
+			log.info("[API CALL] Target URL ==> " + url);
+			
 			UriComponents uri 				= UriComponentsBuilder.fromHttpUrl(url).build();
 			ResponseEntity<Map> resultMap 	= null;
 			
@@ -1840,6 +1848,9 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 			}catch(Exception ex) {
 				
 				log.error("ApiCallError[Disconnectec]: " + ex.getMessage());
+				
+				ex.printStackTrace();
+				
 				return new ApiResultVO(0, "API서버 통신와 통신을 할 수 없습니다.");
 			}
 			

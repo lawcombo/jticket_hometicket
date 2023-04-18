@@ -20,8 +20,12 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bluecom.ticketing.controller.TicketingController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ApiConnectionToolkit {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ApiConnectionToolkit.class);
@@ -71,6 +75,8 @@ public class ApiConnectionToolkit {
 				httpType 	= "PUT";
 			}
 			*/
+			
+			log.info("|	[CALL URL]		=> "+ urlAddr );
 			
 			URL url = new URL(urlAddr);
 			HttpURLConnection connectionUrl = (HttpURLConnection) url.openConnection();

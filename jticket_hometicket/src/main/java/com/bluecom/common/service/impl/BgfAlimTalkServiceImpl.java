@@ -444,6 +444,10 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 	@Override
 	public boolean sendRefund_noSchedule(HttpServletRequest request, SaleVO_noSchedule saleVO, WebPaymentDTO webPayment,
 			WebPaymentPgResultDTO pgResult, ShopDetailVO shopDetail) throws Exception {
+		
+		//소금산은 product_group_kind() == 1 로 타더라... 일단 알림톡 안씀. 향후에 템플릿 만들어지면 그때 처리.
+		
+		
 		AlimTalkTemplateDTO template = null;
 		if(webPayment.getProduct_group_kind().equals("1")) {
 			template = getNormalRefundMessage(request, saleVO, webPayment, pgResult, shopDetail);

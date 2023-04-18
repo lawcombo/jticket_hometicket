@@ -4232,6 +4232,8 @@ public class TicketingController extends BaseController {
 
 						if (paySuccess) { // 결제 승인 성공
 
+							
+							log.info("[TicketApi Call]");
 							//ApiResultVO apiResultVO = ticketingService.callTicketApi(pgResult);
 							ApiResultVO apiResultVO = ticketingService.callTicketApi_noSchedule(pgResult);
 
@@ -4969,8 +4971,10 @@ public class TicketingController extends BaseController {
 						
 						ShopDetailVO shopDetail = ticketingService.getShopDetail(webPayment.getShop_code());
 
-						//messageService.sendRefund(request, saleVO, webPayment, pgResult, shopDetail);
-						messageService.sendRefund_noSchedule(request, saleVO, webPayment, pgResult, shopDetail);
+						
+						//=============================알림톡=====================================
+						//일단 주석. 템플릿 없음.
+						//messageService.sendRefund_noSchedule(request, saleVO, webPayment, pgResult, shopDetail);
 						
 						rttr.addFlashAttribute("refundResult", "예매가 정상 취소 되었습니다.");
 						
