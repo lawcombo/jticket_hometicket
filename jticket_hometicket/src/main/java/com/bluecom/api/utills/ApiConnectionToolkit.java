@@ -58,7 +58,9 @@ public class ApiConnectionToolkit {
 	        String tokenJson = mapper.writeValueAsString(map);
 			*/
 	        
-			String urlAddr 	= "https://api.wfmc.kr:21001/v1/hpub/ticket/hist/insert";
+			//String urlAddr 	= "https://api.wfmc.kr:21001/v1/hpub/ticket/hist/insert";
+			//String urlAddr 	= "https://api.wfmc.kr:21001/v1/hpub/ticket/hist/insert";
+			String urlAddr 	= "http://100.100.52.42:21001/v1/hpub/ticket/hist/insert";
 			String httpType = "";
 			
 			/*
@@ -88,6 +90,10 @@ public class ApiConnectionToolkit {
 			connectionUrl.setRequestMethod("POST");
 			connectionUrl.setRequestProperty("Content-Length", Integer.toString(paramJson.getBytes().length));
 			connectionUrl.setRequestProperty("Content-Language", "UTF-8");
+			
+			//System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+
+			//connectionUrl.setRequestProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
 			
 			//나이스 토큰값 셋팅.
 			//connectionUrl.setRequestProperty(niceTokenKey, niceTokenValue);
