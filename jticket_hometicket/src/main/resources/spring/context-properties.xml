@@ -7,10 +7,17 @@
 	        <map>
 	        
 	        
-	        	<!-- 소금산 운영 설정 -->
+	        	<!-- nice 개발 설정 -->
 	        	<!-- 
-	        	<entry key="apiUrl" value="https://iticket.wfmc.kr/api"/>
+	        	<entry key="apiUrl" value="https://iticket-stg.nicetcm.kr/api"/>
+	        	<entry key="userApi" value="https://ticketstgsvc.nicetcm.co.kr:443/Apis/Services/SetReservationInfo.ashx"/>
+	        	<entry key="kisPgPayModule" value="https://api.kispg.co.kr/v2/payment"/>
+				<entry key="kisPgPayCanelModule" value="https://api.kispg.co.kr/v2/cancel"/>
 	        	 -->
+	        
+	        
+	        	<!-- 소금산 운영 설정 -->
+	        	
 	        	<entry key="apiUrl" value="https://iticket.wfmc.kr:9443/api"/>
 	        	<entry key="userApi" value="https://ticketsvc.wfmc.kr:443/Apis/Services/SetReservationInfo.ashx"/>
 	        	<entry key="kisPgPayModule" value="https://api.kispg.co.kr/v2/payment"/>
@@ -36,7 +43,7 @@
 
 
 				<!-- 에러시 리다이렉트할 제주맥주 페이지 -->
-				<entry key="jejubeer" value="https://jejubeer.co.kr/brewery-program"/>
+				<entry key="jejubeer" value="https://cms.wfmc.kr/web/lay1/S1T155C194/contents.do"/>
 				<entry key="diamondbay" value="http://www.diamondbay.co.kr/"/>
 				
 				

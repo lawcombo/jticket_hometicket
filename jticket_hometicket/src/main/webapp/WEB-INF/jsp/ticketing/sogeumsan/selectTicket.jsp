@@ -134,7 +134,10 @@
 					</div>
 					<div id="product-section" class="booking_con03">
 						<h5 class="con01_01_tit">
-							권종선택(금액)
+							권종선택(금액) 
+							<!-- =======소금산 그랜드밸리 온라인 예매 수량 600개 하드코딩======= -->
+							<br /> <span id="ticketingCntStatusText"> (총 수량 : 600 매 / </span> <span style="color:red;"> 남은 수량 : <c:out value='${availableQuantity}' /> 매) </span>
+							<!-- ==================================================== -->
 						</h5>
 						<form:form role="reserve" action="/ticketing/sogeumsan/insertReserver" method="GET" class="sel_form">
 							<input type="hidden" name="content_mst_cd" value="<c:out value='${shopInfo.content_mst_cd }' />"/>
@@ -147,7 +150,7 @@
 							<input type="hidden" name="loginUserNm" value="<c:out value='${loginUserNm}' />"/>
 							
 						</form:form>
-						<div>			
+						<div id="resButtonDiv">			
 							<button id="reserve-button">구매하기</button>
 						</div>
 					</div>
@@ -212,6 +215,7 @@
 var header = $("meta[name='_csrf_header']").attr('content');
 var token = $("meta[name='_csrf']").attr('content');
 
+
 $.ajaxSetup({
 	beforeSend: function (xhr) {
     	xhr.setRequestHeader(header, token);
@@ -224,6 +228,31 @@ $.ajaxSetup({
 
 
 <script>
+
+
+var saledQuantity 		= '${saledQuantity}';
+var availableQuantity 	= '${availableQuantity}';
+
+$(document).ready(function() {
+	
+	// ============================== 소금산 그랜드밸리 남은 수량에 따른 예매하기 버튼 처리 =====================================
+	if(availableQuantity < 1)
+	{
+		document.getElementById('reserve-button').style.display="none";
+		
+		$("#resButtonDiv").append('<span id="resInfoText" style="color:red;">금일 판매 티켓이 모두 소진되어 예매할 수 없습니다.</span>')
+	}
+	else
+	{
+		document.getElementById('reserve-button').style.display="block";
+	}
+	//===============================================================================================================	
+	
+});
+
+
+
+
 
 $(function() {
 	
@@ -345,6 +374,7 @@ $(function() {
 			productsCount += Number($(this).val());
 		});
 		
+		
 		if(productsCount <= 0) {
 			alert('권종을 선택해 주세요.');
 			$(".productCount:first").focus();
@@ -352,6 +382,18 @@ $(function() {
 		}
 		
 		
+		
+		//========소금산 그랜드 밸리 남은수량과 선택한 수량 비교========
+		if(availableQuantity < productsCount)
+		{
+			alert("예매 가능한 수량은 " + availableQuantity +"매 입니다.");
+			$("input[name='productGroupRadio']:first").focus();
+			return;
+		}
+		//==================================================
+			
+			
+			
 		
 		var form = $("form[role='reserve']");
 		form.submit();

@@ -109,6 +109,14 @@ public class TicketingDAO extends EgovAbstractMapper {
 	
 	
 	
+	public List<ProductGroupDTO> selectResStatusCount(String contentMstCd) throws Exception {
+		
+		return selectList("ticketingMapper.selectResStatusCount", contentMstCd);
+	}
+	
+	
+	
+	
 	public List<ProductDTO> selectProducts(ProductGroupDTO productGroup) throws Exception {
 
 		return selectList("ticketingMapper.selectProducts", productGroup);

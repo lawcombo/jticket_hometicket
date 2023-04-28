@@ -42,4 +42,10 @@ public class ProductGroupDTO implements Serializable {
 //	String contentMstCd = "";
 	int valid_period;
 	String piece_ticket_yn;
+	
+	
+	
+	//===================== 사용가능 티켓 수량
+	int SALE_QUANTITY;
+	int AVAILABLE_QUANTITY;
 }

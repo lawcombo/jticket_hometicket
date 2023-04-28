@@ -1642,4 +1642,30 @@
 
 	</select>
 	
+	
+	
+	
+	<!-- 소금산 그랜드밸리 홈페이지 예매, 현재까지 예매한 정상 건 수 ( 상품, 나오라쇼 관련 ) -->
+	<select id="selectResStatusCount" parameterType="String" resultType="productGroup">
+		SELECT 
+			SALE_SHOP_CODE ,
+			PRODUCT_CODE ,
+			PRODUCT_NAME ,
+			SUM(QUANTITY) 			AS SALE_QUANTITY ,
+			(600 - SUM(QUANTITY)) 	AS AVAILABLE_QUANTITY,
+			WORK_DATETIME
+		FROM bc_sale_product 
+		WHERE 1=1
+		AND sale_shop_code = (SELECT shop_code FROM bc_shop where CONTENT_MST_CD = #{contentMstCd})
+		AND SALE_TYPE = 'SS'
+		AND REFUND_YN = '0'
+		AND DATE_FORMAT(WORK_DATETIME , '%Y-%m-%d') = DATE_FORMAT(now(), '%Y-%m-%d')
+		AND ONLINE_CHANNEL = '1001'
+		AND (PRODUCT_CODE = '201' or PRODUCT_CODE = '202' or PRODUCT_CODE = '205' or PRODUCT_CODE = '206' or PRODUCT_CODE = '207' or PRODUCT_CODE = '208' or PRODUCT_CODE = '210' or PRODUCT_CODE = '211')
+		GROUP BY SALE_SHOP_CODE
+	
+	</select>
+	
+	
+	
 </mapper>

@@ -65,6 +65,7 @@ public interface TicketingService{
 	
 	
 	List<ProductGroupDTO> getProductGroups_noSchedule(String shopCode) throws Exception;
+	List<ProductGroupDTO> selectResStatusCount(String shopCode) throws Exception;
 	
 	List<ProductDTO> getProducts(ProductGroupDTO productGroup) throws Exception;
 	List<ProductDTO> getProducts_NoSchedule(ProductGroupDTO_noSchedule productGroup) throws Exception;

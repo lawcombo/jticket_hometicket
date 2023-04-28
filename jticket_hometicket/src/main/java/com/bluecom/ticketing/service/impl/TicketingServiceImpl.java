@@ -239,6 +239,12 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 		return ticketingMapper.getProductGroups_noSchedule(contentMstCd);
 	}
 	
+	@Override
+	public List<ProductGroupDTO> selectResStatusCount(String contentMstCd) throws Exception {
+		
+		return ticketingMapper.selectResStatusCount(contentMstCd);
+	}
+	
 	
 	
 	

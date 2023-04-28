@@ -3611,6 +3611,28 @@ public class TicketingController extends BaseController {
 			model.addAttribute("loginUserId", shopInfo.getUserId());
 			model.addAttribute("loginUserNm", shopInfo.getUserName());
 			
+			
+			
+			// =======소금산 그랜드밸리 온라인 예매 수량 600개 하드코딩, 향후 삭제 소스=======
+			List<ProductGroupDTO> resStatusCount = ticketingService.selectResStatusCount(shopInfo.getContent_mst_cd());
+			
+			if(resStatusCount.size() > 0 )
+			{
+				int saledQuantity 		= resStatusCount.get(0).getSALE_QUANTITY();
+				int availableQuantity 	= resStatusCount.get(0).getAVAILABLE_QUANTITY();
+				
+				model.addAttribute("saledQuantity", saledQuantity);
+				model.addAttribute("availableQuantity", availableQuantity);
+			}
+			else
+			{
+				model.addAttribute("saledQuantity", 0);
+				model.addAttribute("availableQuantity", 600);
+			}
+			
+			// ====================================================
+			
+			
 			return "/ticketing/sogeumsan/selectTicket";
 		}
 		
