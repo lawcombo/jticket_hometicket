@@ -15,7 +15,7 @@
 				<p class="t1"><a href="https://www.facebook.com/seohaerang.jebu" target="_blank"><img src="/resources/images/ft_img03.png" style="max-width:23px;" alt="서해랑 페이스북" /></a></p>
 			</div>
 			 -->
-			<p class="t2"><a href="https://www.ganghwa.go.kr/open_content/main/guidance/personal.jsp">개인정보처리방침</a></p>
+			<p class="t2"><a href="https://cms.wfmc.kr/web/lay1/bbs/S1T207C216/A/15/view.do?article_seq=40&cpage=1&rows=10&condition=&keyword=">개인정보처리방침</a></p>
 			
 		</div>
 		
