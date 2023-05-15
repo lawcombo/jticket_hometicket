@@ -17,7 +17,6 @@
 	        
 	        
 	        	<!-- 소금산 운영 설정 -->
-	        	
 	        	<entry key="apiUrl" value="https://iticket.wfmc.kr:9443/api"/>
 	        	<entry key="userApi" value="https://ticketsvc.wfmc.kr:443/Apis/Services/SetReservationInfo.ashx"/>
 	        	<entry key="kisPgPayModule" value="https://api.kispg.co.kr/v2/payment"/>

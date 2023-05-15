@@ -68,4 +68,10 @@ public class PaymentInfoDTO implements Serializable{
 	String ordTel;
 	String ordEmail;
 	
+	
+	
+	//소금산밸리 로그인접속자정보
+	String loginUserId = "";
+	String loginUserNm = "";
+	
 }

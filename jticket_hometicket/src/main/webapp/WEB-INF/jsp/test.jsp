@@ -78,7 +78,11 @@
 	
 	<div style="clear:both;display:flex;justify-content:space-evenly;width:100%;padding:30px;">
 		<div>
-			<a onclick="pop.openSogeumSan();" style="cursor:pointer;">원주 소금산 그랜드 밸리 예매<span style="color:red">(가상결제!)</span></a>
+			<a onclick="pop.openSogeumSan();" style="cursor:pointer;">원주 소금산 그랜드 밸리 예매(회차No)<span style="color:red">(가상결제!)</span></a>
+		</div>
+		
+		<div>
+			<a onclick="pop.openSogeumSanNew();" style="cursor:pointer;">원주 소금산 그랜드 밸리 예매(회차Yes)<span style="color:red">(가상결제!)</span></a>
 		</div>
 	</div>
 	
@@ -161,6 +165,7 @@ var pop = {
 		},
 		
 		//==========================================원주 소금산 그랜드 벨리==========================================
+		//사용안함
 		openSogeumSan : function(){
 			var popupWidth = 1250;
 			var popupHeight = 900;
@@ -171,6 +176,48 @@ var pop = {
 			
 			window.open('/ticketing/sogeumsan/selectTicket?content_mst_cd=SOGEUMSAN_0_1&product_group_code=101&userId=hydra33&userName=테스트유저', 'window_name', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
 		},
+		
+		//사용
+		openSogeumSanNew : function(){
+			pop.openSogeumSanResPop();
+			//pop.openSogeumSanImagePop_1();
+			//pop.openSogeumSanImagePop_1();
+		},
+		
+		openSogeumSanResPop : function(){
+			var popupWidth = 1250;
+			var popupHeight = 900;
+			
+			//팍업 가운데 정렬을 위한 화면 해상도 계산
+			var popupX = (window.screen.width / 2) - (popupWidth / 2);
+			var popupY= (window.screen.height / 2) - (popupHeight / 2);
+			
+			window.open('/ticketing/sogeumsan2/schedule?content_mst_cd=SOGEUMSAN_0_1&product_group_code=102&userId=hydra33&userName=테스트유저', 'window_name', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+		},
+		openSogeumSanImagePop_1 : function(){
+			
+			var popupWidth = 850;
+			var popupHeight = 900;
+			
+			//팍업 가운데 정렬을 위한 화면 해상도 계산
+			var popupX = (window.screen.width / 2) - (popupWidth / 2);
+			var popupY= (window.screen.height / 2) - (popupHeight / 2);
+			
+			window.open('/ticketing/imagesPopup_1', 'img1', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+			window.open('/ticketing/imagesPopup_2', 'img2', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+		},
+		openSogeumSanImagePop_1 : function(){
+			var popupWidth = 850;
+			var popupHeight = 900;
+			
+			//팍업 가운데 정렬을 위한 화면 해상도 계산
+			var popupX = (window.screen.width / 2) - (popupWidth / 2);
+			var popupY= (window.screen.height / 2) - (popupHeight / 2);
+			
+			window.open('/ticketing/imagesPopup_2', '_blank', 'a2' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+		},
+		
+		
 		
 		//==========================================MCY캠핑파크==========================================
 		openMcyCamping : function(){

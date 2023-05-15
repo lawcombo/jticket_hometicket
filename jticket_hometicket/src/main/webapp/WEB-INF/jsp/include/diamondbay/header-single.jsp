@@ -13,7 +13,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
 <meta name="description" content="" />
 <meta name="author" content="" />
-<title> 다이아몬드베이 </title>
+<title> NICE 홈페이지 예매 </title>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/jeju/html5reset-1.6.1.css" >
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/jeju/fonts.css?v=180227" >
