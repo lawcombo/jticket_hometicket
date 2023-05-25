@@ -740,7 +740,7 @@ table, td, th {
 					</div>
 					 -->
 					<div class="mt_bot">
-						<img src="../../../../../resources/images/sogeumsan/naora5.jpg" style="width:100%;">
+						<img src="../../../../../resources/images/sogeumsan/naora7.jpg" style="width:100%;">
 					</div>
 				</div>
 				
@@ -767,7 +767,7 @@ table, td, th {
 					</div>
 					 -->
 					<div class="mt_bot">
-						<img src="../../../../../resources/images/sogeumsan/naora6.jpg" style="width:100%;">
+						<img src="../../../../../resources/images/sogeumsan/naora8.jpg" style="width:100%;">
 					</div>
 				</div>
 				
