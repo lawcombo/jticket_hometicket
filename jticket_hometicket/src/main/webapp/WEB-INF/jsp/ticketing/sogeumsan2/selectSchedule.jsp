@@ -107,7 +107,7 @@
 					<h3>· 예매 안내 </h3>
 					<p>
 						* 1인당 예매 수량 제한: 총 10매 ( 11매 이상 구매 불가 ) <br>
-						* 이용요금 할인 대상자는 티켓 수령 및 현장 발권 시 반드시  <font style="background-color: rgb(29, 202, 211); font-weight:bold;">"신분증 지참"</font> 바랍니다.<br>
+						* 이용요금 할인 대상자는 티켓 수령 및 현장 발권 시 반드시  <font style="background-color: rgb(29, 202, 211); font-weight:bold;">"신분증 및 증빙서류 지참"</font> 바랍니다.<br>
 						* 제한 수량 초과시 이용이 불가할 수 있습니다.
 						<!-- 
 						한 일행 당 9인 이상은 <span style="text-decoration:underline; font-weight:bold;">따로 예약 및 동선 분리를 하셔도 입장이 절대 불가</span>하며,<Br>
@@ -146,7 +146,7 @@
 			</c:forEach>
 			
 			<input type="hidden" name="loginUserId" value="${loginUserId}" />
-						<input type="hidden" name="loginUserNm" value="${loginUserNm}" />
+			<input type="hidden" name="loginUserNm" value="${loginUserNm}" />
 		</form:form>
 	</div><!-- mx1200 end -->
 	
@@ -166,12 +166,12 @@
 					</div>
 					 -->
 					<div class="mt_bot">
-						<img src="../../../../../resources/images/sogeumsan/naora3.jpg" style="width:820px;">
+						<img src="../../../../../resources/images/sogeumsan/naora7.jpg" style="width:100%;">
 					</div>
 				</div>
 				
-				<div style="width:822px">
-					<button class="md_bts" style="cursor:pointer; margin-left:19px" onclick="nitiConfirm.confirmBtn();">닫기</button>
+				<div style="padding-right:20px; margin-left:20px; padding-bottom:5px">
+					<button class="md_bts" style="cursor:pointer;" onclick="nitiConfirm.confirmBtn();">닫기</button>
 				</div>
 			</div>
 		</div>
@@ -193,12 +193,12 @@
 					</div>
 					 -->
 					<div class="mt_bot">
-						<img src="../../../../../resources/images/sogeumsan/naora4.jpg" style="width:820px;">
+						<img src="../../../../../resources/images/sogeumsan/naora8.jpg" style="width:100%;">
 					</div>
 				</div>
 				
-				<div style="width:822px">
-					<button class="md_bts" style="cursor:pointer; margin-left:19px" onclick="nitiConfirm.confirmBtn2();">닫기</button>
+				<div style="padding-right:20px; margin-left:20px; padding-bottom:5px">
+					<button class="md_bts" style="cursor:pointer;" onclick="nitiConfirm.confirmBtn2();">닫기</button>
 				</div>
 			</div>
 		</div>
@@ -210,7 +210,7 @@
 
 <script type="text/x-mustache" id="list-template">
 	<ul>
-	<li class="list_tit_li"><div class="ch_time">시간 선택</div><div class="ch_num">수량</div></li>
+	<li class="list_tit_li"><div class="ch_time">선택</div><div class="ch_num">수량</div></li>
 	{{#data}}
 		<li class="th_list_tem_li">
 			<div data-id="item{{id}}"
@@ -366,7 +366,7 @@ var checkBtn = {
 			//오늘 예매를 내일 날짜로 할경우, 오늘 18시 이전까지만 예매 가능하도록.
 			if(tomorrowFormat == targetDate)
 			{
-				if(todayHours >= 12)
+				if(todayHours >= 18)
 				{
 					var reserveDateTmp = tomorrowYear + "년 " + tomorrowMonth + "월 "+ tomorrowDay + "일";
 					

@@ -54,6 +54,10 @@ public class JejuMailServiceImpl extends EgovAbstractServiceImpl implements Mail
 		{
 			resultBoolean = sendNewOfDiamondbay(request, apiResult, pgResult, "완료", "정상처리", "다이아몬드베이 예약이 완료되었습니다.");
 		}
+		else
+		{
+			resultBoolean = sendNew(request, apiResult, pgResult, "완료", "정상처리", "소금산그랜드밸리 예매 완료되었습니다.");
+		}
 		
 		return resultBoolean;
 	}
@@ -71,7 +75,7 @@ public class JejuMailServiceImpl extends EgovAbstractServiceImpl implements Mail
 		
 		
 		mailVO.setFrom(propertyService.getString("senderEmail"));
-		subject = "제주맥주 양조장 예약이 완료되었습니다.";
+		subject = "소금산그랜드밸리 예매 완료되었습니다.";
 		
 		mailVO.setSubject(subject);
 		
@@ -99,7 +103,7 @@ public class JejuMailServiceImpl extends EgovAbstractServiceImpl implements Mail
 		text = text.replace("{4}", useDate);		
 		text = text.replace("{5}", fifth);
 		text = text.replace("{6}", sixth);
-		text = text.replace("{7}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/resources/images/jeju/email_logo.jpg");
+		text = text.replace("{7}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/resources/images/company_logo.png");
 		text = text.replace("{8}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/checkTicket?content_mst_cd=" + payment.getContent_mst_cd());
 		text = text.replace("{9}", payment.getProduct_group_name());
 		
@@ -146,7 +150,7 @@ public class JejuMailServiceImpl extends EgovAbstractServiceImpl implements Mail
 		log.debug("예약변경 메일 전송", apiResult.getWebPayment().getOrder_no());
 		return sendNew(request, apiResult, pgResult, "변경", "변경", "제주맥주 양조장 투어 예약이 변경되었습니다.");
 	}
-		
+	
 	@Override
 	public boolean sendRefund(HttpServletRequest request, SaleVO sale, WebPaymentDTO payment, WebPaymentPgResultDTO pgResult) throws Exception {
 	
@@ -158,7 +162,7 @@ public class JejuMailServiceImpl extends EgovAbstractServiceImpl implements Mail
 		MailVO mailVO = new MailVO();
 		mailVO.setTo(payment.getReserverEmail());
 		mailVO.setFrom(propertyService.getString("senderEmail"));
-		mailVO.setSubject("제주맥주 양조장 투어 예약이 취소되었습니다.");
+		mailVO.setSubject("소금산그랜드밸리 예매 취소되었습니다.");
 		String templateFile = request.getSession().getServletContext().getRealPath("/") + "resources" + File.separator + "jeju_email.html";
 		
 //		0	reserverName
@@ -181,7 +185,8 @@ public class JejuMailServiceImpl extends EgovAbstractServiceImpl implements Mail
 		text = text.replace("{4}", useDate);		
 		text = text.replace("{5}", "취소");
 		text = text.replace("{6}", "취소");
-		text = text.replace("{7}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/resources/images/jeju/email_logo.jpg");
+		//text = text.replace("{7}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/resources/images/jeju/email_logo.jpg");
+		text = text.replace("{7}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/resources/images/long_company_logo.png");
 		text = text.replace("{8}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/checkTicket?content_mst_cd=" + payment.getContent_mst_cd());
 		text = text.replace("{9}", payment.getProduct_group_name());
 		

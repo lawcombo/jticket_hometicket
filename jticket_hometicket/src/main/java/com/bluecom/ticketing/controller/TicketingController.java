@@ -347,6 +347,12 @@ public class TicketingController extends BaseController {
 			callBackJsp = "/ticketing/payRequest";
 		}
 		
+		model.addAttribute("loginUserId", info.getLoginUserId());
+		model.addAttribute("loginUserNm", info.getLoginUserNm());
+		
+		log.info("[sogeumsan/payRequest] 사용차 ID : " + info.getLoginUserId());
+		log.info("[sogeumsan/payRequest] 사용자 이름 : " + info.getLoginUserNm());
+		
 		
 		return callBackJsp;
 	}
@@ -856,7 +862,7 @@ public class TicketingController extends BaseController {
 							try {
 								
 								//알림톡 저장
-								messageService.send(request, response, apiResultVO, pgResult, shopDetail);
+								//messageService.send(request, response, apiResultVO, pgResult, shopDetail);
 								
 							} catch(Exception ex) {
 								ex.printStackTrace();
@@ -866,7 +872,10 @@ public class TicketingController extends BaseController {
 							
 								try {
 									CompanyVO company = ticketingService.getCompany(apiResultVO.getWebPayment().getShop_code());
+									
+									//이메일
 									mailService.sendReserve(request, apiResultVO, pgResult);
+									
 								} catch(Exception ex) {
 									ex.printStackTrace();
 								}
@@ -1410,6 +1419,11 @@ public class TicketingController extends BaseController {
 	public String prevShowTicketList(@ModelAttribute("essential")EssentialDTO essential, SaleDTO saleDTO, 
 										HttpServletRequest request, HttpServletResponse response, Model model,
 										RedirectAttributes rttr) throws Exception{
+		
+
+		log.info("================예매 본인인증 성공_예매내역 확인(/prevShowTicket)=================");
+		
+		
 		request.getSession().setAttribute("saleDTO", saleDTO);
 		
 		String redirectPage = null;
@@ -1462,6 +1476,9 @@ public class TicketingController extends BaseController {
 	public String ShowTicketInfoList(@ModelAttribute("essential")EssentialDTO essential, 
 								SaleDTO saleDTO, HttpServletRequest request,
 								@ModelAttribute("message") String message, Model model) throws Exception {
+		
+		log.info("================예매 취소 본인인증 성공 예매 리스트 (/showTicketInfoList)=================");
+		
 		HttpSession session = request.getSession();
 		saleDTO = (SaleDTO) session.getAttribute("saleDTO");
 		saleDTO.setType("1");
@@ -1680,7 +1697,7 @@ public class TicketingController extends BaseController {
 	@PostMapping("/cancelTicket")
 	public String cancelTicket(@ModelAttribute("buyerInfo") SaleDTO sale,  HttpServletRequest request, HttpServletResponse response,
 			RedirectAttributes rttr, Model model) throws Exception {
-		String redirectPage = "redirect:/ticketing/showTicketInfo";
+		String redirectPage = "redirect:/ticketing/sogeumsan2/showTicketInfo";
 		
 		Date now = new Date();
 		Date today = DateHelper.getDateStart(now);
@@ -2029,7 +2046,7 @@ public class TicketingController extends BaseController {
 					ShopDetailVO shopDetail = ticketingService.getShopDetail(webPayment.getShop_code());
 					
 					//알림톡 메시지 전송
-					messageService.sendRefund(request, saleVO, webPayment, pgResult, shopDetail); 
+					//messageService.sendRefund(request, saleVO, webPayment, pgResult, shopDetail); 
 
 					//알림톡 메시지 전송
 					mailService.sendRefund(request, saleVO, webPayment, pgResult); 
@@ -3008,8 +3025,8 @@ public class TicketingController extends BaseController {
 			
 			
 			//==============================소금산 벨리 예매버튼 클릭시 원주 소금산 벨리 로그인 접속자 정보 받기 ==================================
-			System.out.println("로그인 USER ID 	==> " + essential.getUserId());
-			System.out.println("로그인 USER NAME 	==> " + essential.getUserName());
+			log.info("로그인 USER ID 		==> " + essential.getUserId());
+			log.info("로그인 USER NAME 	==> " + essential.getUserName());
 			//=====================================================================================================================
 			
 			
@@ -3210,13 +3227,6 @@ public class TicketingController extends BaseController {
 		public String finishForSogeumsan2(@ModelAttribute("essential") @Valid EssentialDTO essential, @RequestParam("orderNo") String orderNo, Model model) throws Exception {
 			
 			
-			System.out.println("[/sogeumsan/finish]: "+ essential.getUserId());
-			System.out.println("[/sogeumsan/finish]: "+ essential.getUserName());
-			
-			// ============================== 소금산벨리 ( 리버스아이티 ) 에 예매 내역 전송 ============================= 
-			sogeumsanResApiCall_new(essential.getContent_mst_cd(), orderNo, essential.getUserId(), essential.getUserName(), "slae");
-			//=================================================================================================
-			
 			Map<String, Object> params = new HashMap<>();
 			params.put("orderNo", orderNo);
 			params.put("contentMstCd", essential.getContent_mst_cd());
@@ -3226,6 +3236,20 @@ public class TicketingController extends BaseController {
 			ShopDetailVO shopDetail = ticketingService.getShopDetailByContentMstCd(essential.getContent_mst_cd());
 			model.addAttribute("shopDetail", shopDetail);
 			
+			
+			
+			// ============================== 소금산벨리 ( 리버스아이티 ) 에 예매 내역 전송 ============================= 
+			log.info("=====================================[예매 완료]===================================");
+			log.info("[/sogeumsan/finish 사용자 ID]: "+ essential.getUserId());
+			log.info("[/sogeumsan/finish 사용자 이름]: "+ essential.getUserName());
+			log.info("[/sogeumsan/finish 사용자 연락처]: "+ trade.get(0).getMember_tel());
+			log.info("=================================================================================");
+			
+			sogeumsanResApiCall_new(essential.getContent_mst_cd(), orderNo, essential.getUserId(), essential.getUserName(), trade.get(0).getMember_tel(), "slae");
+			//=================================================================================================
+			
+			
+			
 			return "/ticketing/sogeumsan2/finish";
 		}
 		
@@ -3234,7 +3258,7 @@ public class TicketingController extends BaseController {
 		 * @param contentMstCd
 		 * @param orderNum
 		 */
-		public void sogeumsanResApiCall_new(String contentMstCd, String orderNum, String userId, String userNm, String statusFlag) {
+		public void sogeumsanResApiCall_new(String contentMstCd, String orderNum, String userId, String userNm, String userTel, String statusFlag) {
 			
 			try {
 				Map<String, Object> params = new HashMap<>();
@@ -3259,7 +3283,7 @@ public class TicketingController extends BaseController {
 				{
 					if(i == 0)
 					{
-						makeCommonParam(resSaleInfoList.get(i), defaultParam, userId, userNm, statusFlag);
+						makeCommonParam(resSaleInfoList.get(i), defaultParam, userId, userNm, userTel, statusFlag);
 					}
 					
 					// 헤더 셋팅 후 PRODUCT_LIST 가공
@@ -3310,7 +3334,7 @@ public class TicketingController extends BaseController {
 		 * @return
 		 * @throws Exception
 		 */
-		public static SogeumsanLinkVO.socialSaleHeader makeCommonParam(FinishTradeVO_noSchedule map, SogeumsanLinkVO.socialSaleHeader defaultParam, String userId, String userNm, String statusFlag) throws Exception{
+		public static SogeumsanLinkVO.socialSaleHeader makeCommonParam(FinishTradeVO_noSchedule map, SogeumsanLinkVO.socialSaleHeader defaultParam, String userId, String userNm, String userTel, String statusFlag) throws Exception{
 			
 			//공통영역 셋팅
 			defaultParam.setCONTENT_MST_CD("SOGEUMSAN_0_1");
@@ -3318,7 +3342,7 @@ public class TicketingController extends BaseController {
 			defaultParam.setTERMINAL_DATETIME(map.getSaleWorkDateTime());
 			defaultParam.setUSER_ID(userId);
 			defaultParam.setUSER_NM(userNm);
-			defaultParam.setUSER_TEL("");
+			defaultParam.setUSER_TEL(userTel);
 			defaultParam.setORDER_NUM(map.getSaleOrderNum());
 			defaultParam.setVALID_FROM(map.getSaleValidFrom());
 			defaultParam.setVALID_TO(map.getSaleValidTo());
@@ -3370,6 +3394,9 @@ public class TicketingController extends BaseController {
 		public String ShowTicketInfoListOfSogeumsan2(@ModelAttribute("essential")EssentialDTO essential, 
 				SaleDTO saleDTO, HttpServletRequest request,
 				@ModelAttribute("message") String message, Model model) throws Exception {
+			
+			log.info("================예매 본인인증 성공 예매 리스트 (/sogeumsan2/showTicketInfoList)=================");
+			
 			HttpSession session = request.getSession();
 			saleDTO = (SaleDTO) session.getAttribute("saleDTO");
 			saleDTO.setType("1");
@@ -3395,6 +3422,9 @@ public class TicketingController extends BaseController {
 									HttpServletRequest request, SaleDTO saleDTO,
 									/*SaleDTO2 changedSaleDTO,*/
 									@ModelAttribute("message") String message, Model model) throws Exception {
+			
+			
+			log.info("================예매 본인인증 성공 예매 상세정보 (/sogeumsan2/showTicketInfo)=================");
 			
 			HttpSession session = request.getSession();
 			saleDTO = (SaleDTO) session.getAttribute("saleDTO");

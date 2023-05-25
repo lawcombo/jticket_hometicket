@@ -74,7 +74,7 @@
 										</section>
 										<section class="order-wrap time-wrap">
 											<h3>
-												<img src="../resources/images/img_icon_calendar.png">
+												<img src="../../../../resources/images/img_icon_calendar.png">
 												<span class="reserve-date"></span>
 											</h3>
 											<div class="reserve-list chang"></div>
@@ -302,28 +302,64 @@ $(function() {
 	$('#cancelButton').on('click', function(e){
 		e.preventDefault();
 		var text;
-		if(todayDate > playDate){
-			alert("예약 날짜가 지났습니다. 예약취소가 불가능합니다.");
+		if(todayDate > playDate)
+		{
+			alert("행사 날짜가 지났습니다. 예매취소가 불가능합니다.");
 			return false;
-		}else if(todayDate == playDate){
-			alert("예약 당일은 취소가 불가능합니다.");
+		}
+		else if(todayDate == playDate)
+		{
+			alert("행사 당일은 취소가 불가능합니다.");
 			return false;
-		}else{
+		}
+		else
+		{
 			var yesterday = new Date(playDate);
 			yesterday.setDate(yesterday.getDate()-1);
 			yesterday = yesterday.toJSON().split("T");
 			yesterday = yesterday[0];
-			 if(todayDate <= yesterday){ //100% 환불
-				text = "현재 예약을 취소하시겠습니까?";
-				$("#partialCancelCode").val(0);
-			}else{
-				alert("취소 진행이 불가능합니다.");
-				return false;
+			 
+			
+			
+			//=======================================================================
+			//취소하고자 하는 날이 예매한날(행사일) 하루 전일 경우
+			if(todayDate == yesterday)
+			{
+				var todayTest 	= new Date();
+				var todayHours 	= todayTest.getHours();
+				
+				//행사일 전날 오후 18시 이전까지만 환불 가능
+				if(todayHours >= 18)
+				{
+					alert("취소 마감시간(행사일 기준 전일 18시) 이후에는 티켓의 환불이 불가합니다.");
+					return false;
+				}
+				else
+				{
+					text = "현재 예매를 취소하시겠습니까?";
+					$("#partialCancelCode").val(0);
+				}
 			}
-			 /* else if(todayDate > yesterday2[0]){ //50% 환불
-				text = "환불 규정이 적용되어 50% 환불 가능합니다. 취소하시겠습니까?";
-				$("#partialCancelCode").val(1);
-			} */
+			//=======================================================================			
+			else
+			{
+				//if(todayDate <= yesterday)
+				if(todayDate < yesterday)
+				{ //100% 환불
+					text = "현재 예매를 취소하시겠습니까?";
+					$("#partialCancelCode").val(0);
+				}
+				else
+				{
+					alert("취소 진행이 불가능합니다.");
+					return false;
+				}
+				 /* else if(todayDate > yesterday2[0]){ //50% 환불
+					text = "환불 규정이 적용되어 50% 환불 가능합니다. 취소하시겠습니까?";
+					$("#partialCancelCode").val(1);
+				} */
+			}
+			
 		}
 		
 		if(confirm(text)) {

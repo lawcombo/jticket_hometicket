@@ -48,7 +48,7 @@ DataEncrypt sha256Enc 	= new DataEncrypt();
 String ediDate 			= getyyyyMMddHHmmss();	
 String hashString 		= sha256Enc.encrypt(ediDate + merchantID + price + merchantKey);
 %>
-<%@ include file="../../include/ganghwakidscafe/header-single.jsp"%>
+<%@ include file="../../include/sogeumsan/header-single2.jsp" %>
 <style>
 a.disabled {
   pointer-events: none;
@@ -133,6 +133,10 @@ function checkPlatform(ua) {
 						<div id="pay-info-section" class="paytop">
 							<h1 id="container_title" class="pay_ch_tit">결제정보 확인</h1>
 							<form name="payForm" method="post" action="<c:url value="${webPayment.getFee() > 0 ? '/ticketing/payResult' : '/ticketing/pay0Result'}" />">
+								
+								<input type="hidden" name="userId" value="${loginUserId}" />
+								<input type="hidden" name="userName" value="${loginUserNm}" />
+								
 								<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> 
 								<div class="tbl_frm01 tbl_wrap bookinfo">
 									<table class="table table-bordered flexible-table bys_tabst bys_tabst2 etble_cus pay_rtb">

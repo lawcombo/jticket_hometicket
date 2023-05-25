@@ -17,6 +17,7 @@
 	        
 	        
 	        	<!-- 소금산 운영 설정 -->
+	        	
 	        	<entry key="apiUrl" value="https://iticket.wfmc.kr:9443/api"/>
 	        	<entry key="userApi" value="https://ticketsvc.wfmc.kr:443/Apis/Services/SetReservationInfo.ashx"/>
 	        	<entry key="kisPgPayModule" value="https://api.kispg.co.kr/v2/payment"/>
@@ -28,7 +29,8 @@
 	        	<entry key="apiValue">
 	        		<value><![CDATA[{"key":"4104A22CCDBC4159BE0373EA9CEFC42B","token":"$2a$10$mC74L9bGjRgjtKh/Udx7zOJEn.TM9DSrVCAcUIvL04LZAEnoOC/Oa","created":"20210226122046","expired":"21210226122046"}]]></value>
 	        	</entry>
-	        	<entry key="senderEmail" value="jejubeer@jejubeer.co.kr"/>
+	        	<entry key="senderEmail" value="admin@wfmc.kr"/>
+	        	
 	        	<entry key="senderEmailOfDiamondbay" value="diamondbay@diamondbay.co.kr"/>
 
 				<entry key="senderEmail_noSchedule" value="niceAdmin@nicetcm.co.kr"/>

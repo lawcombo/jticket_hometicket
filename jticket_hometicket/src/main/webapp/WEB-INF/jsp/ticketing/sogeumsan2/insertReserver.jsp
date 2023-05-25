@@ -30,10 +30,10 @@
 	//리턴url은 인증 전 인증페이지를 호출하기 전 url과 동일해야 합니다. ex) 인증 전 url : https://www.~ 리턴 url : https://www.~
 
 	//개발
-	 
-	//String sReturnUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/success?content_mst_cd=" + ((com.bluecom.ticketing.domain.EssentialDTO)request.getAttribute("essential")).getContent_mst_cd();     // 성공시 이동될 URL
-	//String sErrorUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/fail?content_mst_cd=" + ((com.bluecom.ticketing.domain.EssentialDTO)request.getAttribute("essential")).getContent_mst_cd();         // 실패시 이동될 URL
-	
+	/*
+	String sReturnUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/success?content_mst_cd=" + ((com.bluecom.ticketing.domain.EssentialDTO)request.getAttribute("essential")).getContent_mst_cd();     // 성공시 이동될 URL
+	String sErrorUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/fail?content_mst_cd=" + ((com.bluecom.ticketing.domain.EssentialDTO)request.getAttribute("essential")).getContent_mst_cd();         // 실패시 이동될 URL
+	*/
 	//운영
 	String sReturnUrl = "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/success?content_mst_cd=" + ((com.bluecom.ticketing.domain.EssentialDTO)request.getAttribute("essential")).getContent_mst_cd();     // 성공시 이동될 URL
 	String sErrorUrl = "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/reserverAuthentication/fail?content_mst_cd=" + ((com.bluecom.ticketing.domain.EssentialDTO)request.getAttribute("essential")).getContent_mst_cd();         // 실패시 이동될 URL
@@ -328,9 +328,11 @@ table, td, th {
 											</label>
 										</div>
 									</div>
+									<!-- 
 									<p class ="ewp_m_info_tb" style="font-size:smaller; text-align:-webkit-auto; color:darkgrey;">
 										선택 항목에 동의하지 않아도 서비스를 이용하실 수 있습니다.
 									</p>
+									 -->
 								</li>
 							</ul>
 							
@@ -357,34 +359,45 @@ table, td, th {
 								</li>
 								<li class="agreementLi answer toggleContent" style="display: none;">
 									<div class="pt20 pb20 ag_tg">
-										 <c:out value="${reserveInfo.info_a }" escapeXml="false"/>
-										<!-- 
-										<div>
-											당사는 개인정보보호법(법률 제 10465호) 등 관련법령에 의거하여, 정보주체로부터 개인정보를 수집함에 있어,
-											아래 내용을 안내하고 있습니다.<br> 정보주체가 되는 이용자께서는 아래 내용을 자세히 읽어보신 후에
-											동의여부를 결정하여 주시기 바랍니다.<br> <br> <br> 1. 개인정보의 수집
-											및 이용 목적<br> 제주맥주는 “개인정보 보호법”에 따라 수집한 개인정보를 다음의 목적을 위해
-											활용합니다. 제주맥주 양조장 내 진행 프로그램 예약, 제주맥주 주최 프로그램/행사 예약, 예약 조회, 고객
-											문의 게시글 등록, 신청자와의 연락, 개인 맞춤형 광고 및 마케팅 활용, 제공을 위해 개인정보를 수집,
-											이용합니다.<br> <br> <br> 2. 수집하는 개인정보의 항목<br>
-											제주맥주는 제 1조에 명기된 이용 목적을 위해 아래와 같은 개인정보를 수집하고 있습니다.<br> <br>
-											수집항목<br> 필수 : 신청자명, 연락처, 이메일 주소, 방문 희망인원, 방문 희망일시<br>
-											수집방법 : 홈페이지 (고객 집적 입력)<br> <br> <br> 3. 개인정보의
-											보유 및 이용기간<br> 개인정보의 수집 및 이용목적이 달성되면 지체 없이 파기합니다.<br>
-											단, 다음의 정보에 대해서는 아래의 이유로 명시한 기간 동안 보존합니다.<br> 보유 사유 : 제
-											1조에 이용목적 활용 후 고객 사후 관리<br> 보유 및 이용기간 : 고객이 서비스를 이용하는 기간에
-											한하여 보유 및 이용을 원칙으로 하되, 개인정보 유효기간제에 따라 1년동안 이용하지 않는 이용자의 개인정보는
-											파기<br> <br> <br> 4. 수집한 개인정보의 위탁<br> 서비스
-											향상 및 효율적인 개인정보 관리를 위하여 외부에 위탁하여 처리하고 있으며, 관계법령에 따라 위탁 계약 시
-											개인정보가 안전하게 관리될 수 있도록 규정하고 있습니다. 개인정보취급 수탁자와 그 업무의 내용은 다음과
-											같습니다.<br> <br> [수탁자 : 수탁범위]<br> 제주맥주(주),
-											한국전자금융(주) : 전산시스템의 구축 및 유지보수<br> <br> <br> 이용자
-											개인정보보호를 위하여 수집된 개인정보는 암호화되어 처리됩니다.<br> 고객께서는 본 안내에 따른
-											개인정보 수집에 대하여 거부를 하실 수 있는 권리가 있습니다.<br> 단, 개인정보 수집에 대하여
-											동의를 하지 않으실 경우에는, 제주맥주에서 주최하는 프로그램에 신청이 이루어지지 않음에 따라 당사의 개인정보
-											처리 요구 서비스를 이용하실 수 없습니다.
-										</div>
-										 -->
+										 <%-- <c:out value="${reserveInfo.info_a }" escapeXml="false"/> --%>
+										<table>
+										    <thead>
+										        <tr style="text-align:center; background-color:gainsboro;">
+										            <th style="width:60%">구분</th>
+										            <th style="width:40%">환급 기준</th>
+										        </tr>
+										    </thead>
+										    <tbody>
+										        <tr>
+										            <td>1. 이용자 본인의 귀책 사유 없이 ⌜재난 및 안
+														전관리 기본법⌟ 제3조의 ‘자연재난’ 및 ‘사
+														회재난’ 정의에서 태풍, 호우, 전염병 등으로
+														예약시설의 사용이 불가능하다고 인정될 경우
+													</td>
+										            <td> ○이용료 전액 환급 </td>
+										        </tr>
+										        <tr>
+										            <td>
+										            	2. 관리‧운영 주체의 사정으로 인한 예약취소	<br />
+														○ 사용예정일 1일전까지 취소
+													</td>
+										            <td> ○이용료 전액 환급 </td>
+										        </tr>
+										        <tr>
+										            <td>
+										            	3. 사용하려는 자의 귀책 사유로 인한 예약취소 <br />
+														○ 사용예정일 5일전에 취소	<br />
+														○ 사용예정일 2～4일전에 취소	<br />
+														○ 사용예정일 1일전에 취소	<br />
+													</td>
+										            <td> 
+										            	○ 이용료 전액 환급	<br />
+														○ 이용료의 10% 공제 후 환급	<br />
+														○ 이용료의 20% 공제 후 환급 	<br />
+													</td>
+										        </tr>
+										    </tbody>
+										</table>
 									</div>
 								</li>
 							</ul>
@@ -445,9 +458,9 @@ table, td, th {
 																		이용요금 할인(우대 대상)
 																	</h3>
 																	<p class="mt_txt">
-																		- 65세이상, 수급자, 한부모가족, 다자녀가정, 장애인, 국가유공자, 단체, 원주시민인 경우에는 이용요금 할인은 받을 수 있습니다. <br>
-																		- 자세한 내용은 <span class="txt_red_st">이전 페이지 팝업창</span>에서 확인 가능합니다. <br>
-																		- 이용요금 할인 대상자는 티켓 수령 및 현장 발권 시 반드시 "신분증 지참" 바랍니다.
+																		- 만 65세 이상, 수급자, 한부모가족, 다자녀가정, 장애인, 국가유공자, 단체, 원주시민인 경우에는 이용요금 할인은 받을 수 있습니다. <br>
+																		- 자세한 내용은 <span class="txt_red_st" onclick="popupCall.openPop();" style="cursor:pointer;">이전 페이지 팝업창</span>에서 확인 가능합니다. <br>
+																		- 이용요금 할인 대상자는 티켓 수령 및 현장 발권 시 반드시 "신분증 등 증빙서류 지참" 바랍니다.
 																	</p>
 																	
 																</div>
@@ -710,6 +723,67 @@ table, td, th {
 		</form:form>
 	</div>
 </div>
+
+
+
+<div class="" style="display: none;" id="image1">
+	<div class="rad_modal_content" style="max-width:max-content;">
+		<div class="rad_modal_x">
+			<div id="agreementTermsOfUse-modal-section" class="md_cont">
+				<div class="modal_tb">
+					<!-- 
+					<div class="mt_top">
+						<h2>
+							<strong>잠깐!</strong>
+						</h2>
+						<p class="mt_top_text"></p>
+					</div>
+					 -->
+					<div class="mt_bot">
+						<img src="../../../../../resources/images/sogeumsan/naora5.jpg" style="width:100%;">
+					</div>
+				</div>
+				
+				<div style="padding-right:20px; margin-left:20px; padding-bottom:5px">
+					<button class="" style="cursor:pointer;" onclick="nitiConfirm.confirmBtn();">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="rad_modal_bk" id="rad_modal_bk"></div>
+</div>
+
+<div class="" style="display: none;" id="image2">
+	<div class="rad_modal_content" style="max-width:max-content;">
+		<div class="rad_modal_x">
+			<div id="agreementTermsOfUse-modal-section" class="md_cont">
+				<div class="modal_tb">
+					<!-- 
+					<div class="mt_top">
+						<h2>
+							<strong>잠깐!</strong>
+						</h2>
+						<p class="mt_top_text"></p>
+					</div>
+					 -->
+					<div class="mt_bot">
+						<img src="../../../../../resources/images/sogeumsan/naora6.jpg" style="width:100%;">
+					</div>
+				</div>
+				
+				<div style="padding-right:20px; margin-left:20px; padding-bottom:5px">
+					<button class="" style="cursor:pointer;" onclick="nitiConfirm.confirmBtn2();">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="rad_modal_bk2" id="rad_modal_bk2"></div>
+</div>
+
+
+
+
+
 <!-- 이용약관 모달 섹션 -->
 <%-- <div id="agreementTermsOfUse-modal-section">
 		<c:out value="${reserveInfo.info_c }" escapeXml="false"/>
@@ -741,6 +815,43 @@ table, td, th {
 // 403 에러 처리(Spring Security에서의 Ajax 호출)
 var header = $("meta[name='_csrf_header']").attr('content');
 var token = $("meta[name='_csrf']").attr('content');
+
+
+//=============================================================
+var popupCall = {
+		openPop : function(){
+			$("#image1").fadeIn();
+		}
+}
+
+$(function(){
+	$("#rad_modal_bk").click(function(){
+		$("#image1").fadeOut();
+		
+		$("#image2").fadeIn();
+	});
+});
+
+$(function(){
+	$("#rad_modal_bk2").click(function(){
+		$("image2").fadeOut();
+	});
+});
+
+var nitiConfirm = {
+		confirmBtn : function(){
+			$("#image1").fadeOut();
+			
+			$("#image2").fadeIn();
+		},
+		
+		confirmBtn2 : function(){
+			$("#image2").fadeOut();
+		}
+}
+// =============================================================
+
+
 
 $.ajaxSetup({
 	beforeSend: function (xhr) {
@@ -1026,7 +1137,7 @@ var setReturnedReserverAuthenticationValuesFromChildWindow = function (result) {
 /***** 결제 결과*****/
 var setReturnedPayValuesFromChildWindow = function (result) {
 	if(result.success == 1) {
-		window.location.href= "/ticketing/sogeumsan2/finish?content_mst_cd=<c:out value='${essential.content_mst_cd }' />&product_group_code=<c:out value='${essential.product_group_code }' />&orderNo=" + result.orderNo;	
+		window.location.href= "/ticketing/sogeumsan2/finish?content_mst_cd=<c:out value='${essential.content_mst_cd }' />&product_group_code=<c:out value='${essential.product_group_code }' />&orderNo=" + result.orderNo + "&userId=<c:out value='${loginUserId}' />&userName=<c:out value='${loginUserNm}' />";
 	}
 	
 }
