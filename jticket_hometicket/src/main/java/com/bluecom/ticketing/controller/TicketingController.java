@@ -3425,11 +3425,17 @@ public class TicketingController extends BaseController {
 			
 			
 			log.info("================예매 본인인증 성공 예매 상세정보 (/sogeumsan2/showTicketInfo)=================");
-			
+					
 			HttpSession session = request.getSession();
 			saleDTO = (SaleDTO) session.getAttribute("saleDTO");
 			
+			
+			log.info("1111111111111111111111");
+			
 			List<SaleProductDTO> saleProductDTOList = ticketingService.getSaleProductDTOList(saleDTO);
+			
+			
+			log.info("22222222222222222222222");
 			
 			/*if(saleProductDTOList.isEmpty())
 				return "redirect:/ticketing/checkTicket?content_mst_cd="+essential.getContent_mst_cd();*/
@@ -3440,10 +3446,16 @@ public class TicketingController extends BaseController {
 			//bc_product 에서 fee & web_yn & schedule_yn 값 가져와서 뿌리기
 			List<ProductDTO> products = ticketingService.getProducts(productGroup);
 			
+			
+			log.info("3333333333333333333333");
+			
 			// 방문자 정보 가져오기
 			PaymentInfoDTO paymentInfo = new PaymentInfoDTO();
 			ShopDetailVO shopDetail = ticketingService.getShopDetail(productGroup.getShop_code());
 			paymentInfo.setVisitorType(shopDetail.getPerson_type());
+			
+			
+			log.info("4444444444444444444444444");
 			
 			// 0번상품이 금액 상품
 			WebPaymentDTO orgWebPayment =  ticketingService.getWebPayment(saleProductDTOList.get(0).getOrder_num());
@@ -3451,19 +3463,31 @@ public class TicketingController extends BaseController {
 			
 			saleDTO.setShop_code(productGroup.getShop_code());
 			
-			// web_payment_idx 로 bc_web_payment_coupon 조회 후 금액 가져오기
-			List<CouponVO> coupon = ticketingService.getCouponByWebPaymetIdx(saleProductDTOList.get(0).getOrder_num());
+			log.info("555555555555555555555");
+			
+			
+			// web_payment_idx 로 bc_web_payment_coupon 조회 후 금액 가져오기 _ 블루컴 하......망할
+			//List<CouponVO> coupon = ticketingService.getCouponByWebPaymetIdx(saleProductDTOList.get(0).getOrder_num());
+			
+			
+			log.info("666666666666666666");
+			
+			
 			
 			//구매한 상품정보 가져오기
 			saleDTO.setSale_code(saleProductDTOList.get(0).getSale_code());
 			List<SaleProductDTO> purchase = ticketingService.selectPurchaseProduct(saleDTO);
+			
+			
+			
+			log.info("777777777777777777");
 			
 			model.addAttribute("products", products);
 			model.addAttribute("productGroup", productGroup);
 			model.addAttribute("paymentInfo", paymentInfo);
 			model.addAttribute("dataList", saleProductDTOList);
 			model.addAttribute("buyerInfo", saleDTO);
-			model.addAttribute("coupon", coupon);
+			//model.addAttribute("coupon", coupon);
 			model.addAttribute("purchase", purchase);
 			
 			//model.addAttribute("companyTel", ticketingService.getCompany(saleDTO.getShopCode()).getComp_tel());

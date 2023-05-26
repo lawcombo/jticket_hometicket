@@ -140,7 +140,8 @@
 					<dl class="reserveDl full mt50 ewp_show_bot_ex">
 						<div class="ewp_show_bot" style="max-width:initial; width:fit-content;">
 							<c:choose>
-								<c:when test="${(product.quantity eq product.actual_quantity) && (product.real_fee eq (product.product_fee - coupon[0].couponFee)) }">
+								<%-- <c:when test="${(product.quantity eq product.actual_quantity) && (product.real_fee eq (product.product_fee - coupon[0].couponFee)) }"> --%>
+								<c:when test="${product.quantity eq product.actual_quantity}">
 									<div>
 										<button class="buttonTypeCyan full textLarge ewp_bot_ok" style='<c:out value="${isUsed eq true || isRefunded eq true ? 'pointer-events: none;background-color:#ddd' : '' }" />; cursor:pointer;' onmouseover="this.style.background='#2be6ed'" onmouseout="this.style.background='#05cdd5'" onclick="history.back()" >예매내역 가기</button>
 									</div>
@@ -217,12 +218,14 @@
 				<input type='hidden' name='member_tel' value="${buyerInfo.member_tel }">
 				<input type='hidden' name='member_name' value="${buyerInfo.member_name }">
 				<input type="hidden" name="type" id="partialCancelCode" /> <!-- 부분취소 여부 -->
+				<%-- 
 				<c:forEach var="list" items="${coupon}" varStatus="status">
 					<input type="hidden" name="coupon[${status.index }].cpm_num" value="${list.cpm_num}">
 					<input type="hidden" name="coupon[${status.index }].company_code" value="${list.company_code}">
 					<input type="hidden" name="coupon[${status.index }].cpm_cpn_code" value="${list.cpm_cpn_code}">
 					<input type="hidden" name="coupon[${status.index }].cpm_use_info" value="고객요청취소">
 				</c:forEach>
+				 --%>
 			</form:form>
 			<!-- 변경 form -->
 			<form:form role="modify" action="/ticketing/modifyTicket" method="POST">

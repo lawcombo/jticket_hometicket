@@ -186,7 +186,7 @@ public class JejuMailServiceImpl extends EgovAbstractServiceImpl implements Mail
 		text = text.replace("{5}", "취소");
 		text = text.replace("{6}", "취소");
 		//text = text.replace("{7}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/resources/images/jeju/email_logo.jpg");
-		text = text.replace("{7}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/resources/images/long_company_logo.png");
+		text = text.replace("{7}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/resources/images/company_logo.png");
 		text = text.replace("{8}", "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/checkTicket?content_mst_cd=" + payment.getContent_mst_cd());
 		text = text.replace("{9}", payment.getProduct_group_name());
 		
