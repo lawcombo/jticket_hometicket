@@ -39,7 +39,7 @@
 			
 		
 			<div class="intro res_tit res_padi">
-				<h1>소금산 밸리 예매하기</h1>
+				<h1>나오라쇼 예매하기</h1>
 			</div>
 			
 			<div style="float:right; padding-right:18px">
