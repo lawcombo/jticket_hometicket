@@ -108,6 +108,12 @@
 			                				<td rowspan="2">40분</td>
 			                			</tr>
 			                			<tr>
+			                				<td>양조장투어 + 논알콜맥주</td>
+			                				<td>19,000</td>
+			                				<td>제주맥주 논알콜맥주 1잔(제주누보 330ml)</td>
+			                				<td rowspan="2">40분</td>
+			                			</tr>
+			                			<tr>
 			                				<td>양조장투어 + 음료</td>
 			                				<td>19,000</td>
 			                				<td>제주음료</td>
@@ -115,7 +121,7 @@
 			                		</tbody>
 			                	</table>
 			                	<p class="beer_table_p">
-			                		*양조장투어 + 맥주 선택 시 신분증 필참
+			                		*양조장투어 + 맥주, 논알콜맥주 선택 시 신분증 필참
 			                	</p>
 			                </div><!-- beer_table_bx end -->
 			            
