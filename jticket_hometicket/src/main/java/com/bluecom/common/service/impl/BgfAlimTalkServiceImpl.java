@@ -473,7 +473,7 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 			ShopDetailVO shopDetail) throws Exception{
 		
 		AlimTalkTemplateDTO searchTemplate = new AlimTalkTemplateDTO(); // default
-		searchTemplate.setShop_code("SOGEUMSAN");
+		searchTemplate.setShop_code("MCYCAMPING");
 		searchTemplate.setType("REFUND");
 		searchTemplate.setProduct_group_kind("1");		
 
@@ -494,7 +494,7 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 		text = text.replace("#{6}", saleVO.getValid_to());
 		text = text.replace("#{7}", payment.getReserverName());
 		text = text.replace("#{8}", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(saleVO.getWork_Datetime()));
-		text = text.replace("#{9}", "https://" + request.getServerName() + request.getContextPath() + "/ticketing/sogeumsan/selectTicket?content_mst_cd=" + payment.getContent_mst_cd());
+		text = text.replace("#{9}", "https://" + request.getServerName() + request.getContextPath() + "/ticketing/mcycamping/selectTicket?content_mst_cd=" + payment.getContent_mst_cd());
 		text = text.replace("#{14}", StringUtils.hasText(shopDetail.getComp_tel()) ? shopDetail.getComp_tel() : "");
 		text = text.replace("#{15}", new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()));
 		template.setText(text);
@@ -519,7 +519,7 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 			ShopDetailVO shopDetail) throws Exception{
 
 		AlimTalkTemplateDTO searchTemplate = new AlimTalkTemplateDTO(); // default
-		searchTemplate.setShop_code("SOGEUMSAN");
+		searchTemplate.setShop_code("MCYCAMPING");
 		searchTemplate.setType("REFUND");
 		searchTemplate.setProduct_group_kind("2");
 		
@@ -540,7 +540,7 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 		text = text.replace("#{6}", payment.getPlay_sequence() + "(" + payment.getStart_time() + "~" + payment.getEnd_time() + ")");
 		text = text.replace("#{7}", payment.getReserverName());
 		text = text.replace("#{8}", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(saleVO.getWork_Datetime()));
-		text = text.replace("#{9}", "https://" + request.getServerName() + request.getContextPath() + "/ticketing/sogeumsan/selectTicket?content_mst_cd=" + payment.getContent_mst_cd());
+		text = text.replace("#{9}", "https://" + request.getServerName() + request.getContextPath() + "/ticketing/mcycamping/selectTicket?content_mst_cd=" + payment.getContent_mst_cd());
 		text = text.replace("#{14}", StringUtils.hasText(shopDetail.getComp_tel()) ? shopDetail.getComp_tel() : "");
 		
 		template.setText(text);
@@ -568,6 +568,9 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 		WebPaymentDTO payment = apiResult.getWebPayment();
 		
 		AlimTalkTemplateDTO template = null;
+		
+		System.out.println("@@@@@@@ : " + payment.getProduct_group_kind());
+		
 		if(payment.getProduct_group_kind().equals("1")) {
 			template = getNormalReservationMessage_noSchedule(request, sale, payment, pgResult, shopDetail);
 		} else if(payment.getProduct_group_kind().equals("2")) {
@@ -596,7 +599,7 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 		
 		AlimTalkTemplateDTO searchTemplate = new AlimTalkTemplateDTO(); // default
 		
-		searchTemplate.setShop_code("SOGEUMSAN");
+		searchTemplate.setShop_code("MCYCAMPING");
 		searchTemplate.setType("RESERVE");
 		searchTemplate.setProduct_group_kind("1");
 		
@@ -617,11 +620,11 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 		text = text.replace("#{6}", sale.getVALID_TO());
 		text = text.replace("#{7}", payment.getReserverName());
 		text = text.replace("#{8}", sale.getWORK_DATETIME());	
-		text = text.replace("#{9}", "https://" + request.getServerName() + request.getContextPath() + "/ticketing/sogeumsan/selectTicket?content_mst_cd=" + payment.getContent_mst_cd());
-		text = text.replace("#{10}", "https://" + request.getServerName() + request.getContextPath() + "/ticketing/termsOfUse?content_mst_cd=" + payment.getContent_mst_cd());
+		//text = text.replace("#{9}", "https://" + request.getServerName() + request.getContextPath() + "/ticketing/mcycamping/selectTicket?content_mst_cd=" + payment.getContent_mst_cd());
+		//text = text.replace("#{10}", "https://" + request.getServerName() + request.getContextPath() + "/ticketing/termsOfUse?content_mst_cd=" + payment.getContent_mst_cd());
 		text = text.replace("#{11}", StringUtils.hasText(shopDetail.getWeekday_use_time()) ? shopDetail.getWeekday_use_time() : "");	
 		text = text.replace("#{12}", StringUtils.hasText(shopDetail.getWeekend_use_time()) ? shopDetail.getWeekend_use_time() : "");	
-		text = text.replace("#{13}", "https://" + request.getServerName() + request.getContextPath() + "/ticketing/sogeumsan/refundPolicy?content_mst_cd=" + payment.getContent_mst_cd());
+		//text = text.replace("#{13}", "https://" + request.getServerName() + request.getContextPath() + "/ticketing/mcycamping/refundPolicy?content_mst_cd=" + payment.getContent_mst_cd());
 		text = text.replace("#{14}", StringUtils.hasText(shopDetail.getComp_tel()) ? shopDetail.getComp_tel() : "");	
 		template.setText(text);
 		

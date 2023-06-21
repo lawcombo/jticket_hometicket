@@ -4993,6 +4993,8 @@ public class TicketingController extends BaseController {
 		
 		
 		//=========================================MCY 캠핑파크 =================================================
+		
+		
 		@GetMapping("/mcycamping/selectTicket")
 		public String process1SelectTicketOfMcyCamping(@ModelAttribute("shopInfo") @Valid ShopInfo_noScheduleDTO shopInfo,
 				Errors errors, HttpServletResponse response, RedirectAttributes redirectAttribute, Model model, HttpServletRequest request)
@@ -5233,6 +5235,125 @@ public class TicketingController extends BaseController {
 		}
 		
 		
+		@GetMapping("/mcycamping/showTicketInfoList")
+		public String ShowTicketInfoList_noScheduleOfMcy(SaleDTO_noSchedule saleDTO, HttpServletRequest request,
+				@ModelAttribute("message") String message, Model model) throws Exception {
+//			List<SaleProductDTO> saleProductDTOList = ticketingService.getSaleProductList(saleDTO);
+	//
+//			model.addAttribute("saleProducts", saleProductDTOList);
+			
+			String shopCode = ticketingService.getShopCode(saleDTO.getContent_mst_cd());
+			saleDTO.setShop_code(shopCode);
+			
+			model.addAttribute("sale", saleDTO);
+			List<SaleVO_noSchedule> sales = ticketingService.getSalesByMemberInfo(saleDTO);
+			
+			
+			model.addAttribute("sales", sales);
+			//model.addAttribute("companyTel", ticketingService.getCompany(saleDTO.getShopCode()).getComp_tel());
+			
+			
+			return "/ticketing/mcycamping/showTicketInfoList";
+		}
+		
+		
+		@GetMapping("/mcycamping/showTicketInfo")
+		public String ShowTicketInfo_noScheduleOfMcy(HttpServletRequest request, SaleDTO_noSchedule saleDTO, @ModelAttribute("message") String message, Model model) throws Exception {
+			
+			BigDecimal totalFee = BigDecimal.ZERO;
+			
+			String orderNum = ticketingService.getOrderNumBySaleCode(saleDTO);
+			String shopCode = ticketingService.getShopCode(saleDTO.getContent_mst_cd());
+			
+			
+			//SaleVO saleVO = new SaleVO();
+			SaleVO_noSchedule saleVO = new SaleVO_noSchedule();
+			
+			saleVO.setContent_mst_cd(saleDTO.getContent_mst_cd());
+			saleVO.setSale_code(saleDTO.getSale_code());
+			saleVO.setOrder_num(orderNum);
+			saleVO.setShop_code(shopCode);
+			saleVO.setContent_mst_cd(saleDTO.getContent_mst_cd());
+			
+			saleVO = ticketingService.getSaleByOrderNum(saleVO);
+			
+			List<SaleProductDTO_noSchedule> saleProducts = ticketingService.getSaleProduct(saleDTO);
+
+			int refundQuantity= 0;
+			/*for(SaleProductDTO saleProduct : saleProducts) {
+				if(saleProduct.getRefund_yn().equals("1")) {
+					refundQuantity++;
+				} else {
+					SaleProductDTO tsSaleProduct = ticketingService.getTsSaleProductByBookNo(saleProduct);
+					if(tsSaleProduct != null) {
+						saleProduct.setPlay_date(tsSaleProduct.getPlay_date());
+					}
+				}
+			}*/
+			
+			// 상품코드별 상품판매정보
+			Map<String, List<SaleProductDTO_noSchedule>> saleProductMap = new HashMap<>();
+			
+			for(int i=0; i< saleProducts.size(); i++) {
+				
+				SaleProductDTO_noSchedule saleProduct = saleProducts.get(i);
+				
+				if(saleProductMap.containsKey(saleProduct.getProduct_code())) {
+					saleProductMap.get(saleProduct.getProduct_code()).add(saleProduct);
+				} else {
+					List<SaleProductDTO_noSchedule> persons = new ArrayList<>();
+					persons.add(saleProduct);
+					saleProductMap.put(saleProduct.getProduct_code(), persons);
+				}
+			}
+			model.addAttribute("saleProductMap", saleProductMap);
+			
+			int targetIdx = 0;
+			
+			
+			for(int i=0; i<saleProducts.size(); i++) {
+				
+				// 전체 구매 금액 계산
+				totalFee = totalFee.add(saleProducts.get(i).getProduct_fee());
+				
+				if(saleProducts.get(i).getRefund_yn().equals("1")) {
+					refundQuantity++;
+				}else {
+					SaleProductDTO_noSchedule tsSaleProduct = ticketingService.getTsSaleProductByBookNo(saleProducts.get(i));
+					if(tsSaleProduct != null) {
+						saleProducts.get(i).setPlay_date(tsSaleProduct.getPlay_date());
+					}
+					if(i > 0) {
+						if(saleProducts.get(i).getProduct_name().equals(saleProducts.get(targetIdx).getProduct_name())) {
+							int currentCount = Integer.parseInt(saleProducts.get(i).getQuantity());
+							if(currentCount <= 0)
+								continue;
+							int count = Integer.parseInt(saleProducts.get(targetIdx).getQuantity()) + currentCount;
+							saleProducts.get(targetIdx).setQuantity(String.valueOf(count));						
+							
+							BigDecimal currentProductFee = saleProducts.get(i).getProduct_fee().multiply(BigDecimal.valueOf(currentCount));
+							BigDecimal productFee = saleProducts.get(targetIdx).getProduct_fee().add(currentProductFee);
+
+							saleProducts.get(targetIdx).setProduct_fee(productFee);
+
+						} else {
+							targetIdx = i;
+						}
+					}
+					
+				}
+			}
+			
+			saleVO.setRefund_quantity(refundQuantity);
+			model.addAttribute("saleProducts", saleProducts);
+			model.addAttribute("sale", saleVO);
+			model.addAttribute("totalFee", totalFee);
+			
+//			ShopDetailVO shopDetail = ticketingService.getShopDetail(productGroup.getShop_code());
+			return "/ticketing/mcycamping/showTicketInfo";
+		}
+		
+		
 		@GetMapping("/mcycamping/finish")
 		public String process1FinishOfMcyCamping(@ModelAttribute("shopInfo") @Valid ShopInfo_noScheduleDTO shopInfo,
 				@RequestParam("orderNo") String orderNo, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -5326,9 +5447,9 @@ public class TicketingController extends BaseController {
 		public String cancelTicketOfMcyCamping(@ModelAttribute("sale") SaleDTO_noSchedule sale,
 				@RequestParam(name = "isMyPage", required = false) String isMyPage, HttpServletRequest request,
 				HttpServletResponse response, RedirectAttributes rttr, Model model) throws Exception {
-			String failRedirectPage = "redirect:/ticketing/sogeumsan/showTicketInfo?content_mst_cd=" + sale.getContent_mst_cd() + "&member_name=" + URLEncoder.encode(sale.getMember_name(), "UTF-8") 
+			String failRedirectPage = "redirect:/ticketing/mcycamping/showTicketInfo?content_mst_cd=" + sale.getContent_mst_cd() + "&member_name=" + URLEncoder.encode(sale.getMember_name(), "UTF-8") 
 				+ "&member_tel=" + sale.getMember_tel() + "&today=" + sale.getToday() + "&sale_code=" + sale.getSale_code();
-			String successRedirectPage = "redirect:/ticketing/sogeumsan/prevShowTicket?content_mst_cd=" + sale.getContent_mst_cd() + "&today=" + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) 
+			String successRedirectPage = "redirect:/ticketing/mcycamping/prevShowTicket?content_mst_cd=" + sale.getContent_mst_cd() + "&today=" + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) 
 				+ "&member_name=" + URLEncoder.encode(sale.getMember_name(), "UTF-8") + "&member_tel=" + sale.getMember_tel();;
 			Date now = new Date();
 			Date today = DateHelper.getDateStart(now);
@@ -6024,6 +6145,8 @@ public class TicketingController extends BaseController {
 									ex.printStackTrace();
 								}
 
+								/*
+								 * 이메일 안보내기
 								if (StringUtils.hasText(apiResultVO.getWebPayment().getReserverEmail())) {
 
 									try {
@@ -6032,6 +6155,8 @@ public class TicketingController extends BaseController {
 										ex.printStackTrace();
 									}
 								}
+								*/
+								
 								resultSuccess = 1;
 								resultOrderNum = moid;
 								resultMessage = "결제에 성공하였습니다.";

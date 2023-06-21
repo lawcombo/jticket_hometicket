@@ -265,6 +265,7 @@
 											<input readonly type="hidden" name="reserver.phone">
 										</td>
 									</tr>
+									<!-- 
 									<tr>
 										<th>
 											<label for="bcd_memo">E-Mail주소</label>
@@ -273,10 +274,11 @@
 											<input type="text" name="reserver.email" id="email">
 										</td>
 									</tr>
+									 -->
 									
 								</tbody>
 							</table>
-							<p class="pstxt">※ 확인메일 수령을 원하시면 email을 기입해 주세요.</p>
+							<!-- <p class="pstxt">※ 확인메일 수령을 원하시면 email을 기입해 주세요.</p> -->
 						</div>
 					</div>
 					<!-- 방문자 정보 -->

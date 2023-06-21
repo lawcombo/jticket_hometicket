@@ -102,7 +102,7 @@ var setReturnedCheckReservationAuthenticationValuesFromChildWindow = function (r
 		var form = $('form[role="checkTicketAjax"]');
 		$.ajax({
 			type : 'post',  				       
-			url : '<c:url value="/ticketing/maycamping/checkTicketAjax" />',
+			url : '<c:url value="/ticketing/mcycamping/checkTicketAjax" />',
 			headers : {
 				"Content-type" : "application/json;charset=utf-8",
 				"X-HTTP-Method-Override" : "POST"
@@ -123,7 +123,7 @@ var setReturnedCheckReservationAuthenticationValuesFromChildWindow = function (r
 				
 				
 				
-				window.location = "<c:url value='/ticketing/maycamping/prevShowTicket' />?content_mst_cd=" + checkTicketContentMstCd + "&member_name=" 
+				window.location = "<c:url value='/ticketing/mcycamping/prevShowTicket' />?content_mst_cd=" + checkTicketContentMstCd + "&member_name=" 
 						+ data[0].member_name + "&member_tel=" +  data[0].member_tel + "&today=<c:out value='${today}' />&sale_code=" + data[0].sale_code;
 				
 			},

@@ -220,7 +220,7 @@ $.ajaxSetup({
 
 </script>
 
-<%@ include file="../../include/sogeumsan/check-ticket.jsp" %>
+<%@ include file="../../include/mcycamping/check-ticket.jsp" %>
 
 
 <script>
