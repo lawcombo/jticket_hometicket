@@ -261,7 +261,7 @@
 									<tr>
 										<th scope="row"><label for="bcd_memo">휴대폰 번호</label></th>
 										<td>
-											<input readonly type="text" name="reserver.phoneShow" required class='required' style="background-color:#fafafa;">
+											<input readonly type="text" name="reserver.phoneShow" required class='required' style="background-color:#fafafa;" placeholder="나이스평가정보에서 인증 받은 휴대폰 번호를 사용">
 											<input readonly type="hidden" name="reserver.phone">
 										</td>
 									</tr>
