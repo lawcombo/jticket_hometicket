@@ -256,7 +256,7 @@
 								<tbody>
 									<tr>
 										<th scope="row">예매자 성함</th>
-										<td><input readonly type='text' name='reserver.name' placeholder='본인확인 버튼을 눌러주세요' required class="required" style="background-color:#fafafa;"><br></td>
+										<td><input readonly type='text' name='reserver.name' placeholder='나이스평가정보에서 인증 받은 이름을 사용' required class="required" style="background-color:#fafafa;"><br></td>
 									</tr>
 									<tr>
 										<th scope="row"><label for="bcd_memo">휴대폰 번호</label></th>
