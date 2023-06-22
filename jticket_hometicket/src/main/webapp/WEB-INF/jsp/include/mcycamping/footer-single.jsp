@@ -22,7 +22,7 @@
 		<div class="ft_2">
 			<p>[26384] 경북 경주시 천북남로 196 </p>
 			<p>현장문의 : 054-745-3667 (운영시간 : 10:00 ~ 22:00 (입장마감 21:00)) </p>
-			<p>Copyrightⓒ MCY Camping Park. All rights reserved.</p>
+			<p>Copyrightⓒ MCYpark. All rights reserved.</p>
 		</div>
 	</div><!-- //ft_w -->
 </div><!-- //ft_wrap -->
