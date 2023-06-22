@@ -8,21 +8,21 @@
 	        
 	        
 	        	<!-- nice 개발 설정 -->
-	        	<!-- 
+	        	
 	        	<entry key="apiUrl" value="https://iticket-stg.nicetcm.kr/api"/>
 	        	<entry key="userApi" value="https://ticketstgsvc.nicetcm.co.kr:443/Apis/Services/SetReservationInfo.ashx"/>
 	        	<entry key="kisPgPayModule" value="https://api.kispg.co.kr/v2/payment"/>
 				<entry key="kisPgPayCanelModule" value="https://api.kispg.co.kr/v2/cancel"/>
-	        	 -->
+	        	
 	        
 	        
 	        	<!-- 소금산 운영 설정 -->
-	        	
+	        	<!-- 
 	        	<entry key="apiUrl" value="https://iticket.wfmc.kr:9443/api"/>
 	        	<entry key="userApi" value="https://ticketsvc.wfmc.kr:443/Apis/Services/SetReservationInfo.ashx"/>
 	        	<entry key="kisPgPayModule" value="https://api.kispg.co.kr/v2/payment"/>
 				<entry key="kisPgPayCanelModule" value="https://api.kispg.co.kr/v2/cancel"/>
-	        	
+	        	 -->
 	        	
 
 	        	<entry key="apiKey" value="BC-Auth-Token"/>

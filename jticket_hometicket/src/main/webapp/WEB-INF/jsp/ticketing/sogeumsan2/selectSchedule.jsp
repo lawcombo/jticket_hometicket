@@ -229,8 +229,8 @@
 				<div class="order">
 					{{#reserv}}
 					{{#product.product}}
-					<div class="order_spbx">
-						<span data-id="{{id}}">{{name}}</span>
+					<div class="order_spbx" style="text-align:right; padding-right:15px;">
+						<span data-id="{{id}}" style="float:left;">{{name}}</span>
 						<button type="button" data-id="{{id}}" id="{{id}}{{code}}" class="btn js-minus">
 							<span class="material-icons">remove</span>
 						</button>
@@ -409,6 +409,8 @@ var checkBtn = {
 					//console.log(json.products);
 					var schedule = json.schedule;
 					products = json.products;
+					
+					console.log(products);
 					
 					let productAry = {product: []};
 					for(var j=0; j<products.length; j++){

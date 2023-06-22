@@ -495,7 +495,7 @@
 				AND bp.web_yn = 1
 				AND bp.delete_yn = 0
 				AND bp.schedule_yn=1
-				ORDER BY bp.order_no
+				ORDER BY bp.order_no, bp.product_name
 		]]>
 	</select>
 	

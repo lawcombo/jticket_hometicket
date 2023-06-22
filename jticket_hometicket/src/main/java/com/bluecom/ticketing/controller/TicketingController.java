@@ -3037,8 +3037,10 @@ public class TicketingController extends BaseController {
 			model.addAttribute("productGroup", productGroup);
 			
 			//List<ProductDTO> products = ticketingService.getProducts(productGroup);
-			List<ProductDTO> products = ticketingService.selectProductsForGanghwa(productGroup);
+			//List<ProductDTO> products = ticketingService.selectProductsForGanghwa(productGroup);
+			List<ProductDTO> products = ticketingService.selectProductsForSogeumsan(productGroup);
 			model.addAttribute("products", products);
+			
 			
 			ScheduleDTO scheduleDTO = new ScheduleDTO();
 			scheduleDTO.setContentMstCd(essential.getContent_mst_cd());
