@@ -114,7 +114,7 @@
 								</p>
 								<p class="con_imgbx03">
 									<img src="/resources/noSchedule/images/con2_1_icon2.png">
-									<span>현장 방문 후 매표소에서<br>모바일 티켓 제시 후 탑승권 수령</span>
+									<span>현장 방문 후 매표소에서<br>모바일 티켓 제시 후 입장권 수령</span>
 								</p>
 							</div>		
 						</div>
