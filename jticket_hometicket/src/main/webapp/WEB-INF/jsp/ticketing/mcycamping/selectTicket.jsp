@@ -46,8 +46,8 @@
 			<h2>온라인 예매</h2>
 			<span class="bar"></span>
 			<div class="desc">
-				<em>'MCY 캠핑파크' 빠르게 만나는 방법!!</em>
-				온라인 예매로 아름다운 MCY 캠핑파크를 지금 만나보세요! 
+				<em>'MCY파크(MCYpark)' 빠르게 만나는 방법!!</em>
+				온라인 예매로 아름다운 MCY파크(MCYpark)를 지금 만나보세요! 
 			</div>
 		</div>
 		<div class="res_btbx">
@@ -58,8 +58,8 @@
 			<div class="re_ban_w ewp_re_ban_w">
 				<p class="ban_l"><img src="/resources/noSchedule/images/con2_1_bann01.png" alt="" /></p>
 				<p class="ban_r">
-					MCY 캠핑파크 <b>쉽게 만나는 방법!</b><span class="inline_b"></span>온라인 예매로 구매하세요!
-					<span class="t1"> <b>온라인 예매로 아름다운 MCY 캠핑파크</b>를 지금 만나볼 수 있습니다.</span>
+					MCY파크(MCYpark) <b>쉽게 만나는 방법!</b><span class="inline_b"></span>온라인 예매로 구매하세요!
+					<span class="t1"> <b>온라인 예매로 아름다운 MCY파크(MCYpark)</b>를 지금 만나볼 수 있습니다.</span>
 				</p>
 			</div>
 		</div>
