@@ -58,7 +58,7 @@ fbq('track', 'PageView');
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 <meta name="description" content="" />
 <meta name="author" content="" />
-<title>MCY 캠핑파크</title>
+<title>MCY파크(MCYpark)</title>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-214554947-1"></script>
 <script>
