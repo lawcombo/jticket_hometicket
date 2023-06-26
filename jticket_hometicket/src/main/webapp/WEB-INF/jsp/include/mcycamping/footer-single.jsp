@@ -15,14 +15,19 @@
 				<p class="t1"><a href="https://www.facebook.com/seohaerang.jebu" target="_blank"><img src="/resources/images/ft_img03.png" style="max-width:23px;" alt="서해랑 페이스북" /></a></p>
 			</div>
 			 -->
+			 <!-- 
 			<p class="t2"><a href="https://www.ganghwa.go.kr/open_content/main/guidance/personal.jsp">개인정보처리방침</a></p>
-			
+			 -->
 		</div>
 		
 		<div class="ft_2">
-			<p>[26384] 경북 경주시 천북남로 196 </p>
-			<p>현장문의 : 054-745-3667 (운영시간 : 10:00 ~ 22:00 (입장마감 21:00)) </p>
-			<p>Copyrightⓒ MCYpark. All rights reserved.</p>
+			<p>상호: 햇살가득한캠핑 </p>
+			<p>대표: 이승탁 </p>
+			<p>주소: 경북 경주시 천북남로 196 </p>
+			<p>사업자번호: 272-88-02353 </p>
+			<p>대표번호: 054-745-3667(운영시간: 10:00 ~ 22:00(입장마감 21:00)) </p>
+			<p>이메일: mcy6572@naver.com</p>
+			<p>Copyrightⓒ MCY Park. All rights reserved.</p>
 		</div>
 	</div><!-- //ft_w -->
 </div><!-- //ft_wrap -->
