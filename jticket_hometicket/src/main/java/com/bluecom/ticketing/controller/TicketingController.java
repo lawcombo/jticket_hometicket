@@ -2404,6 +2404,115 @@ public class TicketingController extends BaseController {
 		
 		
 		
+		//=========================================== 소금산 그랜드밸리 6월상품, 7월상품 처리 =====================================================
+		
+		if(scheduleDTO.getContentMstCd().contains("SOGEUMSAN"))
+		{
+			if(scheduleDTO.getPlay_date().contains("2023-06"))
+			{
+				if(scheduleDTO.getProduct_group_code().equals("102"))
+				{
+					for(int i=0; i<products.size(); i++)
+					{
+						if(products.get(i).getProduct_code().equals("232"))
+						{//대인(우대대상_1) 7월에 팔 상품임
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("233"))
+						{//대인(우대대상_2) 7월에 팔 상품임
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("234"))
+						{//소인(우대대상_1) 7월에 팔 상품임
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("235"))
+						{//소인(우대대상_2) 7월에 팔 상품임
+							products.remove(i);
+							--i;
+							continue;
+						}
+					}
+				}
+			}
+			else if(scheduleDTO.getPlay_date().contains("2023-07"))
+			{
+				if(scheduleDTO.getProduct_group_code().equals("102"))
+				{
+					for(int i=0; i<products.size(); i++)
+					{
+						if(products.get(i).getProduct_code().equals("214"))
+						{//6월에 팔던 상품 제거
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("215"))
+						{//6월에 팔던 상품 제거
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("216"))
+						{//6월에 팔던 상품 제거
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("217"))
+						{//6월에 팔던 상품 제거
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("218"))
+						{//6월에 팔던 상품 제거
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("219"))
+						{//6월에 팔던 상품 제거
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("220"))
+						{//6월에 팔던 상품 제거
+							products.remove(i);
+							--i;
+							continue;
+						}
+						else if(products.get(i).getProduct_code().equals("221"))
+						{//6월에 팔던 상품 제거
+							products.remove(i);
+							--i;
+							continue;
+						}
+						
+						//개발서버
+						/*
+						else if(products.get(i).getProduct_code().equals("208"))
+						{
+							products.remove(i);
+							--i;
+							continue;
+						}
+						*/
+						
+					}
+				}
+			}
+		}
+		
+		
+		
 		map.put("products", products);
 		
 		return map;

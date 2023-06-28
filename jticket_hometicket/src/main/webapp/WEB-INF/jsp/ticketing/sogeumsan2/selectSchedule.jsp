@@ -104,10 +104,15 @@
 				
 				
 				<div class="ewp_date_info">
-					<h3>· 예매 안내 </h3>
+					<h3>· 티켓 예매 안내 </h3>
 					<p>
-						* 1인당 예매 수량 제한: 총 10매 ( 11매 이상 구매 불가 ) <br>
-						* 이용요금 할인 대상자는 티켓 수령 및 현장 발권 시 반드시  <font style="background-color: rgb(29, 202, 211); font-weight:bold;">"신분증 및 증빙서류 지참"</font> 바랍니다.<br>
+						* 1인당 예매 수량 제한 : 총 10매 <br>
+						* 1일 수량 매진시 관람 불가(1일 수량: 온라인 600매/현장 200매) <br>
+						* 대인(13세 이상) / 소인(7세 이상~12세 이하) / 6세 이하 무료 / 단체(20명 이상) <font style="background-color: rgb(255, 153, 0); font-weight:bold; cursor:pointer;" onclick="textInfoClick.modalFade(0)">요금표 확인하기</font> <br>
+						* 예매 시 할인(우대) 권종을 숙지 후 예매 <font style="background-color: rgb(255, 153, 0); font-weight:bold; cursor:pointer;" onclick="textInfoClick.modalFade(1)">우대 대상(1) 확인하기</font> <font style="background-color: rgb(255, 153, 0); font-weight:bold; cursor:pointer;" onclick="textInfoClick.modalFade(2)">우대 대상(2) 확인하기</font><br>
+						* 현장 티켓 수령 시 할인(우대)을 변경 불가 및 할인(우대)을 관련하여 당일 취소, 변경, 환불 불가 <br>
+						* 이용요금 우대 대상자는 티켓 수령 및 현장 발권 시 "신분증 및 증빙서류" 반드시 지참 <br>
+						* 현지 기상악화로 휴장할 경우, 동의 없이 자동 취소(100% 환불처리) <br>
 						* 제한 수량 초과시 이용이 불가할 수 있습니다.
 						<!-- 
 						한 일행 당 9인 이상은 <span style="text-decoration:underline; font-weight:bold;">따로 예약 및 동선 분리를 하셔도 입장이 절대 불가</span>하며,<Br>
@@ -116,6 +121,22 @@
 						<br>
 						* 자세한 내용은 공지사항을 참고해주세요!
 						-->
+					</p>
+				</div>
+				
+				<div class="ewp_date_info">
+					<h3>· 티켓 수령 안내 </h3>
+					<p>
+						* 증빙서류 및 휴대폰 뒷번호 확인 후 티켓 수량 가능 (신분증 반드시 지참) <br>
+						* 할인(우대) 증빙서류 미 지참시 차액 지불 <br>
+						* 티켓 배송 불가 / 예매티켓은 공연당일 현장 수령만 가능 <br>
+						* 공연 당일 티켓 취소, 변경, 환불 불가 <br>
+					</p>
+				</div>
+				
+				<div class="ewp_date_info">
+					<h3>· 문의 간현관광지 관리사무소 033-749-4860 </h3>
+					<p>
 					</p>
 				</div>
 				
@@ -166,7 +187,7 @@
 					</div>
 					 -->
 					<div class="mt_bot">
-						<img src="../../../../../resources/images/sogeumsan/naora7.jpg" style="width:100%;">
+						<img src="../../../../../resources/images/sogeumsan/0628.png" style="width:100%;">
 					</div>
 				</div>
 				
@@ -178,20 +199,12 @@
 	</div>
 	<div class="rad_modal_bk"></div>
 </div>
-
+<!-- 
 <div class="rad_modal" style="display: none;" id="image2">
 	<div class="rad_modal_content" style="max-width:max-content;">
 		<div class="rad_modal_x">
 			<div id="agreementTermsOfUse-modal-section" class="md_cont">
 				<div class="modal_tb">
-					<!-- 
-					<div class="mt_top">
-						<h2>
-							<strong>잠깐!</strong>
-						</h2>
-						<p class="mt_top_text"></p>
-					</div>
-					 -->
 					<div class="mt_bot">
 						<img src="../../../../../resources/images/sogeumsan/naora8.jpg" style="width:100%;">
 					</div>
@@ -205,7 +218,67 @@
 	</div>
 	<div class="rad_modal_bk2"></div>
 </div>
+ -->
+ 
+ <!-- 요금표 확인하기 모달 -->
+ <div class="rad_modal" style="display: none;" id="image3">
+	<div class="rad_modal_content" style="max-width:max-content;">
+		<div class="rad_modal_x">
+			<div id="agreementTermsOfUse-modal-section" class="md_cont">
+				<div class="modal_tb">
+					<div class="mt_bot">
+						<img src="../../../../../resources/images/sogeumsan/price.png" style="width:100%;">
+					</div>
+				</div>
+				
+				<div style="padding-right:20px; margin-left:20px; padding-bottom:5px">
+					<button class="md_bts" style="cursor:pointer;" onclick="nitiConfirm.confirmBtn3();">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="rad_modal_bk3"></div>
+</div>
 
+ <!-- 우대대상 1 모달 -->
+ <div class="rad_modal" style="display: none;" id="image4">
+	<div class="rad_modal_content" style="max-width:max-content;">
+		<div class="rad_modal_x">
+			<div id="agreementTermsOfUse-modal-section" class="md_cont">
+				<div class="modal_tb">
+					<div class="mt_bot">
+						<img src="../../../../../resources/images/sogeumsan/fre1.png" style="width:100%;">
+					</div>
+				</div>
+				
+				<div style="padding-right:20px; margin-left:20px; padding-bottom:5px">
+					<button class="md_bts" style="cursor:pointer;" onclick="nitiConfirm.confirmBtn4();">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="rad_modal_bk4"></div>
+</div>
+ 
+ <!-- 우대대상 2 모달 -->
+ <div class="rad_modal" style="display: none;" id="image5">
+	<div class="rad_modal_content" style="max-width:max-content;">
+		<div class="rad_modal_x">
+			<div id="agreementTermsOfUse-modal-section" class="md_cont">
+				<div class="modal_tb">
+					<div class="mt_bot">
+						<img src="../../../../../resources/images/sogeumsan/fre2.png" style="width:100%;">
+					</div>
+				</div>
+				
+				<div style="padding-right:20px; margin-left:20px; padding-bottom:5px">
+					<button class="md_bts" style="cursor:pointer;" onclick="nitiConfirm.confirmBtn5();">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="rad_modal_bk5"></div>
+</div>
 
 
 <script type="text/x-mustache" id="list-template">
@@ -229,7 +302,7 @@
 				<div class="order">
 					{{#reserv}}
 					{{#product.product}}
-					<div class="order_spbx" style="text-align:right; padding-right:15px;">
+					<div class="order_spbx" style="text-align:right; padding-right:15px; ">
 						<span data-id="{{id}}" style="float:left;">{{name}}</span>
 						<button type="button" data-id="{{id}}" id="{{id}}{{code}}" class="btn js-minus">
 							<span class="material-icons">remove</span>
@@ -276,6 +349,28 @@ $(document).ready(function() {
 });
 //=======================================
 
+	
+var textInfoClick = {
+		
+		modalFade : function(flag){
+			
+			if(flag == 0)
+			{//요금표 확인하기
+				$("#image3").fadeIn();
+			}
+			else if(flag == 1)
+			{//우대 대상(1) 확인하기
+				$("#image4").fadeIn();
+			}
+			else if(flag == 2)
+			{//우대 대상(2) 확인하기
+				$("#image5").fadeIn();
+			}
+			
+		}
+		
+}
+	
 var checkBtn = {
 		goCheckPop : function(){
 			var popupWidth = 1250;
@@ -664,26 +759,57 @@ $(function(){
 	$(".rad_modal_bk").click(function(){
 		$("#image1").fadeOut();
 		
-		$("#image2").fadeIn();
+		//$("#image2").fadeIn();
 	});
 });
 
+
+$(function(){
+	$(".rad_modal_bk3").click(function(){
+		$("#image3").fadeOut();
+	});
+	
+	$(".rad_modal_bk4").click(function(){
+		$("#image4").fadeOut();
+	});
+	
+	$(".rad_modal_bk5").click(function(){
+		$("#image5").fadeOut();
+	});
+});
+
+
+/* 
 $(function(){
 	$(".rad_modal_bk2").click(function(){
 		$("image2").fadeOut();
 	});
 });
-
+ */
 var nitiConfirm = {
 		confirmBtn : function(){
 			$("#image1").fadeOut();
 			
-			$("#image2").fadeIn();
+			//$("#image2").fadeIn();
 		},
 		
 		confirmBtn2 : function(){
-			$("#image2").fadeOut();
-		}
+			//$("#image2").fadeOut();
+		},
+		
+		confirmBtn3 : function(){
+			$("#image3").fadeOut();
+		},
+		
+		confirmBtn4 : function(){
+			$("#image4").fadeOut();
+		},
+		
+		confirmBtn5 : function(){
+			$("#image5").fadeOut();
+		},
+		
+		
 }
 </script></div>
 
