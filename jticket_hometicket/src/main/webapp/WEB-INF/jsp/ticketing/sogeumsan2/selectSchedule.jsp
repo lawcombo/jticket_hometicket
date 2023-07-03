@@ -104,6 +104,16 @@
 				
 				
 				<div class="ewp_date_info">
+					<h3>· 이용 안내 </h3>
+					<p>
+						* 야간경관조명 이용시간: 18:30 ~ 22:00 <br>
+						* 출렁다리, 하늘바람길 이용시간: 18:30 ~ 20:30 <br>
+						* 나오라쇼 공연시간: 20:30 ~ 21:20
+					</p>
+				</div>
+				
+				
+				<div class="ewp_date_info">
 					<h3>· 티켓 예매 안내 </h3>
 					<p>
 						* 1인당 예매 수량 제한 : 총 10매 <br>
@@ -187,7 +197,7 @@
 					</div>
 					 -->
 					<div class="mt_bot">
-						<img src="../../../../../resources/images/sogeumsan/0628.png" style="width:100%;">
+						<img src="../../../../../resources/images/sogeumsan/main_0703.png" style="width:100%;">
 					</div>
 				</div>
 				
@@ -227,7 +237,7 @@
 			<div id="agreementTermsOfUse-modal-section" class="md_cont">
 				<div class="modal_tb">
 					<div class="mt_bot">
-						<img src="../../../../../resources/images/sogeumsan/price.png" style="width:100%;">
+						<img src="../../../../../resources/images/sogeumsan/price_new.png" style="width:100%;">
 					</div>
 				</div>
 				
@@ -247,7 +257,7 @@
 			<div id="agreementTermsOfUse-modal-section" class="md_cont">
 				<div class="modal_tb">
 					<div class="mt_bot">
-						<img src="../../../../../resources/images/sogeumsan/fre1.png" style="width:100%;">
+						<img src="../../../../../resources/images/sogeumsan/fre1new.png" style="width:100%;">
 					</div>
 				</div>
 				
@@ -267,7 +277,7 @@
 			<div id="agreementTermsOfUse-modal-section" class="md_cont">
 				<div class="modal_tb">
 					<div class="mt_bot">
-						<img src="../../../../../resources/images/sogeumsan/fre2.png" style="width:100%;">
+						<img src="../../../../../resources/images/sogeumsan/fre2new.png" style="width:100%;">
 					</div>
 				</div>
 				
