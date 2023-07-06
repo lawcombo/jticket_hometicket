@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,11 +46,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -64,22 +61,16 @@ import com.bluecom.common.service.MessageService;
 import com.bluecom.common.util.CommUtil;
 import com.bluecom.common.util.DateHelper;
 import com.bluecom.common.util.ScriptUtils;
-import com.bluecom.ticketing.controller.TicketingController.DataEncrypt;
 import com.bluecom.ticketing.domain.ApiProductRefundDTO;
 import com.bluecom.ticketing.domain.ApiResultVO;
 import com.bluecom.ticketing.domain.ApiSocialCancelDTO;
-import com.bluecom.ticketing.domain.BaseDTO_noSchedule;
 import com.bluecom.ticketing.domain.BookOpenVO;
 import com.bluecom.ticketing.domain.CompanyVO;
 import com.bluecom.ticketing.domain.CouponVO;
-import com.bluecom.ticketing.domain.ErrorPathCode;
-import com.bluecom.ticketing.domain.ErrorSiteCode;
-import com.bluecom.ticketing.domain.ErrorTypeCode;
 import com.bluecom.ticketing.domain.EssentialDTO;
 import com.bluecom.ticketing.domain.FinishTradeVO;
 import com.bluecom.ticketing.domain.FinishTradeVO_noSchedule;
 import com.bluecom.ticketing.domain.PaymentInfoDTO;
-import com.bluecom.ticketing.domain.PaymentInfoDTO_noSchedule;
 import com.bluecom.ticketing.domain.ProductDTO;
 import com.bluecom.ticketing.domain.ProductGroupDTO;
 import com.bluecom.ticketing.domain.ProductGroupDTO_noSchedule;
@@ -87,18 +78,12 @@ import com.bluecom.ticketing.domain.RefundHistoryVO;
 import com.bluecom.ticketing.domain.RefundVO;
 import com.bluecom.ticketing.domain.ReserverDTO;
 import com.bluecom.ticketing.domain.SaleDTO;
-import com.bluecom.ticketing.domain.SaleDTO_noSchedule;
 import com.bluecom.ticketing.domain.SaleProductDTO;
-import com.bluecom.ticketing.domain.SaleProductDTO_noSchedule;
 import com.bluecom.ticketing.domain.SaleVO;
-import com.bluecom.ticketing.domain.SaleVO_noSchedule;
 import com.bluecom.ticketing.domain.ScheduleDTO;
-import com.bluecom.ticketing.domain.SelfAuthenticationDTO;
 import com.bluecom.ticketing.domain.ShopDetailVO;
-import com.bluecom.ticketing.domain.ShopInfo_noScheduleDTO;
 import com.bluecom.ticketing.domain.ShopPaymentsaleVO;
 import com.bluecom.ticketing.domain.SogeumsanLinkVO;
-import com.bluecom.ticketing.domain.TicketValidVO;
 import com.bluecom.ticketing.domain.VerificationKeyVO;
 import com.bluecom.ticketing.domain.WebPaymentDTO;
 import com.bluecom.ticketing.domain.WebPaymentPgResultDTO;
@@ -3359,6 +3344,8 @@ public class TicketingController extends BaseController {
 			sogeumsanResApiCall_new(essential.getContent_mst_cd(), orderNo, essential.getUserId(), essential.getUserName(), trade.get(0).getMember_tel(), "slae");
 			//=================================================================================================
 			
+			model.addAttribute("loginUserId", essential.getUserId());
+			model.addAttribute("loginUserName", essential.getUserName());
 			
 			
 			return "/ticketing/sogeumsan2/finish";

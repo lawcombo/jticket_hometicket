@@ -25,6 +25,10 @@
 	<div class="conts_box">
 		<section class="reserve reserve-form ewp_show_ex">
 			<div class="verticalAlignMiddle">
+				
+				<input type="hidden" id="loginUserId" name="loginUserId" value="${loginUserId}" />
+				<input type="hidden" id="loginUserName" name="loginUserName" value="${loginUserName}" />
+			
 				<ul class="reserveDl full mt50 ewp_show_wrapper mb50">
 					<li class="reserveDt">
 					<p class="sh_tit">
@@ -91,6 +95,20 @@
 <!-- 			        	</p> -->
 <!-- 			        </div> -->
 				<div class="pageLine"></div>
+				
+				
+				<dl class="reserveDl full mt50 ewp_show_bot_ex">
+						<div class="ewp_show_bot" style="max-width:initial;">
+							<div>
+								<button class="buttonTypeCyan full textLarge ewp_bot_ok" style="background-color:#05cdd5; cursor:pointer;" onmouseover="this.style.background='#2be6ed'" onmouseout="this.style.background='#05cdd5'" onclick="bottomClickBtn.movePage(0);" >처음으로</button>
+							</div>
+							<div>
+								<button class="buttonTypeCyan full textLarge ewp_bot_ok" style="background-color:#05cdd5; cursor:pointer;" onmouseover="this.style.background='#2be6ed'" onmouseout="this.style.background='#05cdd5'" onclick="bottomClickBtn.movePage(1);" >예매확인</button>
+							</div>
+						</div>
+					</dl>
+				
+				
 				<!-- 
 				<ul class="reserveDl full mt50 ewp_show_wrapper show_bot_tb">
 					<li class="reserveDt">
@@ -176,6 +194,29 @@
 	 	// 전화번호에 하이픈 넣기
 		$("#memberTelSpan").text(addHyphenToPhoneNumber($("#memberTelSpan").text()));
 	});
+	
+	
+	var bottomClickBtn = {
+		movePage : function(flag){
+			
+			var link = "";
+			
+			var loginUserId 	= $("#loginUserId").val();
+			var loginUserName 	= $("#loginUserName").val();
+			
+			if(flag == 0)
+			{//처음으로
+				link = "/ticketing/sogeumsan2/schedule?content_mst_cd=SOGEUMSAN_0_1&product_group_code=102&userId=" + loginUserId + "&userName=" + loginUserName;
+				location.href=link;
+			}
+			else if(flag == 1 )
+			{//예매확인
+				link = "/ticketing/checkTicket?content_mst_cd=SOGEUMSAN_0_1";
+				location.href=link;
+			}
+			
+		}		
+	}
 	
 </script>
 <%@ include file="../../include/sogeumsan/footer-single2.jsp" %>

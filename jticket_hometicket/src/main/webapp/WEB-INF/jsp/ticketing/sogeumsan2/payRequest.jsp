@@ -34,9 +34,9 @@ String coupon			= webPayment.getCouponFee(); //쿠폰 총 금액
 String fee				= webPayment.getTotal_fee().toString(); //총 상품 금액
 
 //개발
-//String returnURL 		= "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/payResult"; // 결과페이지(절대경로) - 모바일 결제창 전용
+String returnURL 		= "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/payResult"; // 결과페이지(절대경로) - 모바일 결제창 전용
 //운영
-String returnURL 		= "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/payResult"; // 결과페이지(절대경로) - 모바일 결제창 전용
+//String returnURL 		= "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/payResult"; // 결과페이지(절대경로) - 모바일 결제창 전용
 
 /*
 *******************************************************
