@@ -232,4 +232,4 @@ if(window.wcs) _nasa["cnv"] = wcs.cnv("1","10"); // 전환유형, 전환가치 �
 </script> 
 
 
-<%@ include file="../../include/sogeumsan/footer-single.jsp" %>
+<%@ include file="../../include/mcycam/footer-single.jsp" %>
