@@ -26,8 +26,8 @@
 		<section class="reserve reserve-form ewp_show_ex">
 			<div class="verticalAlignMiddle">
 				
-				<input type="hidden" id="loginUserId" name="loginUserId" value="${loginUserId}" />
-				<input type="hidden" id="loginUserName" name="loginUserName" value="${loginUserName}" />
+				<input type="hidden" id="loginUserId" 	name="loginUserId" 		value="${loginUserId}" />
+				<input type="hidden" id="loginUserName" name="loginUserName" 	value="${loginUserName}" />
 			
 				<ul class="reserveDl full mt50 ewp_show_wrapper mb50">
 					<li class="reserveDt">

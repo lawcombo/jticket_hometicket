@@ -3337,11 +3337,13 @@ public class TicketingController extends BaseController {
 			// ============================== 소금산벨리 ( 리버스아이티 ) 에 예매 내역 전송 ============================= 
 			log.info("=====================================[예매 완료]===================================");
 			log.info("[/sogeumsan/finish 사용자 ID]: "+ essential.getUserId());
-			log.info("[/sogeumsan/finish 사용자 이름]: "+ essential.getUserName());
+			//log.info("[/sogeumsan/finish 사용자 이름]: "+ essential.getUserName());
+			log.info("[/sogeumsan/finish 사용자 이름]: "+ trade.get(0).getMember_name());
 			log.info("[/sogeumsan/finish 사용자 연락처]: "+ trade.get(0).getMember_tel());
 			log.info("=================================================================================");
 			
-			sogeumsanResApiCall_new(essential.getContent_mst_cd(), orderNo, essential.getUserId(), essential.getUserName(), trade.get(0).getMember_tel(), "slae");
+			//sogeumsanResApiCall_new(essential.getContent_mst_cd(), orderNo, essential.getUserId(), essential.getUserName(), trade.get(0).getMember_tel(), "slae");
+			sogeumsanResApiCall_new(essential.getContent_mst_cd(), orderNo, essential.getUserId(), trade.get(0).getMember_name(), trade.get(0).getMember_tel(), "slae");
 			//=================================================================================================
 			
 			model.addAttribute("loginUserId", essential.getUserId());
