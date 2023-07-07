@@ -6,8 +6,11 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="validator" uri="http://www.springmodules.org/tags/commons-validator" %>
-
+<%-- 
 <%@ include file="../../include/sogeumsan/header-single.jsp" %>
+ --%>
+<%@ include file="../../include/mcycamping/header-single.jsp" %>
+
 <c:set var="now" value="<%=new java.util.Date() %>" />
 <fmt:formatDate var="today" value="${now }" pattern="yyyy-MM-dd"/>
 <c:set var="isUsed" value="false" />
@@ -87,7 +90,7 @@ a.disabled {
 </div>
 
 <div id="hidden-section" style="display:none;">
-	<form:form name="form" method="GET" action="/ticketing/sogeumsan/showTicketInfo">
+	<form:form name="form" method="GET" action="/ticketing/mcycamping/showTicketInfo">
 		<input type="hidden" name="content_mst_cd" value="${sale.content_mst_cd}" />		
 		<input type="hidden" name="order_num" id="order_no" />		
 		<input type='hidden' name='shop_code' value="${sale.shop_code }">

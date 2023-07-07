@@ -61,7 +61,7 @@ String hashString 		= sha256Enc.encrypt(ediDate + merchantID + price + merchantK
 </script>
 <%-- <title><spring:message code="site.title" /></title> --%>
 
-<title>소금산 그랜드밸리</title>
+<title>MCY파크(MCYpark)</title>
 
 <!-- 아래 js는 PC 결제창 전용 js입니다.(모바일 결제창 사용시 필요 없음) -->
 <script src="https://web.nicepay.co.kr/v3/webstd/js/nicepay-3.0.js" type="text/javascript"></script>
