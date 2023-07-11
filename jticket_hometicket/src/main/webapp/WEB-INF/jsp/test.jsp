@@ -87,6 +87,7 @@
 	<div style="clear:both;display:flex;justify-content:space-evenly;width:100%;padding:30px;">
 		<div>
 			<a onclick="pop.openMcyCamping();" style="cursor:pointer;">MCY캠핑파크 예매<span style="color:red">(가상결제!)</span></a>
+			<!-- <a href="/ticketing/mcycamping/selectTicket?content_mst_cd=MCYCAMPING_0_1&product_group_code=101" style="cursor:pointer;">MCY캠핑파크 예매<span style="color:red">(가상결제!)</span></a> -->
 		</div>
 	</div>
 	
@@ -182,6 +183,7 @@ var pop = {
 			var popupY= (window.screen.height / 2) - (popupHeight / 2);
 			
 			window.open('/ticketing/mcycamping/selectTicket?content_mst_cd=MCYCAMPING_0_1&product_group_code=101', 'window_name', 'height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+			
 		},
 }
 

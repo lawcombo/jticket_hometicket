@@ -5849,22 +5849,38 @@ public class TicketingController extends BaseController {
 			 * <인증 결과 파라미터>
 			 ****************************************************************************************
 			 */
-			String authResultCode = (String) request.getParameter("AuthResultCode"); // 인증결과 : 0000(성공)
-			String authResultMsg = (String) request.getParameter("AuthResultMsg"); // 인증결과 메시지
-			String nextAppURL = (String) request.getParameter("NextAppURL"); // 승인 요청 URL
-			String txTid = (String) request.getParameter("TxTid"); // 거래 ID
-			String authToken = (String) request.getParameter("AuthToken"); // 인증 TOKEN
-			String payMethod = (String) request.getParameter("PayMethod"); // 결제수단
-			String mid = (String) request.getParameter("MID"); // 상점 아이디
-			String moid = (String) request.getParameter("Moid"); // 상점 주문번호
-			String amt = (String) request.getParameter("Amt"); // 결제 금액
-			String reqReserved = (String) request.getParameter("ReqReserved"); // 상점 예약필드
-			String netCancelURL = (String) request.getParameter("NetCancelURL"); // 망취소 요청 URL
+			String authResultCode 	= (String) request.getParameter("AuthResultCode"); // 인증결과 : 0000(성공)
+			String authResultMsg 	= (String) request.getParameter("AuthResultMsg"); // 인증결과 메시지
+			String nextAppURL 		= (String) request.getParameter("NextAppURL"); // 승인 요청 URL
+			String txTid 			= (String) request.getParameter("TxTid"); // 거래 ID
+			String authToken 		= (String) request.getParameter("AuthToken"); // 인증 TOKEN
+			String payMethod 		= (String) request.getParameter("PayMethod"); // 결제수단
+			String mid 				= (String) request.getParameter("MID"); // 상점 아이디
+			String moid 			= (String) request.getParameter("Moid"); // 상점 주문번호
+			String amt 				= (String) request.getParameter("Amt"); // 결제 금액
+			String reqReserved 		= (String) request.getParameter("ReqReserved"); // 상점 예약필드
+			String netCancelURL 	= (String) request.getParameter("NetCancelURL"); // 망취소 요청 URL
 
-			String authSignature = (String) request.getParameter("Signature"); // Nicepay에서 내려준 응답값의 무결성 검증 Data
+			String authSignature 	= (String) request.getParameter("Signature"); // Nicepay에서 내려준 응답값의 무결성 검증 Data
 
-			WebPaymentDTO webPayment = ticketingService.getWebPayment(moid);
-			VerificationKeyVO keys = ticketingService.getKeys(webPayment.getShop_code());
+			
+			log.info("-------------------# 인증 결과 파라미터 START---------------------------");
+			log.info("[AuthResultCode] -> " + authResultCode);
+			log.info("[authResultMsg] -> " + authResultMsg);
+			log.info("[nextAppURL] -> " + nextAppURL);
+			log.info("[txTid] -> " + txTid);
+			log.info("[authToken] -> " + authToken);
+			log.info("[payMethod] -> " + payMethod);
+			log.info("[mid] -> " + mid);
+			log.info("[amt] -> " + amt);
+			log.info("[reqReserved] -> " + reqReserved);
+			log.info("[netCancelURL] -> " + netCancelURL);
+			log.info("[authSignature] -> " + authSignature);
+			log.info("--------------------# 인증 결과 파라미터 END----------------------------");
+			
+			
+			WebPaymentDTO webPayment 	= ticketingService.getWebPayment(moid);
+			VerificationKeyVO keys 		= ticketingService.getKeys(webPayment.getShop_code());
 
 			/*
 			 ****************************************************************************************
