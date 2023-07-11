@@ -5864,19 +5864,19 @@ public class TicketingController extends BaseController {
 			String authSignature 	= (String) request.getParameter("Signature"); // Nicepay에서 내려준 응답값의 무결성 검증 Data
 
 			
-			log.info("-------------------# 인증 결과 파라미터 START---------------------------");
-			log.info("[AuthResultCode] -> " + authResultCode);
-			log.info("[authResultMsg] -> " + authResultMsg);
-			log.info("[nextAppURL] -> " + nextAppURL);
-			log.info("[txTid] -> " + txTid);
-			log.info("[authToken] -> " + authToken);
-			log.info("[payMethod] -> " + payMethod);
-			log.info("[mid] -> " + mid);
-			log.info("[amt] -> " + amt);
-			log.info("[reqReserved] -> " + reqReserved);
-			log.info("[netCancelURL] -> " + netCancelURL);
-			log.info("[authSignature] -> " + authSignature);
-			log.info("--------------------# 인증 결과 파라미터 END----------------------------");
+			log.debug("-------------------# 인증 결과 파라미터 START---------------------------");
+			log.debug("[AuthResultCode] -> " + authResultCode);
+			log.debug("[authResultMsg] -> " + authResultMsg);
+			log.debug("[nextAppURL] -> " + nextAppURL);
+			log.debug("[txTid] -> " + txTid);
+			log.debug("[authToken] -> " + authToken);
+			log.debug("[payMethod] -> " + payMethod);
+			log.debug("[mid] -> " + mid);
+			log.debug("[amt] -> " + amt);
+			log.debug("[reqReserved] -> " + reqReserved);
+			log.debug("[netCancelURL] -> " + netCancelURL);
+			log.debug("[authSignature] -> " + authSignature);
+			log.debug("--------------------# 인증 결과 파라미터 END----------------------------");
 			
 			
 			WebPaymentDTO webPayment 	= ticketingService.getWebPayment(moid);

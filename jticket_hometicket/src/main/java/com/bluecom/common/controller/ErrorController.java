@@ -49,6 +49,10 @@ public class ErrorController extends BaseController {
 		{
 			siteNm = "diamondbay";
 		}
+		else if(request.getAttribute("javax.servlet.error.request_uri").toString().contains("mcycamping"))
+		{
+			siteNm = "mcycamping";
+		}
 		else
 		{
 			siteNm = "jejubeer";

@@ -31,7 +31,7 @@ String buyerTel 		= webPayment.getReserverPhone(); 						// 구매자연락처
 String buyerEmail 		= webPayment.getReserverEmail(); 						// 구매자메일주소
 String moid 			= webPayment.getOrder_no(); 							// 상품주문번호	
 String returnURL 		= "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ticketing/mcycamping/payResult"; // 결과페이지(절대경로) - 모바일 결제창 전용
-
+//String returnURL 		= "https://" + request.getServerName()  + request.getContextPath() + "/ticketing/mcycamping/payResult"; // 결과페이지(절대경로) - 모바일 결제창 전용
 /*
 *******************************************************
 * <해쉬암호화> (수정하지 마세요)
@@ -82,8 +82,20 @@ String hashString 		= sha256Enc.encrypt(ediDate + merchantID + price + merchantK
 </head>
 <script type="text/javascript">
 
+//모바일로 결제시 return url로 csrf 값 전달줘야함
+var csrfParameterNm = '${_csrf.parameterName}';
+var csrfToken = '${_csrf.token}';
+
 //결제창 최초 요청시 실행됩니다.
 function nicepayStart(pay){
+	
+	//---------------------------------------------------------------------
+	//회차 없는 예매 버전.
+	//모바일로 결제시 return url로 csrf 값 전달줘야함
+	var returnUrlTmp = '<%=returnURL%>';
+	var returnUrl = returnUrlTmp + "?" + csrfParameterNm + "=" +csrfToken;
+	$("#ReturnURL").val(returnUrl);
+	//---------------------------------------------------------------------
 	
 	if(pay>0) {
 		if(checkPlatform(window.navigator.userAgent) == "mobile"){//모바일 결제창 진입
@@ -215,8 +227,11 @@ function checkPlatform(ua) {
 									<input type="hidden" name="MID" value="<%=merchantID%>" readonly>
 									<input type="hidden" name="Moid" value="<%=moid%>" readonly>
 									<!-- 히든 -->
-									<input type="hidden" name="ReturnURL" value="<%=returnURL%>"> <!-- 인증완료 결과처리 URL -->
-									<input type="hidden" name="VbankExpDate" value="">	<!-- 가상계좌입금만료일(YYYYMMDD) -->
+									<%-- 
+									<input type="hidden" name="ReturnURL" value="<%=returnURL%>"> 		
+									 --%>
+									<input type="hidden" name="ReturnURL" id="ReturnURL" value=""> 		<!-- 인증완료 결과처리 URL -->
+									<input type="hidden" name="VbankExpDate" value="">					<!-- 가상계좌입금만료일(YYYYMMDD) -->
 									<!-- 옵션 --> 
 									<input type="hidden" name="GoodsCl" value="1"/>						<!-- 상품구분(실물(1),컨텐츠(0)) -->
 									<input type="hidden" name="TransType" value="0"/>					<!-- 일반(0)/에스크로(1) --> 

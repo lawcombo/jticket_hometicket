@@ -64,6 +64,7 @@
 				<!-- 에러시 리다이렉트할 제주맥주 페이지 -->
 				<entry key="jejubeer" value="https://jejubeer.co.kr/brewery-program"/>
 				<entry key="diamondbay" value="http://www.diamondbay.co.kr/"/>
+				<entry key="mcycamping" value="http://mcypark.co.kr/"/>
 				
 				
 				<entry key="type" value="1"/>
