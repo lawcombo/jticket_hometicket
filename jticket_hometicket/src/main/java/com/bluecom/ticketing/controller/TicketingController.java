@@ -516,6 +516,11 @@ public class TicketingController extends BaseController {
 		
 		//payRequest에서 넘겨받은 값으로 pg 호출 및 api 호출 후 결제 결과를 나타냄
 		
+		log.info("========================================================================");
+		log.info("[payResult]");
+		log.info(" ::::: 나이스페이먼츠 인증성공 ====> 나이스페이먼츠 승인요청 START");
+		
+		
 		int resultSuccess = 0;
 		String resultOrderNum = "";
 		String resultMessage = "";
@@ -536,7 +541,7 @@ public class TicketingController extends BaseController {
 		String amt 				= (String)request.getParameter("Amt"); 				// 결제 금액
 		String reqReserved 		= (String)request.getParameter("ReqReserved"); 		// 상점 예약필드
 		String netCancelURL 	= (String)request.getParameter("NetCancelURL"); 	// 망취소 요청 URL
-		String coupon			= (String)request.getParameter("coupon"); //쿠폰 금액
+		String coupon			= (String)request.getParameter("coupon"); 				//쿠폰 금액
 
 		String authSignature = (String)request.getParameter("Signature");			// Nicepay에서 내려준 응답값의 무결성 검증 Data
 
@@ -830,10 +835,17 @@ public class TicketingController extends BaseController {
 					
 					if(paySuccess) { // 결제 승인 성공
 						
+						log.info(" ::::: 나이스페이먼츠 결제승인 SUCCESS");
+						
+						log.info(" ::::: NICE Ticket 예매내역 전송 START");
+						
 						ApiResultVO apiResultVO = ticketingService.callTicketApi(pgResult); //pg결제 성공 후 api 호출
+						
 						
 						// API 호출 성공 
 						if(apiResultVO.getSuccess() == 1) {
+							
+							log.info(" ::::: NICE Ticket 예매내역 전송 END ==> SUCCESS ");
 							
 							WebPaymentStatusDTO apiCallStatus = WebPaymentStatusDTO.builder()
 									.status("고객-예매-Api호출-성공")
@@ -870,6 +882,9 @@ public class TicketingController extends BaseController {
 							resultMessage = "결제에 성공하였습니다.";
 						}else { // API호출 실패
 							
+							log.info(" ::::: NICE Ticket 예매내역 전송 END ==> FIAL ");
+							log.info(" ::::: FILE INFO ==> " + apiResultVO.toString());
+							
 							WebPaymentStatusDTO apiCallStatus = WebPaymentStatusDTO.builder()
 									.status("고객-예매-Api호출-실패")
 									.message("ApiCallResult: " + apiResultVO.toString())
@@ -896,11 +911,14 @@ public class TicketingController extends BaseController {
 								 *  2. bc_web_payment_coupon update
 								 */
 								// bc_paymentsale (select) 검증해서 쿠폰 있으면 아래 2개 실행, 없으면 skip
+								
+								/*
 								int ret = ticketingService.selectCouponCheck(sale);
 								if(ret > 0) {
 									ticketingService.updateCouponCancelDate(sale.getCoupon());
 									ticketingService.updateCouponUseYn(sale.getOrder_num());
 								}
+								*/
 							}
 							
 							/*
@@ -980,6 +998,9 @@ public class TicketingController extends BaseController {
 		model.addAttribute("success", resultSuccess);
 		model.addAttribute("orderNo", resultOrderNum);
 		model.addAttribute("message", resultMessage);
+		
+		
+		log.info("========================================================================");
 		
 		return "/ticketing/payResult";
 	}
@@ -3322,6 +3343,7 @@ public class TicketingController extends BaseController {
 		@GetMapping("/sogeumsan2/finish")
 		public String finishForSogeumsan2(@ModelAttribute("essential") @Valid EssentialDTO essential, @RequestParam("orderNo") String orderNo, Model model) throws Exception {
 			
+			log.info("=====================================[결제승인 성공]===================================");
 			
 			Map<String, Object> params = new HashMap<>();
 			params.put("orderNo", orderNo);
@@ -3530,12 +3552,9 @@ public class TicketingController extends BaseController {
 			saleDTO = (SaleDTO) session.getAttribute("saleDTO");
 			
 			
-			log.info("1111111111111111111111");
 			
 			List<SaleProductDTO> saleProductDTOList = ticketingService.getSaleProductDTOList(saleDTO);
 			
-			
-			log.info("22222222222222222222222");
 			
 			/*if(saleProductDTOList.isEmpty())
 				return "redirect:/ticketing/checkTicket?content_mst_cd="+essential.getContent_mst_cd();*/
@@ -3547,7 +3566,6 @@ public class TicketingController extends BaseController {
 			List<ProductDTO> products = ticketingService.getProducts(productGroup);
 			
 			
-			log.info("3333333333333333333333");
 			
 			// 방문자 정보 가져오기
 			PaymentInfoDTO paymentInfo = new PaymentInfoDTO();
@@ -3555,7 +3573,6 @@ public class TicketingController extends BaseController {
 			paymentInfo.setVisitorType(shopDetail.getPerson_type());
 			
 			
-			log.info("4444444444444444444444444");
 			
 			// 0번상품이 금액 상품
 			WebPaymentDTO orgWebPayment =  ticketingService.getWebPayment(saleProductDTOList.get(0).getOrder_num());
@@ -3563,14 +3580,10 @@ public class TicketingController extends BaseController {
 			
 			saleDTO.setShop_code(productGroup.getShop_code());
 			
-			log.info("555555555555555555555");
 			
 			
 			// web_payment_idx 로 bc_web_payment_coupon 조회 후 금액 가져오기 _ 블루컴 하......망할
 			//List<CouponVO> coupon = ticketingService.getCouponByWebPaymetIdx(saleProductDTOList.get(0).getOrder_num());
-			
-			
-			log.info("666666666666666666");
 			
 			
 			
@@ -3579,8 +3592,6 @@ public class TicketingController extends BaseController {
 			List<SaleProductDTO> purchase = ticketingService.selectPurchaseProduct(saleDTO);
 			
 			
-			
-			log.info("777777777777777777");
 			
 			model.addAttribute("products", products);
 			model.addAttribute("productGroup", productGroup);
