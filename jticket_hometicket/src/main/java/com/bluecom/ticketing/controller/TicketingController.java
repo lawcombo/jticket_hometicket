@@ -2081,6 +2081,8 @@ public class TicketingController extends BaseController {
 			return "/ticketing/programInfos104";
 		} else if(essential.getProduct_group_code().equals("105")) { // 2022-02-07 체험추가
 			return "/ticketing/programInfos105";
+		} else if(essential.getProduct_group_code().equals("106")) { // 2023-07-31 단체 추가
+			return "/ticketing/programInfos106";
 		}
 		else {			
 			ScriptUtils.alertAndBackPage(response, "상품정보가 올바르지 않습니다.");

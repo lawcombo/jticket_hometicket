@@ -183,7 +183,7 @@
 	</ul>
 </script>
 
-<!-- 제주맥주 상품 추가로 인해 화면 구성 수정_2022_07_07 -->
+<!-- 제주맥주 상품 추가로 인해 화면 구성 수정_2022_07_07 --> <!-- =====> 예전에 만들거 재활용해서 사용 _2023-07-31 단체예약 -->
 <script type="text/x-mustache" id="list-template-for-product106">
 	<ul>
 	<li class="list_tit_li"><div class="ch_time">시간 선택</div><div class="ch_num" style="padding-left:64px;">잔여석</div></li>
@@ -198,7 +198,6 @@
 				<label class="time jejuRadioButton calch" style="width:153px;">
 					<input type="radio" id="c{{id}}" name="cal" value="{{id}}" {{^reserv}}disabled{{/reserv}} /><span class="radio"></span>
 					{{time}}
-					{{scheduleNm}}
 				</label>
 				<div class="seat">
 					<span>{{seat}}</span>
@@ -311,7 +310,7 @@
 								time: schedule[i].subject_text,
 								
 								//추가
-								scheduleNm: schedule[i].play_sequence,
+								//scheduleNm: schedule[i].play_sequence,
 								
 								seat: Number(schedule[i].sumCout),
 								seatlimit: Number(schedule[i].total_count),

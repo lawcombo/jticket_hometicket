@@ -34,6 +34,9 @@
 		<div>
 			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=103">투어_v2<span style="color:red">(가상결제!)</span></a>
 		</div>
+		<div>
+			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=106">단체<span style="color:red">(가상결제!)</span></a>
+		</div>
 		<!-- 
 		<div>
 			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=103">금능해변<span style="color:red">(가상결제!)</span></a>
