@@ -854,7 +854,7 @@ public class TicketingController extends BaseController {
 									.build();
 							ticketingService.addWebPaymentStatus(apiCallStatus);
 							
-							ShopDetailVO shopDetail = ticketingService.getShopDetail(apiResultVO.getWebPayment().getShop_code());
+							//ShopDetailVO shopDetail = ticketingService.getShopDetail(apiResultVO.getWebPayment().getShop_code());
 						
 							try {
 								
@@ -868,7 +868,8 @@ public class TicketingController extends BaseController {
 							if(StringUtils.hasText(apiResultVO.getWebPayment().getReserverEmail())) {
 							
 								try {
-									CompanyVO company = ticketingService.getCompany(apiResultVO.getWebPayment().getShop_code());
+									//CompanyVO company = ticketingService.getCompany(apiResultVO.getWebPayment().getShop_code());
+									
 									
 									//이메일
 									mailService.sendReserve(request, apiResultVO, pgResult);
@@ -1813,11 +1814,13 @@ public class TicketingController extends BaseController {
 		 *  2. bc_web_payment_coupon update
 		 */
 		// bc_paymentsale (select) 검증해서 쿠폰 있으면 아래 2개 실행, 없으면 skip
+		/*
 		int ret = ticketingService.selectCouponCheck(sale);
 		if(ret > 0) {
 			ticketingService.updateCouponCancelDate(sale.getCoupon());
 			ticketingService.updateCouponUseYn(sale.getOrder_num());
 		}
+		*/
 		
 		if("0000".equals(pgResult.getPay_method()) ) {
 			// 0원 결제 - PG타지 않고 처리
@@ -2049,7 +2052,7 @@ public class TicketingController extends BaseController {
 					ticketingService.insertRefundHistory(historyVO);
 					
 					
-					ShopDetailVO shopDetail = ticketingService.getShopDetail(webPayment.getShop_code());
+					//ShopDetailVO shopDetail = ticketingService.getShopDetail(webPayment.getShop_code());
 					
 					//알림톡 메시지 전송
 					//messageService.sendRefund(request, saleVO, webPayment, pgResult, shopDetail); 

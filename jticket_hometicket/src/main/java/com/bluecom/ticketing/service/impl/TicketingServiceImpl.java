@@ -726,10 +726,16 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 	@Override
 	public ApiResultVO callTicketApi(WebPaymentPgResultDTO pgResult) throws Exception {
 
+		log.info("::: CALL TIcketApi");
+		
 		List<CouponVO> coupons = null;
+		/*
 		if(pgResult.getCoupon() != null && !pgResult.getCoupon().equals("0")) {
 			coupons = ticketingMapper.selectCouponByWebPaymetIdx(pgResult.getMoid()); // 사용된 쿠폰 가져오기 - 0원결제에서 타면 쿠폰이 0보다 크다
 		}
+		*/
+		
+		log.info("::: Reserve Data Make Start");
 		
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -738,6 +744,7 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 			WebPaymentDTO webPayment = ticketingMapper.selectWebPaymentByOrderNo(pgResult.getMoid()); // 주문번호만 있으면 됌
 			
 			// 쿠폰 사용전 체크
+			/*
 			if(coupons != null && coupons.size() > 0) {
 				ApiResultVO alreadyUseCoupon = new ApiResultVO();
 				for(CouponVO coupon : coupons) {
@@ -754,8 +761,10 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 					}
 				}
 			}
+			*/
+			
 			// 쿠폰 사용
-			updateCouponForUse(pgResult.getMoid() );
+			//updateCouponForUse(pgResult.getMoid() );
 			
 			Date now = new Date();
 			String ticketingDate = new SimpleDateFormat("yyyy-MM-dd").format(now);
@@ -952,10 +961,12 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 			result.setSocialSales(socialSales);
 			
 			if(result.getSuccess() != 1) {
+				/*
 				if(coupons != null) {
 					updateCouponUseYn(pgResult.getMoid() );
 					updateCouponCancelDate(coupons);
 				}
+				*/
 			}
 			
 			return result;
@@ -963,10 +974,13 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 		} catch (Exception e) {
 			// TODO: handle exception
 			
+			/*
 			if(coupons != null) {
 				updateCouponUseYn(pgResult.getMoid() );
 				updateCouponCancelDate(coupons);
 			}
+			*/
+			
 			ApiResultVO exceptionResult = new ApiResultVO();
 			exceptionResult.setSuccess(0);
 			exceptionResult.setErrMsg("알 수 없는 오류로 인해 api호출에 실패하였습니다.");

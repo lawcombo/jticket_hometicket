@@ -109,7 +109,7 @@ public class JejuMailServiceImpl extends EgovAbstractServiceImpl implements Mail
 		
 		mailVO.setText(text);
 		
-		System.out.println(mailVO.getSubject());
+		//System.out.println(mailVO.getSubject());
 		
 	    try {
             MimeMessage mail = mailSender.createMimeMessage();
