@@ -92,7 +92,7 @@
 			                <div class="row">
 				                <dl class="tableUl mt40">
 				                    <dt class="child_7">
-				                        <img src="/resources/images/age_18_icon.png"
+				                        <img src="/resources/images/age_19_icon.png"
 				                             alt="key visual">
 				                    </dt>
 				                    <dd class="line_h">
