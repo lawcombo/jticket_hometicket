@@ -96,7 +96,7 @@
 				                             alt="key visual">
 				                    </dt>
 				                    <dd class="line_h">
-				                    	<strong>만 18세 이상 참여가능 </strong>
+				                    	<strong>만 19세 이상 참여가능 </strong>
 				                    </dd>
 				                </dl>
 			                </div>
