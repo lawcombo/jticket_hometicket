@@ -237,7 +237,7 @@
 			<div id="agreementTermsOfUse-modal-section" class="md_cont">
 				<div class="modal_tb">
 					<div class="mt_bot">
-						<img src="../../../../../resources/images/sogeumsan/price_new.png" style="width:100%;">
+						<img src="../../../../../resources/images/sogeumsan/price_new2.png" style="width:100%;">
 					</div>
 				</div>
 				
