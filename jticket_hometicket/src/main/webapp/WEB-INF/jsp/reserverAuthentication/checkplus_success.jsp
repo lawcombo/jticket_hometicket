@@ -52,6 +52,16 @@
             sResponseNumber = "";
             sAuthType = "";
         }
+        
+        //핸드폰번호가 82로 시작하는 경우가 발생하여, 82를 강제로 0으로 바꾸기
+        String sMobileNoTmp = "";
+        sMobileNoTmp = sMobileNo.substring(0, 2);
+        
+        if(sMobileNoTmp.equals("82"))
+        {
+        	sMobileNo = "0" + sMobileNo.substring(2, sMobileNo.length());
+        }
+        
     }
     else if( iReturn == -1)
     {

@@ -7,7 +7,7 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="validator" uri="http://www.springmodules.org/tags/commons-validator" %>
 
-<%@ include file="../include/header-single.jsp" %>
+<%@ include file="../../include/header-single.jsp" %>
 
 <meta name="_csrf_header" content="${_csrf.headerName}">
 <meta name="_csrf" content="${_csrf.token}">

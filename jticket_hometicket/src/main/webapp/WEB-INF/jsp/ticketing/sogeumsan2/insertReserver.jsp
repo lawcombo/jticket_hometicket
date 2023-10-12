@@ -208,7 +208,7 @@ table, td, th {
 							</dt>
 							<dd class="reserveDd">
 								<input type="text" name="reserver.name" class="jejuInputBox"
-									id="userName">
+									id="userName" readonly>
 							</dd>
 						</dl>
 						<dl class="reserveDl full mt20">
@@ -219,7 +219,7 @@ table, td, th {
 								<dl class="columnDl">
 									<dt class="columnDt ewp_input_100">
 										<input type="tel" name="reserver.phone" id="phone"
-											class="jejuInputBox full gray num_only">
+											class="jejuInputBox full gray num_only" readonly>
 										<p class="ewp_m_info_tb">나이스평가정보에서 인증 받은 휴대폰 번호를 사용하고
 											있습니다.</p>
 									</dt>

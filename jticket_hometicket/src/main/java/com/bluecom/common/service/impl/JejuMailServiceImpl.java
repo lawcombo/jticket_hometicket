@@ -26,7 +26,6 @@ import com.bluecom.ticketing.domain.WebPaymentPgResultDTO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.property.EgovPropertyService;
-import jdk.nashorn.internal.runtime.Debug;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
