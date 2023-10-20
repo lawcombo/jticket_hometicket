@@ -197,7 +197,7 @@
 					</div>
 					 -->
 					<div class="mt_bot">
-						<img src="../../../../../resources/images/sogeumsan/main_0704.png" style="width:100%;">
+						<img src="../../../../../resources/images/sogeumsan/main_1020.png" style="width:100%;">
 					</div>
 				</div>
 				
