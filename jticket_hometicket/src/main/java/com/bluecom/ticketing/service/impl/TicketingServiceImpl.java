@@ -1833,7 +1833,8 @@ public class TicketingServiceImpl extends EgovAbstractServiceImpl implements Tic
 	private ApiResultVO callApi(String socialSalesJson, String target, HttpMethod httpMethod) throws Exception{
 		
 		try {
-			int timeout = 40000;
+			//int timeout = 40000; // 40초
+			int timeout = 90000; // 1분30초로 변경
 			HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
 			factory.setConnectionRequestTimeout(timeout);
 			factory.setConnectTimeout(timeout);
