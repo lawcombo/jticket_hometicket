@@ -81,7 +81,7 @@
 			<section class="order-wrap time-wrap">
 				<h3>
 					<!-- <span class="material-icons">event_available</span> -->
-					<img src="../resources/images/img_icon_calendar.png">
+					<img src="../../../resources/images/img_icon_calendar.png">
 					<span class="reserve-date"></span>
 				</h3>
 				<div class="reserve-list th_res_list">
