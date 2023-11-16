@@ -53,8 +53,8 @@
 		             class="isMb" />
 		    </div>
 		
-		    <div class="body-contents-wrap pdplus">
-		    	<div class="pdwrap">
+			<div class="body-contents-wrap pdplus">
+		        <div class="pdwrap">
 			        <div class="beerwalk-desc-title">
 			            <div>
 			                <h2>많고 많은 맥주잔 중, 내 맥주잔 하나는 있어야죠!</h2>
@@ -64,51 +64,82 @@
 			
 			        <div class="pageLine pginfo"></div>
 			
-			        <div class="beerwalk-desc-info mt30 info102">
-			            <div class="beerwalk-desc-info-type">
+			        <div class="beerwalk-desc-info mt30">
+			            <!-- <div class="beerwalk-desc-info-type">
 			                <div class="beerwalk-desc-info-type-cell prginfo">
 			                    <dl>
 			                        <dt>금액</dt>
-			                        <dd>12,000원</dd>
+			                        <dd>22,000원</dd>
 			                    </dl>
 			                    <dl>
 			                        <dt>체험시간</dt>
-			                        <dd>30분</dd>
+			                        <dd>40분</dd>
 			                    </dl>
 			                    <dl>
 			                        <dt>포함사항 <sub>(택1)</sub></dt>
-			                        <dd>제주맥주 전용잔 <sub>(370ml)</dd>
+			                        <dd class="pl_line">제주맥주 4종 샘플러 <sub>(250ml*4)</sub><br>또는 스파클링 음료와 제주맥주 굿즈세트</dd>
 			                    </dl>
 			                </div>
-			            </div>
+			            </div> -->
+			            <div class="beer_table_bx">
+			                	<table>
+			                		<colgroup>
+			                			<col width="20%">
+			                			<col width="15%">
+			                			<col width="*">
+			                			<col width="20%">
+			                		</colgroup>
+			                		<thead>
+			                			<tr>
+			                				<th>금액</th>
+			                				<th>체험시간</th>
+			                				<th>포함사항</th>
+			                				<th>정원</th>
+			                			</tr>
+			                		</thead>
+			                		<tbody>
+			                			<tr>
+			                				<td>15,000원</td>
+			                				<td>45분</td>
+			                				<td>제주맥주 전용잔, 시음맥주 <sub>200ml</sub></td>
+			                				<td >6명</td>
+			                			</tr>
+			                		</tbody>
+			                	</table>
+			                	<p class="beer_table_p">
+			                		*맥주 시음 희망시 신분증 필참
+			                	</p>
+			                </div><!-- beer_table_bx end -->
+			            
 			            <div class="beerwalk-desc-info-help ps_mgt">
-			                <dl>
+			                <dl style="margin-right:0; width:50%">
 			                    <dt>
 			                        <img src="https://dsfyc8ahox9m2.cloudfront.net/static/images/reservationRenew/img_icon_calendar_2.png"
 			                             alt="key visual">
 			                    </dt>
-			                    <dd class="line_h"><strong>사전 예약 필수</strong></dd>
+			                    <dd><strong>사전 예약 필수</strong></dd>
 			                </dl>
-			                <dl class="tableUl mt40">
+			                <dl class="tableUl mt40" style="width:50%;">
 			                    <dt>
-			                        <img src="https://dsfyc8ahox9m2.cloudfront.net/static/images/reservationRenew/img_icon_age_all.png"
-			                             alt="key visual">
+			                        <img src="https://dsfyc8ahox9m2.cloudfront.net/static/images/reservationRenew/img_icon_age_all.png" alt="key visual">
 			                    </dt>
 			                    <dd class="line_h">
-			                    	<strong> 전 연령 참여가능 </strong><br>
+			                    	<strong> 전 연령 참여가능 </strong>
+			                    	<br />
 			                    	<span class="ewp_spnb">(단, 만 12세 이하의 경우 보호자 동반 필수)</span>
 			                    </dd>
 			                </dl>
 			            </div>
 			        </div>
 					
-					
-					
 			        <div class="pageLine pginfo mt30"></div>
 			        
-			       
-				</div>
+		        </div>
+		        
 		    </div>
+		
+		
+		
 			
 <!-- 		    <div class="beerwalk-desc-help bg-gray mt50 pt50 pb50"> -->
 <!-- 		        <div class="innerBox pl100 pr100"> -->

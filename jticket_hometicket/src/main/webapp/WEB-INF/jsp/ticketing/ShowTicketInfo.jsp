@@ -320,10 +320,12 @@ $(function() {
 		if(todayDate > playDate){
 			alert("예약날짜가 지났습니다. 예약취소가 불가능합니다.");
 			return false;
-		}else if(todayDate == playDate){
+		}
+		else if(todayDate == playDate){
 			alert("예약 당일은 취소가 불가능합니다.");
 			return false;
-		}else{
+		}
+		else{
 			var yesterday = new Date(playDate);
 			yesterday.setDate(yesterday.getDate()-1);
 			yesterday = yesterday.toJSON().split("T");
