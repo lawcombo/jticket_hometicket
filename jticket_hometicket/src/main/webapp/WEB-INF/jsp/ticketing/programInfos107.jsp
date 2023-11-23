@@ -110,7 +110,7 @@
 			                		</tbody>
 			                	</table>
 			                	<p class="beer_table_p">
-			                		*양조장투어 + 맥주 선택 시 신분증 필참
+			                		*신분증 필참
 			                	</p>
 			                </div><!-- beer_table_bx end -->
 			            
@@ -124,10 +124,10 @@
 			                </dl>
 			                <dl class="tableUl mt40">
 			                    <dt>
-			                        <img src="https://dsfyc8ahox9m2.cloudfront.net/static/images/reservationRenew/img_icon_age.png"
+			                        <img src="/resources/images/age_19_icon.png"
 			                             alt="key visual">
 			                    </dt>
-			                    <dd><strong> 만 7세 이상
+			                    <dd><strong> 만 19세 이상
 			                        참여가능 </strong></dd>
 			                </dl>
 			            </div>
