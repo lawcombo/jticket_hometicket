@@ -16,7 +16,7 @@
 
 <!-- 필요할 때 사용 (103:양조장투어 / 102:전용잔만들기 / 107:스페셜투어) -->
 <c:choose>
-	<c:when test="${essential.product_group_code ne '103' and essential.product_group_code ne '102'  and essential.product_group_code ne '107'}">
+	<c:when test="${essential.product_group_code ne '103' and essential.product_group_code ne '102'  and essential.product_group_code ne '107' and essential.product_group_code ne '106'}">
 		
 		<script>
             alert("상품그룹코드가 일치하지 않습니다.");
