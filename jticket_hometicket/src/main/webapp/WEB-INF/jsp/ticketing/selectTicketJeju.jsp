@@ -14,7 +14,7 @@
 <meta name="_csrf_header" content="${_csrf.headerName}">
 <meta name="_csrf" content="${_csrf.token}">
 
-<!-- 필요할 때 사용 -->
+<!-- 필요할 때 사용 (103:양조장투어 / 102:전용잔만들기 / 107:스페셜투어) -->
 <c:choose>
 	<c:when test="${essential.product_group_code ne '103' and essential.product_group_code ne '102'  and essential.product_group_code ne '107'}">
 		
