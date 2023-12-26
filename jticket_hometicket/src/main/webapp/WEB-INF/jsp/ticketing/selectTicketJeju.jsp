@@ -14,6 +14,22 @@
 <meta name="_csrf_header" content="${_csrf.headerName}">
 <meta name="_csrf" content="${_csrf.token}">
 
+<!-- 필요할 때 사용 -->
+<c:choose>
+	<c:when test="${essential.product_group_code ne '103' and essential.product_group_code ne '102'  and essential.product_group_code ne '107'}">
+		
+		<script>
+            alert("상품그룹코드가 일치하지 않습니다.");
+            window.location.href = 'https://jejubeer.co.kr/brewery-program';
+        </script>
+        
+	</c:when>
+	<c:otherwise>
+		<!-- 기타 -->
+	</c:otherwise>
+</c:choose>
+
+
 <div class="app">
 	<%@ include file="../include/top_menu.jsp" %>
 	
@@ -23,6 +39,7 @@
 		<div class="body-contents-wrap">
 			<div class="intro res_tit res_padi">
 				<h1>예약하기</h1>
+				<a>${essential.product_group_code}</a>
 			</div>
 			<section class="tabs ewp_tabs">
 				<ul>
