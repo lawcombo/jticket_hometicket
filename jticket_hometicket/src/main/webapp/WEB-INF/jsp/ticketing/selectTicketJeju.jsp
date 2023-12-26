@@ -292,59 +292,68 @@
 					let dataAry = {data: []};
 					var reserv = false;
 					
-					
-					//오늘제주맥주 라는 상품분류 추가되어 분기작업 ( 회차시간에 이름(ex-17:00 델문도 김녕점)도 포함해서 해야하기때문에 ) 
-					if(schedule[0].product_group_code == '106')
+					if(schedule.length > 0)
 					{
-						for(var i=0; i<schedule.length; i++){
-							if(schedule[i].sumCout <= 0){
-								reserv = false;
-								schedule[i].sumCout = 0;
-							}else{
-								reserv = true;
+						//오늘제주맥주 라는 상품분류 추가되어 분기작업 ( 회차시간에 이름(ex-17:00 델문도 김녕점)도 포함해서 해야하기때문에 ) 
+						if(schedule[0].product_group_code == '106')
+						{
+							for(var i=0; i<schedule.length; i++){
+								if(schedule[i].sumCout <= 0){
+									reserv = false;
+									schedule[i].sumCout = 0;
+								}else{
+									reserv = true;
+								}
+								dataAry.data.push({
+									id: schedule[i].schedule_code,
+									time: schedule[i].subject_text,
+									
+									//추가
+									//scheduleNm: schedule[i].play_sequence,
+									
+									seat: Number(schedule[i].sumCout),
+									seatlimit: Number(schedule[i].total_count),
+									reserv: reserv,
+									product:productAry,
+								})
 							}
-							dataAry.data.push({
-								id: schedule[i].schedule_code,
-								time: schedule[i].subject_text,
-								
-								//추가
-								//scheduleNm: schedule[i].play_sequence,
-								
-								seat: Number(schedule[i].sumCout),
-								seatlimit: Number(schedule[i].total_count),
-								reserv: reserv,
-								product:productAry,
-							})
+							
+							var temlate = $('#list-template-for-product106').html();
+							var html = Mustache.render(temlate, dataAry);
+							
+							$('.reserve-list').append(html);
 						}
-						
-						var temlate = $('#list-template-for-product106').html();
-						var html = Mustache.render(temlate, dataAry);
-						
-						$('.reserve-list').append(html);
+						else
+						{
+							for(var i=0; i<schedule.length; i++){
+								if(schedule[i].sumCout <= 0){
+									reserv = false;
+									schedule[i].sumCout = 0;
+								}else{
+									reserv = true;
+								}
+								dataAry.data.push({
+									id: schedule[i].schedule_code,
+									time: schedule[i].subject_text,
+									seat: Number(schedule[i].sumCout),
+									seatlimit: Number(schedule[i].total_count),
+									reserv: reserv,
+									product:productAry,
+								})
+							}
+							
+							var temlate = $('#list-template').html();
+							var html = Mustache.render(temlate, dataAry);
+							
+							$('.reserve-list').append(html);
+						}
 					}
 					else
 					{
-						for(var i=0; i<schedule.length; i++){
-							if(schedule[i].sumCout <= 0){
-								reserv = false;
-								schedule[i].sumCout = 0;
-							}else{
-								reserv = true;
-							}
-							dataAry.data.push({
-								id: schedule[i].schedule_code,
-								time: schedule[i].subject_text,
-								seat: Number(schedule[i].sumCout),
-								seatlimit: Number(schedule[i].total_count),
-								reserv: reserv,
-								product:productAry,
-							})
-						}
-						
-						var temlate = $('#list-template').html();
-						var html = Mustache.render(temlate, dataAry);
-						
-						$('.reserve-list').append(html);
+						var htmlTmp = '';
+						htmlTmp += '<span>'+reserveDate+'에 예매가능한 상품이 없습니다.</span><br /><br />';
+						htmlTmp += '<span>다른 날짜를 선택하여 진행해 주시기 바랍니다.</span>';
+						$('.reserve-list').append(htmlTmp);
 					}
 					
 					
@@ -526,6 +535,10 @@
 						//console.log(ymd+' : '+($.inArray(ymd, arrDate)));
 	
 						if ($.inArray(ymd, arrDate) != -1) {
+							
+							console.log("==-=-=-=-=-=-=");
+							console.log(ymd);
+							
 						    return [true, "","Available"]; 
 						} else{
 						     return [false,"","unAvailable"]; 

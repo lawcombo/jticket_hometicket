@@ -435,7 +435,9 @@
 	</select>
 	
 	<select id="selectSchedule" parameterType="java.util.List" resultType="schedule">
-		<![CDATA[
+		
+			<!-- 
+			<![CDATA[
 			SELECT
 				SHOP_CODE AS shop_code, 
 				SCHEDULE_CODE AS schedule_code, 
@@ -474,7 +476,54 @@
 				AND ( SCHEDULE_CODE != '801' and SCHEDULE_CODE != '802' and SCHEDULE_CODE != '803' and SCHEDULE_CODE != '804' and SCHEDULE_CODE != '805' and SCHEDULE_CODE != '806' and
 						SCHEDULE_CODE != '807' and SCHEDULE_CODE != '808' and SCHEDULE_CODE != '901' and  SCHEDULE_CODE != '902' and SCHEDULE_CODE != '903' and SCHEDULE_CODE != '904' and 
 						SCHEDULE_CODE != '905' and SCHEDULE_CODE != '906' )
-		]]>
+			]]>
+			 -->
+			
+			<![CDATA[		
+			SELECT
+				AA.SHOP_CODE 										AS shop_code, 
+				AA.SCHEDULE_CODE 									AS schedule_code, 
+				AA.PRODUCT_GROUP_CODE 								AS product_group_code,
+				AA.PLAY_SEQUENCE 									AS play_sequence, 
+				AA.START_TIME 										AS start_time, 
+				AA.END_TIME 										AS end_time,
+				AA.total_count,
+				AA.START_TIME 										AS subject_text,
+				(TOTAL_COUNT - (select IFNULL(sum(p.QUANTITY ),0) 
+					from bc_sale_product p
+					where
+						p.SALE_SHOP_CODE 	= AA.SHOP_CODE 
+						and p.REFUND_YN 	= '0' 
+						and p.PACKAGE_YN 	= '0' 
+						and p.PLAY_DATE 	= #{play_date} 
+						and ((p.SALE_TYPE ='SS' AND p.ONLINE_YN = '1') OR (p.SALE_TYPE ='TS' AND p.ONLINE_YN = '0'))
+						and p.SCHEDULE_CODE = AA.SCHEDULE_CODE
+					)
+				) AS sumCout,
+				AA.play_date_from,
+				AA.play_date_to,
+				bbo.book_yn 
+			FROM 
+				bc_schedule AS AA
+				LEFT OUTER JOIN bc_book_open as bbo ON bbo.shop_Code = AA.SHOP_CODE 
+													AND bbo.play_date = #{play_date}
+			WHERE
+				1=1
+				AND AA.shop_code 				= (SELECT shop_code FROM bc_shop where CONTENT_MST_CD = #{contentMstCd})
+				AND AA.PRODUCT_GROUP_CODE 		= #{product_group_code}
+				AND AA.PRODUCT_GROUP_TYPE 		= 'TCIT'
+				AND AA.SALE_YN 					= '1' 
+				AND AA.DELETE_YN 				= '0'
+				AND SUBSTRING(REPLACE(#{play_date}, '-',''),5,4) between AA.PLAY_DATE_FROM and AA.PLAY_DATE_TO
+				AND (AA.START_TIME > (DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 10 MINUTE), '%H:%i')) && DATE(NOW()) = STR_TO_DATE(#{play_date}, '%Y-%m-%d') || STR_TO_DATE(#{play_date}, '%Y-%m-%d') > CURDATE())
+				AND if(sale_weekday is null or sale_weekday = '', 1=1, sale_weekday LIKE CONCAT('%', WEEKDAY(#{play_date}), '%'))
+				AND ( AA.SCHEDULE_CODE != '801' and AA.SCHEDULE_CODE != '802' and AA.SCHEDULE_CODE != '803' and AA.SCHEDULE_CODE != '804' and AA.SCHEDULE_CODE != '805' and AA.SCHEDULE_CODE != '806' and
+						AA.SCHEDULE_CODE != '807' and AA.SCHEDULE_CODE != '808' and AA.SCHEDULE_CODE != '901' and  AA.SCHEDULE_CODE != '902' and AA.SCHEDULE_CODE != '903' and AA.SCHEDULE_CODE != '904' and 
+						AA.SCHEDULE_CODE != '905' and AA.SCHEDULE_CODE != '906' )
+				
+				AND bbo.book_yn = '1'
+			]]>
+			
 		<!-- CONCAT(PLAY_SEQUENCE, '회차 (', START_TIME, '~', END_TIME, ')') AS subject_text, -->
 	</select>
 	
