@@ -115,8 +115,8 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 		template.setCallback(StringUtils.hasText(shopDetail.getComp_tel()) ? shopDetail.getComp_tel() : "");
 		//template.setTemplate_code("jejubeer1001");		
 		
-		
-		template.setTemplate_code("jejubeer1001");
+		//템플릿내용 변경으로 템플릿 코드 수정 ( 1001 -> 1006 )
+		template.setTemplate_code("jejubeer1006");
 		
 		
 //		template.setTemplate_code(StringUtils.hasText(shopDetail.getAlimtalk_comp_code()) ? shopDetail.getAlimtalk_comp_code() : "");
@@ -289,7 +289,11 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 		}
 		
 		template.setCallback(StringUtils.hasText(shopDetail.getComp_tel()) ? shopDetail.getComp_tel() : "");
-		template.setTemplate_code("jejubeer1002");		
+		
+		//template.setTemplate_code("jejubeer1002");
+		//템플릿내용 변경으로 템플릿 코드 수정 ( 1002 -> 1007 )
+		template.setTemplate_code("jejubeer1007");
+		
 //		template.setTemplate_code(StringUtils.hasText(shopDetail.getAlimtalk_comp_code()) ? shopDetail.getAlimtalk_comp_code() : "");
 		template.setSender_key(StringUtils.hasText(shopDetail.getAlimtalk_sender_key()) ? shopDetail.getAlimtalk_sender_key() : "");
 				
@@ -433,7 +437,11 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 		}
 		
 		template.setCallback(StringUtils.hasText(shopDetail.getComp_tel()) ? shopDetail.getComp_tel() : "");
-		template.setTemplate_code("jejubeer1003");		
+		
+		//템플릿내용 변경으로 템플릿 코드 수정 ( 1003 -> 1008 )
+		//template.setTemplate_code("jejubeer1003");	
+		template.setTemplate_code("jejubeer1008");	
+		
 //		template.setTemplate_code(StringUtils.hasText(shopDetail.getAlimtalk_comp_code()) ? shopDetail.getAlimtalk_comp_code() : "");
 		template.setSender_key(StringUtils.hasText(shopDetail.getAlimtalk_sender_key()) ? shopDetail.getAlimtalk_sender_key() : "");
 				
