@@ -115,8 +115,8 @@ public class BgfAlimTalkServiceImpl extends EgovAbstractServiceImpl implements M
 		template.setCallback(StringUtils.hasText(shopDetail.getComp_tel()) ? shopDetail.getComp_tel() : "");
 		//template.setTemplate_code("jejubeer1001");		
 		
-		//템플릿내용 변경으로 템플릿 코드 수정 ( 1001 -> 1006 )
-		template.setTemplate_code("jejubeer1006");
+		//템플릿내용 변경으로 템플릿 코드 수정 ( 1001 -> 1006 -> 1010)
+		template.setTemplate_code("jejubeer1010");
 		
 		
 //		template.setTemplate_code(StringUtils.hasText(shopDetail.getAlimtalk_comp_code()) ? shopDetail.getAlimtalk_comp_code() : "");
