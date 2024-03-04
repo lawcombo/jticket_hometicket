@@ -14,9 +14,9 @@
 <meta name="_csrf_header" content="${_csrf.headerName}">
 <meta name="_csrf" content="${_csrf.token}">
 
-<!-- 필요할 때 사용 (103:양조장투어 / 102:전용잔만들기 / 107:스페셜투어) -->
+<!-- 필요할 때 사용 (103:양조장투어_v2 / 102:전용잔만들기 / 107:스페셜투어 / 201:양조장투어_v3 / 202:스페셜투어 / 203:단체투어) -->
 <c:choose>
-	<c:when test="${essential.product_group_code ne '103' and essential.product_group_code ne '102'  and essential.product_group_code ne '107' and essential.product_group_code ne '106'}">
+	<c:when test="${essential.product_group_code ne '103' and essential.product_group_code ne '102'  and essential.product_group_code ne '107' and essential.product_group_code ne '106' and essential.product_group_code ne '201' and essential.product_group_code ne '202' and essential.product_group_code ne '203'}">
 		
 		<script>
             alert("상품그룹코드가 일치하지 않습니다.");
@@ -77,7 +77,7 @@
 						<p>*옵션 변경을 희망하실 경우 예약 취소 후 재예약 하셔야 합니다.</p>
 					</div>
 				</c:if>
-				<c:if test="${productGroup.product_group_code eq '103' }">
+				<c:if test="${productGroup.product_group_code eq '103' or productGroup.product_group_code eq '201' }">
 					<div class="datepick_txt">
 						<!-- 양조장 투어_v2 -->
 						<!-- 
@@ -91,7 +91,14 @@
 						
 					</div>
 				</c:if>
-				<c:if test="${productGroup.product_group_code eq '106' }">
+				<c:if test="${productGroup.product_group_code eq '106' or productGroup.product_group_code eq '203' }">
+					<div class="datepick_txt">
+						<p>[취소/환불안내]</p>
+						<p>- 이용일 기준 1일전 : 결제 금액의 100% 환불</p>
+						<p>- 당일 : 취소/환불/날짜 변경 모두 불가</p>
+					</div>
+				</c:if>
+				<c:if test="${productGroup.product_group_code eq '107' or productGroup.product_group_code eq '202' }">
 					<div class="datepick_txt">
 						<p>[취소/환불안내]</p>
 						<p>- 이용일 기준 1일전 : 결제 금액의 100% 환불</p>

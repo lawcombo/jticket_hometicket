@@ -22,21 +22,46 @@
 	<div style="clear:both;display:flex;justify-content:space-evenly;width:100%;padding:30px;">
 		
 		<div>
-			<a href="/adm">관리자</a>
-<!-- 			<a href="/ticketing/selectSchedule?content_mst_cd=JEJUBEER_0_1&product_group_code=101">투어</a> -->
+			<del><a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=101" >투어<span style="color:red">(가상결제!)</span></a></del>
 		</div>
 		<div>
-			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=101">투어<span style="color:red">(가상결제!)</span></a>
+			<del><a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=103">투어_v2<span style="color:red">(19,000원)</span></a></del>
 		</div>
+		<div>
+			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=201">투어_v3<span style="color:red">(22,000원!)</span></a>
+		</div>
+		
+		
 		<div>
 			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=102">체험<span style="color:red">(가상결제!)</span></a>
 		</div>
+	</div>
+	
+	<hr />
+	
+	<div style="clear:both;display:flex;justify-content:space-evenly;width:100%;padding:30px;">
+		
 		<div>
-			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=103">투어_v2<span style="color:red">(가상결제!)</span></a>
+			<del><a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=107">스페셜투어<span style="color:red">(가상결제!)</span></a></del>
 		</div>
+		
 		<div>
-			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=106">단체<span style="color:red">(가상결제!)</span></a>
+			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=202">스페셜투어_v2<span style="color:red">(25,000원!)</span></a>
 		</div>
+		
+		
+		<div>
+			<del><a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=106">단체<span style="color:red">(가상결제!)</span></a></del>
+		</div>
+		
+		<div>
+			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=203">단체_v2<span style="color:red">(330,000원!)</span></a>
+		</div>
+		
+		
+		
+		
+		
 		<div>
 			<a href="/ticketing/programInfos?content_mst_cd=JEJUBEER_0_1&product_group_code=104">비어테이스팅<span style="color:red">(가상결제!)</span></a>
 		</div>
@@ -60,9 +85,13 @@
 		
 	</div>
 	
+	<hr />
+	
 	<div style="clear:both;display:flex;justify-content:space-evenly;width:100%;padding:30px;">
-		<a onclick="pop.openDiamondBay();" style="cursor:pointer;">다이아몬드베이<span style="color:red">(가상결제!)</span></a>
+		<del><a onclick="pop.openDiamondBay();" style="cursor:pointer;">다이아몬드베이<span style="color:red">(가상결제!)</span></a></del>
 	</div>
+	
+	<hr />
 	
 	<div style="clear:both;display:flex;justify-content:space-evenly;width:100%;padding:30px;">
 		<div>
@@ -75,6 +104,8 @@
 			<a onclick="pop.openGanghwa2();" style="cursor:pointer;">강화키즈카페 예매 확인<span style="color:red">(가상결제!)</span></a>
 		</div>
 	</div>
+	
+	<hr />
 	
 	<div style="clear:both;display:flex;justify-content:space-evenly;width:100%;padding:30px;">
 		<div>

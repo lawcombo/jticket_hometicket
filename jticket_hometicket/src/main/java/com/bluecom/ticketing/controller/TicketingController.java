@@ -2069,24 +2069,59 @@ public class TicketingController extends BaseController {
 
 		}
 		
-		if(essential.getProduct_group_code().equals("101")) {
+		if(essential.getProduct_group_code().equals("101")) 
+		{
+			//양조장 투어 v1
 			return "/ticketing/programInfos101";
-		} else if(essential.getProduct_group_code().equals("102")) {
-			return "/ticketing/programInfos102";
-		} else if(essential.getProduct_group_code().equals("103")) {
-			
+		} 
+		else if(essential.getProduct_group_code().equals("103")) 
+		{
+			//양조잔 추어 v2
 			//return "/ticketing/programInfos103";
 			return "/ticketing/programInfos103_v2";
-		} else if(essential.getProduct_group_code().equals("104")) {
+		} 
+		else if(essential.getProduct_group_code().equals("201")) 
+		{
+			//양조잔 추어 v3
+			return "/ticketing/programInfos201";
+		} 
+		else if(essential.getProduct_group_code().equals("102")) 
+		{
+			//잔만들기
+			return "/ticketing/programInfos102";
+		} 
+		else if(essential.getProduct_group_code().equals("104")) 
+		{
+			//비어테이스팅 클래스
 			return "/ticketing/programInfos104";
-		} else if(essential.getProduct_group_code().equals("105")) { // 2022-02-07 체험추가
+		} 
+		else if(essential.getProduct_group_code().equals("105")) 
+		{ 
+			// 2022-02-07 체험추가
 			return "/ticketing/programInfos105";
-		} else if(essential.getProduct_group_code().equals("106")) { // 2023-07-31 단체 추가
+		} 
+		else if(essential.getProduct_group_code().equals("106")) 
+		{ 
+			// 2023-07-31 단체 추가
 			return "/ticketing/programInfos106";
-		} else if(essential.getProduct_group_code().equals("107")) { // 2023-11-14 스페셜투어 추가
+		} 
+		else if(essential.getProduct_group_code().equals("203")) 
+		{ 
+			// 2023-07-31 단체 v2 추가
+			return "/ticketing/programInfos203";
+		} 
+		else if(essential.getProduct_group_code().equals("107")) 
+		{ 
+			// 2023-11-14 스페셜투어 추가
 			return "/ticketing/programInfos107";
 		} 
-		else {			
+		else if(essential.getProduct_group_code().equals("202")) 
+		{ 
+			// 2023-11-14 스페셜투어 v2 추가
+			return "/ticketing/programInfos202";
+		} 
+		else 
+		{			
 			ScriptUtils.alertAndBackPage(response, "상품정보가 올바르지 않습니다.");
 			return null;
 		}
