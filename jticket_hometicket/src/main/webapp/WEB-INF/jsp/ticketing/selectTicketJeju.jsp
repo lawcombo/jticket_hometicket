@@ -39,7 +39,7 @@
 		<div class="body-contents-wrap">
 			<div class="intro res_tit res_padi">
 				<h1>예약하기</h1>
-				<a>${essential.product_group_code}</a>
+				<%-- <a>${essential.product_group_code}</a> --%>
 			</div>
 			<section class="tabs ewp_tabs">
 				<ul>
