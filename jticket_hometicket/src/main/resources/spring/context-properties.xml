@@ -21,12 +21,8 @@
 	        	<entry key="kisPgPayModule" value="https://api.kispg.co.kr/v2/payment"/>
 				<entry key="kisPgPayCanelModule" value="https://api.kispg.co.kr/v2/cancel"/>
 	        	 -->
-	        	
-	        
-	        	<!-- 개발 -->
-	        	<!-- <entry key="apiUrl" value="https://iticket-stg.nicetcm.co.kr/api"/> -->
-	        	<!-- 실제 -->
-	        	<!-- <entry key="apiUrl" value="https://iticket.nicetcm.co.kr/api"/> -->
+
+
 
 	        	<entry key="apiKey" value="BC-Auth-Token"/>
 	        	<entry key="apiValue">
