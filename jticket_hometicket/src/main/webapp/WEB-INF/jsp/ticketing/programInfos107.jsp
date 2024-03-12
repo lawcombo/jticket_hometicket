@@ -43,7 +43,8 @@
 		</div><!-- mx1200 end -->
 		<section class="beerwalk-desc reservationRenewPage ewp_section color_ch">
 			<div class="ewp_resBtn prog" style="z-index: 9">
-				<button class="reserveButton">예약</button>
+				<button class="reserveButton">3월 예약</button>
+				<button class="reserveButton2">4월 예약</button>
 <!-- 				<p class="reservbt_ps"><strong>10월 8일 이전 일자 예약</strong>을 원하시면 페이지를 이동해주세요.<a href="https://brewery.jejubeer.co.kr/brewery-program/BeerWalk" target="_blank">링크</a></p> -->
 			</div>
 		    <div class="beerwalk-desc-intro">
@@ -103,7 +104,7 @@
 			                		<tbody>
 			                			<tr>
 			                				<td>양조장투어 + 맥주</td>
-			                				<td>22,000</td>
+			                				<td>3월: 22,000 <br/>4월: 25,000</td>
 			                				<td>제주맥주 4종 맥주 샘플러</td>
 			                				<td >40분, 정원 12명</td>
 			                			</tr>
@@ -214,6 +215,10 @@
 $(function() {
 	$(".reserveButton").on('click', function() {
 		window.location.href="/ticketing/selectSchedule?content_mst_cd=${essential.content_mst_cd}&product_group_code=${essential.product_group_code}"
+	});
+	
+	$(".reserveButton2").on('click', function() {
+		window.location.href="/ticketing/selectSchedule?content_mst_cd=${essential.content_mst_cd}&product_group_code=202"
 	});
 	
 	var lastScroll = 0;
