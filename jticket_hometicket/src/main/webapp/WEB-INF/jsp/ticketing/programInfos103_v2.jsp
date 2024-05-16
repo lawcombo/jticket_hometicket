@@ -43,9 +43,13 @@
 		</div><!-- mx1200 end -->
 		<section class="beerwalk-desc reservationRenewPage ewp_section ewp_section_0">
 			<div class="ewp_resBtn prog">
+				<!-- 
 				<button class="reserveButton">3월 예약</button>
 				<button class="reserveButton2">4월 예약</button>
-<!-- 				<p class="reservbt_ps"><strong>10월 8일 이전 일자 예약</strong>을 원하시면 페이지를 이동해주세요.<a href="https://brewery.jejubeer.co.kr/brewery-program/BeerWalk" target="_blank">링크</a></p> -->
+				 -->
+				 
+				<button class="reserveButton">양조장투어 예약</button>
+				<button class="reserveSpecialButton">스페셜투어 예약</button>
 			</div>
 		    <div class="beerwalk-desc-intro">
 		        <img src="https://dsfyc8ahox9m2.cloudfront.net/static/images/reservationRenew/beerwalk/img_hero_beerwalk_2.jpg"
@@ -95,33 +99,33 @@
 			                		</colgroup>
 			                		<thead>
 			                			<tr>
-			                				<th>옵션</th>
+			                				<th>구분</th>
 			                				<th>금액</th>
-			                				<th>포함사항</th>
 			                				<th>체험시간</th>
+			                				<th>정원</th>
+			                				<th>옵션 및 포함사항</th>
 			                			</tr>
 			                		</thead>
 			                		<tbody>
 			                			<tr>
-			                				<td>양조장투어 + 맥주</td>
-			                				<td>3월: 19,000 <br/>4월: 22,000</td>
-			                				<td>제주맥주 1잔(330ml)</td>
-			                				<td rowspan="3">40분</td>
+			                				<td>양조장투어</td>
+			                				<td>22,000</td>
+			                				<td>40분</td>
+			                				<td>15명</td>
+			                				<td>맥주 330ml / 논알콜 330ml /착즙 주스 중 택1</td>
+			                				<!-- <td rowspan="3">40분</td> -->
 			                			</tr>
 			                			<tr>
-			                				<td>양조장투어 + 논알콜맥주</td>
-			                				<td>3월: 19,000 <br/>4월: 22,000</td>
-			                				<td>제주맥주 논알콜맥주 1잔(제주누보 330ml)</td>
-			                			</tr>
-			                			<tr>
-			                				<td>양조장투어 + 음료</td>
-			                				<td>3월: 19,000 <br/>4월: 22,000</td>
-			                				<td>제주음료</td>
+			                				<td>스페셜투어</td>
+			                				<td>25,000</td>
+			                				<td>40분</td>
+			                				<td>12명</td>
+			                				<td>제주맥주 4종<br />(논알콜 또는 착즙 주스로 대체가능)</td>
 			                			</tr>
 			                		</tbody>
 			                	</table>
 			                	<p class="beer_table_p">
-			                		*양조장투어 + 맥주, 논알콜맥주 선택 시 신분증 필참
+			                		*맥주, 논알콜 선택 시 신분증 필수 지참
 			                	</p>
 			                </div><!-- beer_table_bx end -->
 			            
@@ -279,6 +283,7 @@
 
 <script>
 $(function() {
+	/* 
 	//3월예약
 	$(".reserveButton").on('click', function() {
 		window.location.href="/ticketing/selectSchedule?content_mst_cd=${essential.content_mst_cd}&product_group_code=${essential.product_group_code}"
@@ -288,7 +293,16 @@ $(function() {
 	$(".reserveButton2").on('click', function() {
 		window.location.href="/ticketing/selectSchedule?content_mst_cd=${essential.content_mst_cd}&product_group_code=201"
 	});
+	 */
 	
+ 	$(".reserveButton").on('click', function() {
+		window.location.href="/ticketing/selectSchedule?content_mst_cd=${essential.content_mst_cd}&product_group_code=201"
+	});
+	
+	$(".reserveSpecialButton").on('click', function() {
+		window.location.href="/ticketing/selectSchedule?content_mst_cd=${essential.content_mst_cd}&product_group_code=202"
+	});
+	 
 	var lastScroll = 0;
     $(window).scroll(function(){
          var scroll = $(this).scrollTop();
