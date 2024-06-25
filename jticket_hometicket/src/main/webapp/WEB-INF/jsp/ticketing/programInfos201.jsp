@@ -90,8 +90,9 @@
 			                		<colgroup>
 			                			<col width="20%">
 			                			<col width="15%">
+			                			<col width="10%">
+			                			<col width="10%">
 			                			<col width="*">
-			                			<col width="20%">
 			                		</colgroup>
 			                		<thead>
 			                			<tr>
@@ -108,7 +109,7 @@
 			                				<td>22,000</td>
 			                				<td>40분</td>
 			                				<td>15명</td>
-			                				<td>맥주 330ml / 논알콜 330ml /착즙 주스 중 택1</td>
+			                				<td>맥주 330ml / 논알콜 330ml / 착즙 주스 중 택1</td>
 			                				<!-- <td rowspan="3">40분</td> -->
 			                			</tr>
 			                			<tr>
@@ -116,7 +117,7 @@
 			                				<td>25,000</td>
 			                				<td>40분</td>
 			                				<td>12명</td>
-			                				<td>제주맥주 4종<br />(논알콜 또는 착즙 주스로 대체가능)</td>
+			                				<td>제주맥주 4종 (논알콜 또는 착즙 주스로 대체가능)</td>
 			                			</tr>
 			                		</tbody>
 			                	</table>

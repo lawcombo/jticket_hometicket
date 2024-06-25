@@ -28,17 +28,17 @@
         </div>
     </div>
     <div class="header-gnb-top">
-        <!-- <a href="https://jejubeer.co.kr/diversity">DIVERSITY</a> -->
-        <a href="https://jejubeer.co.kr/mycampingcar">EXPERIENCE</a>
-        <a href="https://jejubeer.co.kr/2021barrelseries">COLLABORATION</a>
-        <a href="https://jejubeer.co.kr/shop">SHOP</a>
+        <a href="https://jejubeer.co.kr/ourbeers">OUR BEERS</a>
+        <a href="https://jejubeer.co.kr/366">ONLINE-SHOP</a>
         <a href="https://jejubeer.co.kr/brewery" class="active">BREWERY</a>
+        <a href="https://jejubeer.co.kr/clubnouveau">CLUB NOUVEAU</a>
+        <a href="https://jejubeer.co.kr/oemodm">OEM/ODM</a>
         
     </div>
     <div class="header-gnb">
        <a href="https://jejubeer.co.kr/brewery-intro">양조장 소개</a>
        <a href="https://jejubeer.co.kr/brewery-program" class="active">예약</a>
-       <a href="https://jejubeer.co.kr/brewery-news">공지사항</a>
+       <a href="https://jejubeer.co.kr/brewers_kitchen">용감한 주방</a>
     </div>
     <div class="header-sub">
         <a href="https://jejubeer.co.kr/brewery-program" class="sub-a" id="reservation">프로그램 예약</a>

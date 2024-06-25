@@ -86,28 +86,31 @@
 			                		<colgroup>
 			                			<col width="20%">
 			                			<col width="15%">
-			                			<col width="*">
 			                			<col width="20%">
+			                			<col width="*">
 			                		</colgroup>
 			                		<thead>
 			                			<tr>
 			                				<th>금액</th>
 			                				<th>체험시간</th>
-			                				<th>포함사항</th>
 			                				<th>정원</th>
+			                				<th>포함사항</th>
 			                			</tr>
 			                		</thead>
 			                		<tbody>
 			                			<tr>
 			                				<td>15,000원</td>
 			                				<td>45분</td>
-			                				<td>제주맥주 전용잔, 시음맥주 <sub>200ml</sub></td>
 			                				<td >6명</td>
+			                				<td>제주맥주 전용잔, 시음</td>
 			                			</tr>
 			                		</tbody>
 			                	</table>
 			                	<p class="beer_table_p">
-			                		*맥주 시음 희망시 신분증 필참
+			                		* 음주 불가 시, 논알콜 또는 음료로 대체 가능
+			                	</p>
+			                	<p class="beer_table_p">
+			                		* 맥주 논알콜 시음 시 신분증 필참
 			                	</p>
 			                </div><!-- beer_table_bx end -->
 			            

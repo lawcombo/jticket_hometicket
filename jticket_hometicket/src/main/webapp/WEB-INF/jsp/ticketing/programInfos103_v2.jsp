@@ -94,14 +94,15 @@
 			                		<colgroup>
 			                			<col width="20%">
 			                			<col width="15%">
+			                			<col width="10%">
+			                			<col width="10%">
 			                			<col width="*">
-			                			<col width="20%">
 			                		</colgroup>
 			                		<thead>
 			                			<tr>
 			                				<th>구분</th>
 			                				<th>금액</th>
-			                				<th>체험시간</th>
+			                				<th>시간</th>
 			                				<th>정원</th>
 			                				<th>옵션 및 포함사항</th>
 			                			</tr>
@@ -112,7 +113,7 @@
 			                				<td>22,000</td>
 			                				<td>40분</td>
 			                				<td>15명</td>
-			                				<td>맥주 330ml / 논알콜 330ml /착즙 주스 중 택1</td>
+			                				<td>제주맥주 1종</td>
 			                				<!-- <td rowspan="3">40분</td> -->
 			                			</tr>
 			                			<tr>
@@ -120,12 +121,15 @@
 			                				<td>25,000</td>
 			                				<td>40분</td>
 			                				<td>12명</td>
-			                				<td>제주맥주 4종<br />(논알콜 또는 착즙 주스로 대체가능)</td>
+			                				<td>제주맥주 4종</td>
 			                			</tr>
 			                		</tbody>
 			                	</table>
 			                	<p class="beer_table_p">
-			                		*맥주, 논알콜 선택 시 신분증 필수 지참
+			                		* 음주 불가 시, 논알콜 또는 음료로 대체 가능
+			                	</p>
+			                	<p class="beer_table_p">
+			                		* 맥주, 논알콜 시음시 신분증 필참
 			                	</p>
 			                </div><!-- beer_table_bx end -->
 			            

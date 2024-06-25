@@ -16,21 +16,25 @@
                 <a href="https://www.youtube.com/channel/UCVHSuXVobLHYTvcvsYjCncw" target="_blank">
                     <img src="https://cdn.imweb.me/upload/S20200702f03eaee38b16e/f553848b58e03.png"/>
                 </a>
+                <!-- 
                 <a href="https://www.facebook.com/jejubeerofficial" target="_blank">
                     <img src="https://cdn.imweb.me/upload/S20200702f03eaee38b16e/5215b07b123cf.png"/ class="ewp_sns_icon">
                 </a>
+                 -->
                 <a href="https://www.instagram.com/jejubeerofficial/" target="_blank">
                     <img src="https://cdn.imweb.me/upload/S20200702f03eaee38b16e/08634a2341636.png"/ class="ewp_sns_icon">
                 </a>
+                <!-- 
                 <a href="https://post.naver.com/my.nhn?memberNo=39126203" target="_blank">
                     <img src="https://cdn.imweb.me/upload/S20200702f03eaee38b16e/29268409b8739.png"/ class="ewp_sns_icon">
                 </a>
+                 -->
             </div>
         </div>
 
         <div class="footer-info">
             <p class="address">
-				제주맥주 주식회사 &nbsp; &nbsp; 대표이사 문혁기<br>본사) 제주특별자치도 제주시 한림읍
+				제주맥주 주식회사 &nbsp; &nbsp; 대표이사 신성현<br>본사) 제주특별자치도 제주시 한림읍
 				금능농공길 62-11 &nbsp; &nbsp;<span></span>
 				서울사무실) 서울특별시 중구 동호로 228 동호 38빌딩 6층<br>호스팅 제공자 (주)아임웹 &nbsp; &nbsp;<span></span>
 				사업자등록번호 616-86-27415 &nbsp; &nbsp;<span></span>
