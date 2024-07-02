@@ -13,7 +13,6 @@
                 <a href="https://jejubeer.co.kr/login?back_url=L2JyZXdlcnktcHJvZ3JhbQ%3D%3D&used_login_btn=Y">LOGIN</a>
                 <a href="https://jejubeer.co.kr/site_join_type_choice?back_url=L2JyZXdlcnktcHJvZ3JhbQ%3D%3D">JOIN</a>
                 <a href="https://jejubeer.co.kr/shop_cart">CART</a>
-                <a href="https://sites.google.com/view/jejubeer-recruit/%EC%A0%9C%EC%A3%BC%EB%A7%A5%EC%A3%BC%EB%8B%A4%EC%9B%80" target="_blank">RECRUIT</a>
                 <div class="res_btn">
                 	<a href="https://jejubeer.co.kr/brewery-program">
                 		양조장예약
