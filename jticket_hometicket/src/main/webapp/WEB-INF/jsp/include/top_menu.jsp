@@ -37,7 +37,7 @@
     <div class="header-gnb">
        <a href="https://jejubeer.co.kr/brewery-intro">양조장 소개</a>
        <a href="https://jejubeer.co.kr/brewery-program" class="active">예약</a>
-       <a href="https://jejubeer.co.kr/brewers_kitchen">용감한 주방</a>
+       <!-- <a href="https://jejubeer.co.kr/brewers_kitchen">용감한 주방</a> -->
     </div>
     <div class="header-sub">
         <a href="https://jejubeer.co.kr/brewery-program" class="sub-a" id="reservation">프로그램 예약</a>
